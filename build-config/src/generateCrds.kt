@@ -7,10 +7,11 @@ import org.jetbrains.amper.plugins.CompilationArtifact
 import org.jetbrains.amper.plugins.Input
 import org.jetbrains.amper.plugins.Output
 import org.jetbrains.amper.plugins.TaskAction
+import java.io.File
+import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.createDirectories
-import kotlin.io.path.deleteRecursively
 
 @OptIn(ExperimentalPathApi::class)
 @TaskAction
@@ -19,33 +20,71 @@ fun generateCrds(
     @Input compileClasspath: Classpath,
     @Output outputDir: Path,
 ) {
-    outputDir.deleteRecursively()
-    outputDir.createDirectories()
+    val outputParent = requireNotNull(outputDir.parent)
+    outputParent.createDirectories()
+    val temporaryOutputDir = Files.createTempDirectory(
+        outputParent,
+        "${outputDir.fileName}-",
+    )
 
-    val compiledArtifact = compilationArtifact.artifact
-    val classpathElements = (compileClasspath.resolvedFiles + listOf(compiledArtifact))
-        .distinct()
-        .map(Path::toString)
+    try {
+        val compiledArtifact = compilationArtifact.artifact
+        val classpathElements = (compileClasspath.resolvedFiles + listOf(compiledArtifact))
+            .distinct()
+            .map(Path::toString)
 
-    val collector = CustomResourceCollector()
-        .withParentClassLoader(Thread.currentThread().contextClassLoader)
-        .withClasspathElements(classpathElements)
-        .withFilesToScan(listOf(compiledArtifact.toFile()))
+        val collector = CustomResourceCollector()
+            .withParentClassLoader(Thread.currentThread().contextClassLoader)
+            .withClasspathElements(classpathElements)
+            .withFilesToScan(listOf(compiledArtifact.toFile()))
 
-    val customResourceClasses = collector.findCustomResourceClasses()
-    check(customResourceClasses.isNotEmpty()) {
-        "No Fabric8 custom resources found in ${compiledArtifact.fileName}"
+        val customResourceClasses = collector.findCustomResourceClasses()
+        check(customResourceClasses.isNotEmpty()) {
+            "No Fabric8 custom resources found in ${compiledArtifact.fileName}"
+        }
+
+        val generationInfo = CRDGenerator()
+            .customResourceClasses(customResourceClasses)
+            .inOutputDir(temporaryOutputDir.toFile())
+            .detailedGenerate()
+
+        outputDir.createDirectories()
+        syncGeneratedFiles(temporaryOutputDir, outputDir)
+
+        generationInfo.crdDetailsPerNameAndVersion.forEach { (crdName, versionToInfo) ->
+            println("Generated CRD $crdName:")
+            versionToInfo.forEach { (version, info) ->
+                println(" $version -> ${outputDir.resolve(Path.of(info.filePath).fileName)}")
+            }
+        }
+    } finally {
+        temporaryOutputDir.toFile().deleteRecursively()
     }
+}
 
-    val generationInfo = CRDGenerator()
-        .customResourceClasses(customResourceClasses)
-        .inOutputDir(outputDir.toFile())
-        .detailedGenerate()
+private fun syncGeneratedFiles(sourceDir: Path, targetDir: Path) {
+    val sourceFiles = sourceDir.toFile()
+        .walkTopDown()
+        .filter(File::isFile)
+        .map(File::toPath)
+        .toList()
+    val generatedPaths = sourceFiles.map(sourceDir::relativize).toSet()
 
-    generationInfo.crdDetailsPerNameAndVersion.forEach { (crdName, versionToInfo) ->
-        println("Generated CRD $crdName:")
-        versionToInfo.forEach { (version, info) ->
-            println(" $version -> ${info.filePath}")
+    targetDir.toFile()
+        .walkTopDown()
+        .filter(File::isFile)
+        .map(File::toPath)
+        .forEach { targetFile ->
+            if (targetDir.relativize(targetFile) !in generatedPaths) {
+                Files.deleteIfExists(targetFile)
+            }
+        }
+
+    sourceFiles.forEach { sourceFile ->
+        val targetFile = targetDir.resolve(sourceDir.relativize(sourceFile))
+        targetFile.parent.createDirectories()
+        if (!Files.exists(targetFile) || Files.mismatch(sourceFile, targetFile) != -1L) {
+            Files.copy(sourceFile, targetFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
         }
     }
 }

@@ -33,7 +33,7 @@ The action receives:
 
 - `@Input compilationArtifact: CompilationArtifact` from `${module.jar}`.
 - `@Input compileClasspath: Classpath` from `${module.compileClasspath}`.
-- `@Output outputDir: Path` at `${module.rootDir}/src/main/resources/META-INF/fabric8`.
+- `@Output outputDir: Path` at `${module.rootDir}/resources/META-INF/fabric8`.
 
 The compilation artifact input makes compilation a prerequisite through Kotlin Toolchain task dependency inference. The output is intentionally a source-resource directory, not `${taskOutputDir}` registered as `generated.resources`, so ordinary builds do not invoke the task.
 
@@ -71,7 +71,7 @@ Run with the Kotlin CLI:
 
 1. `./kotlin check`
 2. `./kotlin task :operator:generateCrds@build-config`
-3. Confirm YAML exists below `operator/src/main/resources/META-INF/fabric8/`.
+3. Confirm YAML exists below `operator/resources/META-INF/fabric8/`.
 4. Inspect generated YAML for `apiextensions.k8s.io/v1`, the expected resource group/version, and `spec`/`status` schemas.
 5. Run the explicit task again and confirm execution avoidance when inputs and outputs are unchanged.
 6. Change the operator custom-resource source, rerun the task, and confirm regenerated output.
@@ -95,5 +95,5 @@ Adds a CLI dependency and process boundary without solving a requirement that th
 
 - Use compiled JAR scanning rather than source scanning: Fabric8 CRD Generator operates on compiled class metadata and the Kotlin Toolchain exposes the compilation artifact directly.
 - Use `${module.compileClasspath}` for class loading: custom-resource superclasses, annotations, and dependent model types must be resolvable.
-- Write to `src/main/resources/META-INF/fabric8`: this is the expected discovery/package location and avoids implicit task registration through generated resources.
+- Write to `resources/META-INF/fabric8`: this is Kotlin Toolchain's default resource location and avoids implicit task registration through generated resources.
 - Fail on zero resources: a successful task with no CRD output hides missing annotations or incorrect scanning configuration.

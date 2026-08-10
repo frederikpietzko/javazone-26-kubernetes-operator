@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add an explicit Kotlin Toolchain `generateCrds` task that compiles the operator first, scans its compiled classes with Fabric8, and writes CRD YAML to `operator/src/main/resources/META-INF/fabric8`.
+**Goal:** Add an explicit Kotlin Toolchain `generateCrds` task that compiles the operator first, scans its compiled classes with Fabric8, and writes CRD YAML to `operator/resources/META-INF/fabric8`.
 
 **Architecture:** `build-config` exposes a task action consuming `CompilationArtifact` and `Classpath`. `${module.jar}` supplies the compilation prerequisite; the compiled JAR is scanned and loaded with `${module.compileClasspath}`. The task writes directly to the conventional Fabric8 resource directory and is not listed in `generated.resources`, preserving explicit invocation.
 
@@ -14,7 +14,7 @@
 - Compilation must precede generation through `${module.jar}` task input.
 - Use Fabric8 CRD Generator v2 APIs already declared in `build-config/module.yaml`.
 - Use `${module.compileClasspath}` to resolve custom-resource dependencies and annotations.
-- Write generated files under `operator/src/main/resources/META-INF/fabric8`.
+- Write generated files under `operator/resources/META-INF/fabric8`.
 - Do not add `generated.resources`; normal builds must not invoke generation.
 - Fail explicitly when no custom-resource classes are discovered.
 - Use `./kotlin` for project build, check, and task commands.
@@ -27,7 +27,7 @@
 - Modify: `project.yaml` — register local `build-config` plugin.
 - Modify: `operator/module.yaml` — enable `build-config` for `operator`.
 - Modify: `operator/src/com/example/Main.kt` — add CRD group metadata required by Fabric8 scanning.
-- Create during verification: `operator/src/main/resources/META-INF/fabric8/*.yaml` — generated CRDs; retain as generated project output unless user requests cleanup.
+- Create during verification: `operator/resources/META-INF/fabric8/*.yml` — generated CRDs; retain as generated project output unless user requests cleanup.
 
 ### Task 1: Implement Fabric8 generation action
 
@@ -117,7 +117,7 @@ tasks:
     action: !com.example.generateCrds
       compilationArtifact: ${module.jar}
       compileClasspath: ${module.compileClasspath}
-      outputDir: ${module.rootDir}/src/main/resources/META-INF/fabric8
+      outputDir: ${module.rootDir}/resources/META-INF/fabric8
 ```
 
 Do not add a `generated:` section. The task output is intentionally a source-resource path so the task remains explicit.
@@ -217,7 +217,7 @@ git commit -m "feat(operator): enable CRD generation plugin"
 ### Task 3: Generate and validate CRD output
 
 **Files:**
-- Create during task execution: `operator/src/main/resources/META-INF/fabric8/*.yaml`
+- Create during task execution: `operator/resources/META-INF/fabric8/*.yml`
 
 **Interfaces:**
 - Runs the explicit public command `./kotlin task :operator:generateCrds@build-config`.
@@ -246,13 +246,13 @@ Expected:
 - [ ] **Step 3: Verify generated file and schema**
 
 ```bash
-test -d operator/src/main/resources/META-INF/fabric8
-test "$(find operator/src/main/resources/META-INF/fabric8 -type f -name '*.yaml' | wc -l | tr -d ' ')" -gt 0
-grep -R -q 'apiVersion: apiextensions.k8s.io/v1' operator/src/main/resources/META-INF/fabric8
-grep -R -q 'group: example.com' operator/src/main/resources/META-INF/fabric8
-grep -R -q 'version: v1' operator/src/main/resources/META-INF/fabric8
-grep -R -q 'spec:' operator/src/main/resources/META-INF/fabric8
-grep -R -q 'status:' operator/src/main/resources/META-INF/fabric8
+test -d operator/resources/META-INF/fabric8
+test "$(find operator/resources/META-INF/fabric8 -type f -name '*.yml' | wc -l | tr -d ' ')" -gt 0
+grep -R -q 'apiVersion: "apiextensions.k8s.io/v1"' operator/resources/META-INF/fabric8
+grep -R -q 'group: "example.com"' operator/resources/META-INF/fabric8
+grep -R -q 'name: "v1"' operator/resources/META-INF/fabric8
+grep -R -q 'spec:' operator/resources/META-INF/fabric8
+grep -R -q 'status:' operator/resources/META-INF/fabric8
 ```
 
 Expected: every command succeeds.
@@ -293,7 +293,7 @@ Expected: no whitespace errors. Existing `.idea/workspace.xml` remains unrelated
 The output directory is the operator's source-resource location, so retain the generated YAML and commit it as the initial CRD resource set:
 
 ```bash
-git add operator/src/main/resources/META-INF/fabric8
+git add operator/resources/META-INF/fabric8
 git commit -m "chore(operator): generate CRD manifests"
 ```
 

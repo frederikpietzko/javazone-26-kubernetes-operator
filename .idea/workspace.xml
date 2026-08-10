@@ -7,8 +7,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="initial">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="16" />
+    <option name="cachedIndexableFilesCount" value="19" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -32,6 +33,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "frederikpietzko"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:frederikpietzko/javazone-26-kubernetes-operator.git",
+    "accountId": "d3ae2ea2-89fc-4c5d-8385-2e21ed315108"
+  }
+}]]></component>
   <component name="KmpPackageLockUpdaterState">{
   &quot;jsModulesKotlinGradlePluginVersion&quot;: {},
   &quot;wasmModulesKotlinGradlePluginVersion&quot;: {}
@@ -42,61 +55,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="2.7046178439770973E-8" />
-      <entry key="MS500" value="0.030649343874642226" />
-      <entry key="S2" value="0.4184131213416956" />
-      <entry key="S5" value="0.7057367239361068" />
-      <entry key="S10" value="0.8499427386633436" />
-      <entry key="S30" value="6.893821198814255" />
-      <entry key="S60" value="31.907662355736562" />
-      <entry key="M2" value="72.278476622405" />
-      <entry key="M5" value="119.20937009324862" />
-      <entry key="M10" value="142.224402901098" />
-      <entry key="M15" value="156.60785003299884" />
-      <entry key="M30" value="213.93000057695573" />
-      <entry key="H1" value="326.77586302379876" />
-      <entry key="H2" value="450.1408933066284" />
-      <entry key="H4" value="543.2355696979415" />
-      <entry key="D1" value="643.8357210701183" />
-      <entry key="W1" value="663.6225570980566" />
+      <entry key="MS100" value="1.000000000000001" />
+      <entry key="MS500" value="1.0029654953620668" />
+      <entry key="S2" value="1.888053381930003" />
+      <entry key="S5" value="4.473057811291609" />
+      <entry key="S10" value="6.7620198126302355" />
+      <entry key="S30" value="9.269983693500114" />
+      <entry key="S60" value="10.155415339835661" />
+      <entry key="M2" value="13.361031499317027" />
+      <entry key="M5" value="43.889949510956505" />
+      <entry key="M10" value="88.34184745570828" />
+      <entry key="M15" value="117.54436037538423" />
+      <entry key="M30" value="190.733064756545" />
+      <entry key="H1" value="313.281220704414" />
+      <entry key="H2" value="447.7999852271201" />
+      <entry key="H4" value="551.1748240540273" />
+      <entry key="D1" value="664.63434657187" />
+      <entry key="W1" value="687.1504119632134" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0000000669379738" />
-      <entry key="S10" value="1.0002587989028584" />
-      <entry key="S30" value="1.0679408515625515" />
-      <entry key="S60" value="1.3173937837757947" />
-      <entry key="M2" value="1.757305003921133" />
-      <entry key="M5" value="2.3430870436237035" />
-      <entry key="M10" value="3.012683003271825" />
-      <entry key="M15" value="4.696207568966944" />
-      <entry key="M30" value="14.27911649409122" />
-      <entry key="H1" value="32.0436974463273" />
-      <entry key="H2" value="50.09747548499156" />
-      <entry key="H4" value="63.15717846922836" />
-      <entry key="D1" value="76.88551005796315" />
-      <entry key="W1" value="79.5468824304368" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="4.3476207403444924E-275" />
+      <entry key="S2" value="2.5678101604949464E-69" />
+      <entry key="S5" value="3.6629008698625395E-28" />
+      <entry key="S10" value="1.9139115566997136E-14" />
+      <entry key="S30" value="2.7541485993322E-5" />
+      <entry key="S60" value="0.006306919859253776" />
+      <entry key="M2" value="0.12349670764998796" />
+      <entry key="M5" value="0.9201973065704582" />
+      <entry key="M10" value="2.078280996441181" />
+      <entry key="M15" value="3.637820475097664" />
+      <entry key="M30" value="12.125152920841089" />
+      <entry key="H1" value="29.40412692225004" />
+      <entry key="H2" value="48.19344560061" />
+      <entry key="H4" value="62.30549088794299" />
+      <entry key="D1" value="77.50600181818841" />
+      <entry key="W1" value="80.49069079958981" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.0029603853702727468" />
-      <entry key="MS500" value="0.32915728939885536" />
-      <entry key="S2" value="1.1089076979539059" />
-      <entry key="S5" value="1.5557102869438872" />
-      <entry key="S10" value="1.7694004066659" />
-      <entry key="S30" value="7.930398048942594" />
-      <entry key="S60" value="33.19929748640406" />
-      <entry key="M2" value="74.00987503756222" />
-      <entry key="M5" value="121.53349378307453" />
-      <entry key="M10" value="145.2230920016401" />
-      <entry key="M15" value="161.28828896524726" />
-      <entry key="M30" value="228.18381187401133" />
-      <entry key="H1" value="358.79099597682205" />
-      <entry key="H2" value="500.2160119021339" />
-      <entry key="H4" value="606.3786451552545" />
-      <entry key="D1" value="720.7183673754743" />
-      <entry key="W1" value="743.1690161911326" />
+      <entry key="MS100" value="2.298615980044638E-13" />
+      <entry key="MS500" value="0.005556707303451886" />
+      <entry key="S2" value="1.089305081224857" />
+      <entry key="S5" value="3.9475429155668595" />
+      <entry key="S10" value="6.385056977713251" />
+      <entry key="S30" value="9.081005715416477" />
+      <entry key="S60" value="10.053270155763377" />
+      <entry key="M2" value="13.419521530794562" />
+      <entry key="M5" value="44.7669336274506" />
+      <entry key="M10" value="90.38809754892982" />
+      <entry key="M15" value="121.15371370109541" />
+      <entry key="M30" value="202.82777705257664" />
+      <entry key="H1" value="342.654406468949" />
+      <entry key="H2" value="495.96948997899017" />
+      <entry key="H4" value="613.4651674487583" />
+      <entry key="D1" value="742.1372532231434" />
+      <entry key="W1" value="767.6406445825997" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -115,6 +128,7 @@
   "keyToString": {
     "Amper [Deprecated].Application.executor": "Run",
     "CidrDebugProfileConversion": "true",
+    "KEY_CHAT_IN_TOOLWINDOW": "false",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -142,7 +156,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "rearrange.code.on.save": "true",
-    "settings.editor.selected.configurable": "com.facebook.ktfmt_idea_plugin.settings",
+    "settings.editor.selected.configurable": "com.intellij.ml.llm.agents.skills.settings",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
@@ -221,6 +235,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

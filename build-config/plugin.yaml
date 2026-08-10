@@ -1,0 +1,6 @@
+tasks:
+  generateCrds:
+    action: !com.example.generateCrds
+      compilationArtifact: ${module.jar}
+      compileClasspath: ${module.compileClasspath}
+      outputDir: ${module.rootDir}/src/main/resources/META-INF/fabric8

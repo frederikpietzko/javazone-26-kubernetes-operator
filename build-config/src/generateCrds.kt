@@ -23,7 +23,7 @@ fun generateCrds(
     outputDir.createDirectories()
 
     val compiledArtifact = compilationArtifact.artifact
-    val classpathElements = (compileClasspath.resolvedFiles + compiledArtifact)
+    val classpathElements = (compileClasspath.resolvedFiles + listOf(compiledArtifact))
         .distinct()
         .map(Path::toString)
 

@@ -1,0 +1,23 @@
+product: jvm/app
+
+settings:
+  springBoot:
+    enabled: true
+    version: 4.1.0
+  kotlin:
+    version: 2.4.10
+  jvm:
+    mainClass: com.example.MainKt
+
+dependencies:
+  - $kotlin.reflect
+  - $spring.boot.starter
+  - bom: io.javaoperatorsdk:operator-framework-bom:5.5.1
+  - $libs.spring.operator.framework
+  - $libs.operator.framework
+  - $libs.fabrics.generator.apt
+
+test-dependencies:
+  - $spring.boot.starter.test
+  - $kotlin.test.junit5
+  - $libs.spring.operator.framework.test

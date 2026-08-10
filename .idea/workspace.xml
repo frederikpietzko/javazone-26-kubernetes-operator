@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AmperLocalSettings">
+    <option name="autoSyncWasEnabled" value="true" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="16" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KmpPackageLockUpdaterState">{
+  &quot;jsModulesKotlinGradlePluginVersion&quot;: {},
+  &quot;wasmModulesKotlinGradlePluginVersion&quot;: {}
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="2.7046178439770973E-8" />
+      <entry key="MS500" value="0.030649343874642226" />
+      <entry key="S2" value="0.4184131213416956" />
+      <entry key="S5" value="0.7057367239361068" />
+      <entry key="S10" value="0.8499427386633436" />
+      <entry key="S30" value="6.893821198814255" />
+      <entry key="S60" value="31.907662355736562" />
+      <entry key="M2" value="72.278476622405" />
+      <entry key="M5" value="119.20937009324862" />
+      <entry key="M10" value="142.224402901098" />
+      <entry key="M15" value="156.60785003299884" />
+      <entry key="M30" value="213.93000057695573" />
+      <entry key="H1" value="326.77586302379876" />
+      <entry key="H2" value="450.1408933066284" />
+      <entry key="H4" value="543.2355696979415" />
+      <entry key="D1" value="643.8357210701183" />
+      <entry key="W1" value="663.6225570980566" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000669379738" />
+      <entry key="S10" value="1.0002587989028584" />
+      <entry key="S30" value="1.0679408515625515" />
+      <entry key="S60" value="1.3173937837757947" />
+      <entry key="M2" value="1.757305003921133" />
+      <entry key="M5" value="2.3430870436237035" />
+      <entry key="M10" value="3.012683003271825" />
+      <entry key="M15" value="4.696207568966944" />
+      <entry key="M30" value="14.27911649409122" />
+      <entry key="H1" value="32.0436974463273" />
+      <entry key="H2" value="50.09747548499156" />
+      <entry key="H4" value="63.15717846922836" />
+      <entry key="D1" value="76.88551005796315" />
+      <entry key="W1" value="79.5468824304368" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.0029603853702727468" />
+      <entry key="MS500" value="0.32915728939885536" />
+      <entry key="S2" value="1.1089076979539059" />
+      <entry key="S5" value="1.5557102869438872" />
+      <entry key="S10" value="1.7694004066659" />
+      <entry key="S30" value="7.930398048942594" />
+      <entry key="S60" value="33.19929748640406" />
+      <entry key="M2" value="74.00987503756222" />
+      <entry key="M5" value="121.53349378307453" />
+      <entry key="M10" value="145.2230920016401" />
+      <entry key="M15" value="161.28828896524726" />
+      <entry key="M30" value="228.18381187401133" />
+      <entry key="H1" value="358.79099597682205" />
+      <entry key="H2" value="500.2160119021339" />
+      <entry key="H4" value="606.3786451552545" />
+      <entry key="D1" value="720.7183673754743" />
+      <entry key="W1" value="743.1690161911326" />
+    </decayedShown>
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3Hird7UEy56Gr7qdMiTNcvx1j3f" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Amper [Deprecated].Application.executor": "Run",
+    "CidrDebugProfileConversion": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "rearrange.code.on.save": "true",
+    "settings.editor.selected.configurable": "com.facebook.ktfmt_idea_plugin.settings",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/operator" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.Application">
+    <configuration name="Run Module javazone-26-kubernetes-operator" type="Amper.Run" nameIsGenerated="true">
+      <option name="command" value="run" />
+      <EXTENSION ID="amper.run.common">
+        <option name="module" value="javazone-26-kubernetes-operator" />
+      </EXTENSION>
+      <method v="2" />
+    </configuration>
+    <configuration name="Run Module operator" type="Amper.Run" nameIsGenerated="true">
+      <option name="command" value="run" />
+      <EXTENSION ID="amper.run.common">
+        <option name="module" value="operator" />
+      </EXTENSION>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="javazone-26-kubernetes-operator" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="javazone-26-kubernetes-operator" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="operator.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.jetbrains.amper.spring.Application" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.jetbrains.amper.spring.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.Application" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.337" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.337" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="" />
+      <created>1786361815674</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1786361815674</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

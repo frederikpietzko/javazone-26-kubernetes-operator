@@ -2,6 +2,7 @@ package com.example
 
 import io.fabric8.kubernetes.api.model.Namespaced
 import io.fabric8.kubernetes.client.CustomResource
+import io.fabric8.kubernetes.model.annotation.Group
 import io.fabric8.kubernetes.model.annotation.Version
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -20,4 +21,6 @@ class WebappStatus {
     var status: String? = null
 }
 
-@Version("v1") class Example : CustomResource<WebappSpec, WebappStatus>(), Namespaced
+@Group("example.com")
+@Version("v1")
+class Example : CustomResource<WebappSpec, WebappStatus>(), Namespaced

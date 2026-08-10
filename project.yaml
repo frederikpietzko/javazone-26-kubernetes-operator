@@ -1,6 +1,7 @@
 modules:
   - build-config
   - operator
+  - review-agent
 
 plugins:
   - ./build-config

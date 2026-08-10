@@ -1,0 +1,11 @@
+logging:
+  level:
+    org.springframework.ai.chat.client.advisor: DEBUG
+spring:
+  main:
+    web-application-type: none
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: gemma4:31b-mlx

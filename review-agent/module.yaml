@@ -1,0 +1,13 @@
+product: jvm/app
+settings:
+  springBoot:
+    enabled: true
+    version: 4.1.0
+
+dependencies:
+  - $spring.boot.starter
+  - $kotlin.reflect
+  - bom: org.springframework.ai:spring-ai-bom:2.0.0
+  - $libs.spring.ai.ollama.starter
+  - $libs.jackson.module.kotlin
+  - $libs.spring.ai.community.agent.utils

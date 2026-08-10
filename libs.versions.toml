@@ -10,3 +10,7 @@ operator-framework-junit = { module = "io.javaoperatorsdk:operator-framework-jun
 fabrics-generator-apt = { module = "io.fabric8:crd-generator-apt", version.ref = "fabrics8" }
 fabrics-crd-generator-api = { module = "io.fabric8:crd-generator-api-v2", version.ref = "fabrics8" }
 fabrics-generator-collector = { module = "io.fabric8:crd-generator-collector", version.ref = "fabrics8" }
+
+spring-ai-ollama-starter = { module = "org.springframework.ai:spring-ai-starter-model-ollama" }
+jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin" }
+spring-ai-community-agent-utils = { module = "org.springaicommunity:spring-ai-agent-utils", version = "0.10.0" }

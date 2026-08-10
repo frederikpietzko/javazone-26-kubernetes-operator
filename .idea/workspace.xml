@@ -7,9 +7,17 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="initial">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="cleanup">
+      <change afterPath="$PROJECT_DIR$/k8s/ollama.service.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/review-agent/module.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/review-agent/resources/application-review.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/review-agent/resources/application.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/review-agent/src/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/libs.versions.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/module.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/operator/module.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/project.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,61 +63,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.000000000000001" />
-      <entry key="MS500" value="1.0029654953620668" />
-      <entry key="S2" value="1.888053381930003" />
-      <entry key="S5" value="4.473057811291609" />
-      <entry key="S10" value="6.7620198126302355" />
-      <entry key="S30" value="9.269983693500114" />
-      <entry key="S60" value="10.155415339835661" />
-      <entry key="M2" value="13.361031499317027" />
-      <entry key="M5" value="43.889949510956505" />
-      <entry key="M10" value="88.34184745570828" />
-      <entry key="M15" value="117.54436037538423" />
-      <entry key="M30" value="190.733064756545" />
-      <entry key="H1" value="313.281220704414" />
-      <entry key="H2" value="447.7999852271201" />
-      <entry key="H4" value="551.1748240540273" />
-      <entry key="D1" value="664.63434657187" />
-      <entry key="W1" value="687.1504119632134" />
+      <entry key="MS100" value="1.019812990085583E-4" />
+      <entry key="MS500" value="0.192545888735326" />
+      <entry key="S2" value="1.0595181813550159" />
+      <entry key="S5" value="1.6219825975609274" />
+      <entry key="S10" value="2.3950258442314305" />
+      <entry key="S30" value="7.567051596051224" />
+      <entry key="S60" value="24.612007952982268" />
+      <entry key="M2" value="74.23666068730353" />
+      <entry key="M5" value="209.57714912443757" />
+      <entry key="M10" value="336.66549359246517" />
+      <entry key="M15" value="407.9877047762496" />
+      <entry key="M30" value="511.96464650028076" />
+      <entry key="H1" value="595.1943990204584" />
+      <entry key="H2" value="709.3039153952166" />
+      <entry key="H4" value="903.9227570458531" />
+      <entry key="D1" value="1363.78702411882" />
+      <entry key="W1" value="1502.3494066671808" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="4.3476207403444924E-275" />
-      <entry key="S2" value="2.5678101604949464E-69" />
-      <entry key="S5" value="3.6629008698625395E-28" />
-      <entry key="S10" value="1.9139115566997136E-14" />
-      <entry key="S30" value="2.7541485993322E-5" />
-      <entry key="S60" value="0.006306919859253776" />
-      <entry key="M2" value="0.12349670764998796" />
-      <entry key="M5" value="0.9201973065704582" />
-      <entry key="M10" value="2.078280996441181" />
-      <entry key="M15" value="3.637820475097664" />
-      <entry key="M30" value="12.125152920841089" />
-      <entry key="H1" value="29.40412692225004" />
-      <entry key="H2" value="48.19344560061" />
-      <entry key="H4" value="62.30549088794299" />
-      <entry key="D1" value="77.50600181818841" />
-      <entry key="W1" value="80.49069079958981" />
+      <entry key="MS100" value="1.0000000000864107" />
+      <entry key="MS500" value="1.0097133122356028" />
+      <entry key="S2" value="1.3471306607788611" />
+      <entry key="S5" value="1.929270359834633" />
+      <entry key="S10" value="2.7534515733278413" />
+      <entry key="S30" value="5.466357393488544" />
+      <entry key="S60" value="7.4539052124201035" />
+      <entry key="M2" value="9.020332180671156" />
+      <entry key="M5" value="12.584470774534665" />
+      <entry key="M10" value="21.55551454334826" />
+      <entry key="M15" value="30.00312824984397" />
+      <entry key="M30" value="46.45629033501537" />
+      <entry key="H1" value="62.81541196892905" />
+      <entry key="H2" value="85.1055631310726" />
+      <entry key="H4" value="117.78720174286798" />
+      <entry key="D1" value="187.23148720950223" />
+      <entry key="W1" value="207.30902518138518" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="2.298615980044638E-13" />
-      <entry key="MS500" value="0.005556707303451886" />
-      <entry key="S2" value="1.089305081224857" />
-      <entry key="S5" value="3.9475429155668595" />
-      <entry key="S10" value="6.385056977713251" />
-      <entry key="S30" value="9.081005715416477" />
-      <entry key="S60" value="10.053270155763377" />
-      <entry key="M2" value="13.419521530794562" />
-      <entry key="M5" value="44.7669336274506" />
-      <entry key="M10" value="90.38809754892982" />
-      <entry key="M15" value="121.15371370109541" />
-      <entry key="M30" value="202.82777705257664" />
-      <entry key="H1" value="342.654406468949" />
-      <entry key="H2" value="495.96948997899017" />
-      <entry key="H4" value="613.4651674487583" />
-      <entry key="D1" value="742.1372532231434" />
-      <entry key="W1" value="767.6406445825997" />
+      <entry key="MS100" value="0.038490220649731545" />
+      <entry key="MS500" value="0.6630227270194" />
+      <entry key="S2" value="1.9337627091666931" />
+      <entry key="S5" value="3.080051127453986" />
+      <entry key="S10" value="4.749094913915166" />
+      <entry key="S30" value="12.758024477346387" />
+      <entry key="S60" value="31.874676922723253" />
+      <entry key="M2" value="83.13789327474653" />
+      <entry key="M5" value="222.08104498502306" />
+      <entry key="M10" value="358.1363053841105" />
+      <entry key="M15" value="437.9065307942654" />
+      <entry key="M30" value="558.3515968998884" />
+      <entry key="H1" value="657.9611530351689" />
+      <entry key="H2" value="794.3748214099735" />
+      <entry key="H4" value="1021.6848213021741" />
+      <entry key="D1" value="1551.0115520269621" />
+      <entry key="W1" value="1709.657323577045" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -127,8 +135,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Amper [Deprecated].Application.executor": "Run",
+    "Amper [Deprecated].Reviewer Agent.executor": "Run",
     "CidrDebugProfileConversion": "true",
     "KEY_CHAT_IN_TOOLWINDOW": "false",
+    "Kotlin CLI.Run Module review-agent.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -165,7 +175,7 @@
       <recent name="$PROJECT_DIR$/operator" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.Application">
+  <component name="RunManager" selected="Spring Boot.Reviewer Agent">
     <configuration name="Run Module javazone-26-kubernetes-operator" type="Amper.Run" nameIsGenerated="true">
       <option name="command" value="run" />
       <EXTENSION ID="amper.run.common">
@@ -177,6 +187,16 @@
       <option name="command" value="run" />
       <EXTENSION ID="amper.run.common">
         <option name="module" value="operator" />
+      </EXTENSION>
+      <method v="2" />
+    </configuration>
+    <configuration name="Run Module review-agent" type="Amper.Run" nameIsGenerated="true">
+      <option name="command" value="run" />
+      <envs>
+        <env name="JB_AI_TOKEN" value="eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJzdWIiOiJHcmF6aWUgQXV0aGVudGljYXRpb24iLCJpc3MiOiJodHRwczovL2F1dGguamV0YnJhaW5zLmFpIiwia2lkIjoiZGVmYXVsdCIsInVpZCI6IjcxZjIyNDYzLThhOTUtNDAyOS1hOTViLTUyMGE3NDA0ZTI0ZiIsInVzZXJfc3RhdGUiOiJJTlRFUk5BTCIsInJlZ2lzdHJhdGlvbl9kYXRlIjoxNzgyOTA3NDIwNDUzLCJ0b2tlbl90eXBlIjoidXNlciIsImxpY2Vuc2UiOiJNOUlIQlE2S1pTIiwibGljZW5zZV90eXBlIjoiamV0YnJhaW5zLWFpLm9yZ2FuaXphdGlvbmFsLnVsdGltYXRlIiwiY3VzdG9tZXJfY29kZSI6NzA2MjQ2LCJhaV9zZWF0c19lbmFibGVkIjp0cnVlLCJvcmdfdHlwZSI6Ik9SR0FOSVpBVElPTiIsIm9yZ19pZCI6IjA1Y2YxYTdmLTZhYjUtNzEzYi1hYmQzLTI5ZDBjOGEwNWUyZCIsIm9yZ191c2VyX2lkIjoiY2Y5YjM0YjAtNzFjNy1hZjczLWQ1M2ItMzBhMTRhNmM2ZDNlIiwid29ya3NwYWNlX2lkIjoiMWZmYTFiNGUtYmM0Zi03YjQ1LWY0YTctN2M4OTJjZDQzMTUzIiwiZ2xvYmFsX3VzZXJfaWQiOiJlYWMxOTkxZC1mMzQyLTQ3ZDQtYjg1OC1iMTFlYWRhYjRkODkiLCJvcmdfdXNlcl9jb250ZXh0X3ByaW5jaXBhbCI6ImV5SmhiR2NpT2lKU1V6VXhNaUlzSW5SNWNDSTZJa3BYVkNJc0ltdHBaQ0k2SW1SbFptRjFiSFFpZlEuZXlKbmJHOWlZV3hmZFhObGNsOXBaQ0k2SW1WaFl6RTVPVEZrTFdZek5ESXRORGRrTkMxaU9EVTRMV0l4TVdWaFpHRmlOR1E0T1NJc0luZHZjbXR6Y0dGalpWOXBaQ0k2SWpGbVptRXhZalJsTFdKak5HWXROMkkwTlMxbU5HRTNMVGRqT0RreVkyUTBNekUxTXlJc0luTjFZaUk2SW1ObU9XSXpOR0l3TFRjeFl6Y3RZV1kzTXkxa05UTmlMVE13WVRFMFlUWmpObVF6WlNJc0ltOXlaMTlwWkNJNklqQTFZMll4WVRkbUxUWmhZalV0TnpFellpMWhZbVF6TFRJNVpEQmpPR0V3TldVeVpDSXNJbWx6Y3lJNkltaDBkSEJ6T2k4dllYVjBhQzVxWlhSaWNtRnBibk11WVdraUxDSnZjbWRmZEhsd1pTSTZJazlTUjBGT1NWcEJWRWxQVGlJc0ltcGlZVjloWTJOdmRXNTBYMmxrSWpvek1qRXpNREkzTnl3aWIzSm5YM1Z6WlhKZmRIbHdaU0k2SWsxRlRVSkZVaUlzSW1Oc2FXVnVkRjlwWkNJNkltZHlZWHBwWlMxd2EyTmxJaXdpZFhObGNsOXpkR0YwWlNJNklrbE9WRVZTVGtGTUlpd2laWGh3SWpveE56ZzJORGN3TURRM2ZRLkJwSkpQMnVnQWxaWUE5bE5HRUhKWmlLdnljMUxHYWxpbWRxM0VjVjRjdFBrMzB6QU5mMFhGUFQ4Nkc0a2F4REpYekI0cEtvdXBaRUVqRUpsTDlmTUx1dDk0Z1ZSY1dPZ1ZvYjN3a0FJVHJxQ0I5YlpJYWdkbHZVaEJYaTVlRDUtMWZJY0RVa0pGSVhhdGtfQjh2Tk5CbHVLbTdadWRoZDQwZ1dTT2tLTndtdWxoVUxQVzQ5dmdsbnhaWHJzT3FZYXBNWnBYMnhTY3I0SktkdzlmVm1lYmhpMl9UYzFOYkRVZkdVa3M4aG5xWFJfYmVabjhwQ09rTml6TU1tdl9sQW9Rc0s1UktjOVY0X1ZCT0hCd0hZT3phdEdjbm13UDRJdWhUeDVmQUVEeFhSSHk0YWRQaWEyV2FFaTMwUE9MMlZXZnFLWHUwcHVURnlYSFk2Z3o4RFltQSIsImV4cCI6MTc4NjQ3MDA0N30" />
+      </envs>
+      <EXTENSION ID="amper.run.common">
+        <option name="module" value="review-agent" />
       </EXTENSION>
       <method v="2" />
     </configuration>
@@ -196,9 +216,9 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
-    <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+    <configuration name="Operator" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true">
       <module name="operator.main" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="org.jetbrains.amper.spring.Application" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.Application" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="org.jetbrains.amper.spring.*" />
@@ -209,9 +229,33 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Reviewer Agent" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ACTIVE_PROFILES" value="review" />
+      <module name="review-agent.main" />
+      <selectedOptions>
+        <option name="environmentVariables" />
+      </selectedOptions>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.Application" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.jetbrains.amper.spring.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Kotlin CLI.Run Module javazone-26-kubernetes-operator" />
+      <item itemvalue="Kotlin CLI.Run Module operator" />
+      <item itemvalue="Kotlin CLI.Run Module review-agent" />
+      <item itemvalue="Spring Boot.Reviewer Agent" />
+      <item itemvalue="Spring Boot.Operator" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.Application" />
+        <item itemvalue="Spring Boot.Operator" />
       </list>
     </recent_temporary>
   </component>
@@ -238,7 +282,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial" />
+    <MESSAGE value="cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleanup" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

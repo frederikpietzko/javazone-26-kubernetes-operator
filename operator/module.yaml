@@ -19,6 +19,7 @@ dependencies:
   - $libs.spring.operator.framework
   - $libs.operator.framework
   - $libs.fabrics.generator.apt
+  - $libs.jackson.module.kotlin
 
 test-dependencies:
   - $spring.boot.starter.test

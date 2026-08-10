@@ -1,0 +1,4 @@
+review:
+  repository:
+    url: https://github.com/frederikpietzko/ebfs-jpa.git
+  pr: 1

@@ -14,14 +14,14 @@ No automated live-cluster or kind end-to-end tests are added.
 
 ## Resource lifecycle
 
-For each accepted request, the operator creates only:
+For each accepted request in `default`, the operator creates only:
 
 - ConfigMap named `agent-review-<request-name>` containing the generated review-agent YAML.
 - Job named `agent-review-<request-name>`.
 
 Both resources use the request as owner with `controller=true` and `blockOwnerDeletion=false`.
 
-The operator does not create or observe per-request ServiceAccounts, Roles, or RoleBindings.
+The operator does not create or observe per-request ServiceAccounts, Roles, or RoleBindings. The request namespace is validated before any Kubernetes lookup; the only supported namespace is `default`.
 
 ## Static review-agent identity
 
@@ -37,11 +37,13 @@ Every review Job uses `serviceAccountName: review-agent`. Static identity resour
 
 ## Operator permissions
 
-Replace cluster-wide operator RBAC with a namespaced Role and RoleBinding in `default`. Grant only permissions needed to:
+Replace cluster-wide operator RBAC with a namespaced Role and RoleBinding in `default`. The operator ServiceAccount is `agent-review-operator`. Grant only:
 
-- Read/watch `agentreviewrequests`, `reviewresults`, ConfigMaps, and Jobs.
-- Patch `agentreviewrequests/status`.
-- Create ConfigMaps and Jobs.
+- `agentreviewrequests`: `get`, `list`, `watch`.
+- `agentreviewrequests/status`: `get`, `update`, `patch`.
+- `reviewresults`: `get`, `list`, `watch`.
+- `configmaps`: `get`, `list`, `watch`, `create`.
+- `jobs`: `get`, `list`, `watch`, `create`.
 
 Remove ServiceAccount, Role, RoleBinding, `escalate`, and `bind` permissions from operator RBAC. The operator receives no direct write permissions for `ReviewResultCR` resources.
 
@@ -59,19 +61,46 @@ Keep existing behavior for:
 - Terminal handling for resource conflicts, invalid requests, failed Jobs, missing results, and post-start resource disappearance.
 - ValidatingAdmissionPolicy immutability after processing starts.
 
-Informer event sources are namespace-scoped to `default`, not cluster-wide.
+Informer event sources are namespace-scoped to `default`, not cluster-wide. Configure each JOSDK `InformerEventSource` with the namespace `default`; do not use watch-all-namespaces configuration.
 
 ## Admission
 
-Add a default-namespace admission rule for `AgentReviewRequest` create/update operations. Requests outside `default` are denied.
+Create a `ValidatingAdmissionPolicy` named `agent-review-request-default-namespace` and bind it with `validationActions: [Deny]`. Match `CREATE` and `UPDATE` operations for `agentreviewrequests` in `example.com/v1`, and validate:
 
-Keep spec immutability enforcement for updates after processing begins:
+```cel
+request.namespace == "default"
+```
+
+Requests outside `default` are denied. Add this match condition to the existing immutability policy's `matchConstraints` (the binding remains an UPDATE binding):
+
+```cel
+request.namespace == "default"
+```
+
+Keep spec immutability enforcement for updates after processing starts:
 
 ```cel
 !has(oldObject.status.phase) ||
 oldObject.status.phase == "Pending" ||
 object.spec == oldObject.spec
 ```
+
+## Exact file changes
+
+- Modify `operator/src/com/example/AgentReviewResourceFactory.kt`: return only `AgentReviewResources(configMap, job)` and set Job `serviceAccountName` to `review-agent`.
+- Modify `operator/src/com/example/AgentReviewResourceGateway.kt`: observe and create only ConfigMaps and Jobs; remove identity and RBAC operations.
+- Modify `operator/src/com/example/AgentReviewRequestReconciler.kt`: use `default`-namespace informers and the reduced resource set.
+- Modify `operator/src/com/example/AgentReviewLifecycle.kt` and fixtures for ConfigMap/Job-only observations.
+- Replace `k8s/operator/cluster-role.yaml` and `cluster-role-binding.yaml` with namespaced `role.yaml` and `role-binding.yaml`.
+- Create static `k8s/operator/review-agent-service-account.yaml`, `review-agent-role.yaml` (name `review-agent-result-publisher`), and `review-agent-role-binding.yaml`.
+- Create `k8s/operator/validating-admission-policy-default-namespace.yaml` and binding; update immutable-policy matching to `default`.
+- Keep operator Deployment and review-agent static resources in `default`.
+
+## Error and cleanup semantics
+
+Admission is authoritative for namespace and spec validation. The namespaced `default` informer means normal reconciliation cannot receive other namespaces; the reconciler still guards the namespace before resource access and returns no-op for an unsupported namespace. Invalid or conflicting `default` requests use terminal `Error` status. Transient Kubernetes API failures remain retryable.
+
+ConfigMaps, Jobs, and owned `ReviewResultCR` objects are garbage-collected with the request. Static review-agent and operator identity/RBAC resources remain until the demo installation is removed.
 
 ## Tests
 

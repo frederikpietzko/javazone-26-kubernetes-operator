@@ -21,7 +21,7 @@ prefix. Review output types remain in `review-agent`.
   by this project’s Kotlin CLI.
 - Configuration prefix remains `review`.
 - `Respository` is renamed to `Repository`.
-- `ReviewResult` and `ReviewComment` remain in `review-agent`.
+- `ReviewResultCR` and `ReviewComment` remain in `review-agent`.
 - Use `./kotlin` for project build and test commands.
 - Preserve unrelated existing modification `.idea/workspace.xml`.
 
@@ -282,7 +282,7 @@ class Application
 ```
 
 - Delete the local `Respository` and `Review` declarations.
-- Leave `Reviewer`, `ReviewComment`, and `ReviewResult` unchanged.
+- Leave `Reviewer`, `ReviewComment`, and `ReviewResultCR` unchanged.
 
 - [ ] **Step 6: Run focused tests and the application context test**
 

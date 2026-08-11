@@ -20,4 +20,4 @@ class ReviewComment {
 
 @Group("example.com")
 @Version("v1")
-class ReviewResult : CustomResource<ReviewResultSpec, ReviewResultStatus>(), Namespaced
+class ReviewResultCR : CustomResource<ReviewResultSpec, ReviewResultStatus>(), Namespaced

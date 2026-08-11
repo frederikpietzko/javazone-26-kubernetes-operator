@@ -50,7 +50,7 @@ class Reviewer :
                             )
                         }
                         .call()
-                        .entity(ReviewResult::class.java)
+                        .entity(ReviewResultCR::class.java)
                 requireNotNull(reviewResult) { "Did not receive a response from the chat client" }
             }
         }

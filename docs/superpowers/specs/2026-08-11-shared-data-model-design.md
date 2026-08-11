@@ -26,8 +26,8 @@ consume it without Spring Boot configuration annotations or dependencies.
 - `docs/superpowers/specs/2026-08-11-shared-data-model-design.md`
     - Record this design.
 
-`ReviewResult` and `ReviewComment` remain local to `review-agent` because they describe review-agent output rather than
-shared input configuration.
+`ReviewResultCR` and `ReviewComment` remain local to `review-agent` because they describe review-agent output rather
+than shared input configuration.
 
 ## Shared Model
 

@@ -13,7 +13,7 @@ interface ReviewResultPublisher {
 
 class KubernetesReviewResultPublisher(
     private val client: KubernetesClient,
-    private val target: ReviewResultTarget,
+    private val target: Review.Kubernetes,
 ) : ReviewResultPublisher, AutoCloseable {
     private val namespacedResources =
         client.resources(ReviewResultCR::class.java).inNamespace(target.namespace)
@@ -21,24 +21,29 @@ class KubernetesReviewResultPublisher(
     private var created = false
 
     override fun start() {
-        val reviewResult = ReviewResultCR().apply {
-            metadata = ObjectMetaBuilder().withName(target.name).build()
-            spec = ReviewResultSpec().also { it.comments = emptyList() }
-            status = ReviewResultStatus().also { it.status = "InProgress" }
-        }
+        val reviewResult =
+            ReviewResultCR().apply {
+                metadata = ObjectMetaBuilder().withName(target.name).build()
+                spec = ReviewResultSpec().also { it.comments = emptyList() }
+                status = ReviewResultStatus().also { it.status = "InProgress" }
+            }
 
-        namespacedResources.resource(reviewResult).createOrReplace()
+        namespacedResources
+            .resource(reviewResult)
+            .fieldManager("review-agent")
+            .forceConflicts()
+            .serverSideApply()
         created = true
         updateStatus("InProgress", null)
     }
 
     override fun complete(result: ReviewResult) {
-        val reviewResult = namedResource.get()
-            ?: throw IllegalStateException(
-                "ReviewResult ${target.namespace}/${target.name} disappeared before completion",
-            )
+        val reviewResult =
+            checkNotNull(namedResource.get()) {
+                "ReviewResult ${target.namespace}/${target.name} disappeared before completion"
+            }
         reviewResult.spec = result.toSpec()
-        namespacedResources.resource(reviewResult).replace()
+        namespacedResources.resource(reviewResult).update()
         updateStatus("Completed", null)
     }
 
@@ -59,7 +64,8 @@ class KubernetesReviewResultPublisher(
     }
 
     private fun formatError(exception: Exception): String {
-        val exceptionName = exception::class.qualifiedName ?: exception::class.simpleName ?: "Exception"
+        val exceptionName =
+            exception::class.qualifiedName ?: exception::class.simpleName ?: "Exception"
         val message = exception.message?.takeIf { it.isNotBlank() } ?: "No exception message"
         return "$exceptionName: $message"
     }

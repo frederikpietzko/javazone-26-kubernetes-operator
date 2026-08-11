@@ -12,23 +12,23 @@ import org.springframework.boot.CommandLineRunner
 class ReviewCommandLineRunner(
     private val chatClientBuilder: ChatClient.Builder,
     private val review: Review,
-    private val target: ReviewResultTarget,
 ) : CommandLineRunner {
+    companion object {
+        private val SYSTEM_PROMPT =
+            """
+            You are an adversarial code reviewer. You sole purpose is to find flaws in code.
+            You should look at the diff. If necessary you can clone the repository, but remember to clean it up afterwards.
+            """
+                .trimIndent()
+    }
+
     override fun run(vararg args: String) {
         KubernetesClientBuilder().build().use { client ->
-            KubernetesReviewResultPublisher(client, target).use { publisher ->
+            KubernetesReviewResultPublisher(client, review.kubernetes).use { publisher ->
                 ReviewWorkflow(publisher) {
                     val reviewResult =
                         chatClientBuilder
-                            .defaultSystem {
-                                it.text(
-                                    """
-                                    You are an adversarial code reviewer. You sole purpose is to find flaws in code.
-                                    You should look at the diff. If necessary you can clone the repository, but remember to clean it up afterwards.
-                                    """
-                                        .trimIndent()
-                                )
-                            }
+                            .defaultSystem(SYSTEM_PROMPT)
                             .defaultAdvisors(SimpleLoggerAdvisor())
                             .defaultTools(
                                 ShellTools.builder().build(),
@@ -38,11 +38,9 @@ class ReviewCommandLineRunner(
                             )
                             .build()
                             .prompt()
-                            .user {
-                                it.text(
-                                    "Review the following code: ${review.repository.url} PR: ${review.pr}"
-                                )
-                            }
+                            .user(
+                                "Review the following code: ${review.repository.url} PR: ${review.pr}"
+                            )
                             .call()
                             .entity(ReviewResult::class.java)
                     requireNotNull(reviewResult) {

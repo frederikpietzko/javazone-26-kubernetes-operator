@@ -9,9 +9,12 @@ class ReviewTest {
         val review = Review(
             repository = Repository("https://github.com/example/project.git"),
             pr = "42",
+            kubernetes = Review.Kubernetes("reviews", "review-result-42"),
         )
 
         assertEquals("https://github.com/example/project.git", review.repository.url)
         assertEquals("42", review.pr)
+        assertEquals("reviews", review.kubernetes.namespace)
+        assertEquals("review-result-42", review.kubernetes.name)
     }
 }

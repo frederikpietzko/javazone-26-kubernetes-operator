@@ -12,7 +12,7 @@ class ReviewWorkflowTest {
             comments = listOf(ReviewCommentResult(comment = "Review comment")),
         )
 
-        ReviewWorkflow(publisher) { result }.run()
+        ReviewWorkflow(publisher) { result }
 
         assertEquals(listOf("start", "complete", "complete-result"), publisher.events)
     }
@@ -23,7 +23,7 @@ class ReviewWorkflowTest {
         val failure = IllegalStateException("model unavailable")
 
         assertFailsWith<IllegalStateException> {
-            ReviewWorkflow(publisher) { throw failure }.run()
+            ReviewWorkflow(publisher) { throw failure }
         }
 
         assertEquals(listOf("start", "fail:model unavailable"), publisher.events)
@@ -35,7 +35,7 @@ class ReviewWorkflowTest {
         val failure = IllegalStateException("model unavailable")
 
         val thrown = assertFailsWith<IllegalStateException> {
-            ReviewWorkflow(publisher) { throw failure }.run()
+            ReviewWorkflow(publisher) { throw failure }
         }
 
         assertEquals("model unavailable", thrown.message)

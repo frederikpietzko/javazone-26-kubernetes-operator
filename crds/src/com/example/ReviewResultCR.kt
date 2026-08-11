@@ -11,6 +11,7 @@ class ReviewResultSpec {
 
 class ReviewResultStatus {
     var status: String? = null
+    var error: String? = null
 }
 
 class ReviewComment {

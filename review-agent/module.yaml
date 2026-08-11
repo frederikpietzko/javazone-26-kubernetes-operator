@@ -14,3 +14,4 @@ dependencies:
   - $libs.spring.ai.openai.starter
   - $libs.jackson.module.kotlin
   - $libs.spring.ai.community.agent.utils
+  - $libs.fabrics8.kubernetes.client

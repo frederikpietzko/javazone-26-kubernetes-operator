@@ -28,6 +28,7 @@ object AgentReviewLifecycle {
     private const val MISSING_RESULT_MESSAGE = "review-agent Job completed without publishing a result"
     private const val FAILED_JOB_MESSAGE = "review-agent Job failed"
     private const val FAILED_RESULT_MESSAGE = "review-agent reported failure"
+    private const val MISSING_JOB_MESSAGE = "review-agent Job disappeared after dependent resources were created"
 
     fun decide(
         request: AgentReviewRequestCR,
@@ -44,6 +45,10 @@ object AgentReviewLifecycle {
 
         if (currentPhase == IN_PROGRESS_PHASE && !allResourcesExist) {
             return LifecycleDecision.Error(status(ERROR_PHASE, names, MISSING_RESOURCE_MESSAGE))
+        }
+
+        if (observed.job == null && observed.hasAllNonJobResources()) {
+            return LifecycleDecision.Error(status(ERROR_PHASE, names, MISSING_JOB_MESSAGE))
         }
 
         observed.job?.let { job ->
@@ -117,7 +122,10 @@ object AgentReviewLifecycle {
 }
 
 private fun ObservedAgentReviewResources.hasAllDependentResources(): Boolean =
-    configMap != null && serviceAccount != null && role != null && roleBinding != null && job != null
+    hasAllNonJobResources() && job != null
+
+private fun ObservedAgentReviewResources.hasAllNonJobResources(): Boolean =
+    configMap != null && serviceAccount != null && role != null && roleBinding != null
 
 private fun Job.failed(): Boolean =
     status?.failed?.let { it > 0 } == true ||

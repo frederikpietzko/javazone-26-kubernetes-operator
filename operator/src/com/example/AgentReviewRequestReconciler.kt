@@ -6,6 +6,7 @@ import io.fabric8.kubernetes.api.model.batch.v1.Job
 import io.fabric8.kubernetes.api.model.ServiceAccount
 import io.fabric8.kubernetes.api.model.rbac.Role
 import io.fabric8.kubernetes.api.model.rbac.RoleBinding
+import io.javaoperatorsdk.operator.api.config.informer.InformerEventSourceConfiguration
 import io.javaoperatorsdk.operator.api.reconciler.Context
 import io.javaoperatorsdk.operator.api.reconciler.ControllerConfiguration
 import io.javaoperatorsdk.operator.api.reconciler.EventSourceContext
@@ -14,8 +15,16 @@ import io.javaoperatorsdk.operator.api.reconciler.UpdateControl
 import io.javaoperatorsdk.operator.processing.event.source.EventSource
 import io.javaoperatorsdk.operator.processing.event.source.informer.InformerEventSource
 import io.javaoperatorsdk.operator.processing.event.source.informer.Mappers
-import io.javaoperatorsdk.operator.api.config.informer.InformerEventSourceConfiguration
 import org.springframework.stereotype.Component
+
+internal val AGENT_REVIEW_EVENT_SOURCE_NAMES = listOf(
+    "configmaps",
+    "serviceaccounts",
+    "roles",
+    "rolebindings",
+    "jobs",
+    "reviewresults",
+)
 
 @Component
 @ControllerConfiguration(name = "agent-review-request")
@@ -45,6 +54,8 @@ class AgentReviewRequestReconciler(
 
         val baseName = ResourceNameGenerator.baseName(requestName)
         val observed = gateway.observe(namespace, baseName)
+        val desired = AgentReviewResourceFactory.create(primary, properties.image)
+        gateway.validateDesired(desired, observed)
         val result = observed.reviewResult
         if (result != null && !hasExpectedOwner(result, metadata.name, metadata.uid)) {
             val deletionTimestamp = result.metadata?.deletionTimestamp
@@ -53,39 +64,24 @@ class AgentReviewRequestReconciler(
                     "review result $baseName has conflicting owner and is terminating since $deletionTimestamp",
                 )
             }
-            primary.status = AgentReviewRequestStatus().also {
+            return patchStatusIfChanged(primary, AgentReviewRequestStatus().also {
                 it.phase = ERROR_PHASE
                 it.message = "review result $baseName has a conflicting owner"
                 it.reviewResultName = result.metadata?.name
                 it.jobName = baseName
                 it.configMapName = baseName
-            }
-            return UpdateControl.patchStatus(primary)
+            })
         }
 
-        val decision = reconcileOnce(primary, observed)
-        when (decision) {
+        when (val decision = reconcileOnce(primary, observed)) {
             is LifecycleDecision.EnsureResources -> {
-                gateway.createMissing(AgentReviewResourceFactory.create(primary, properties.image))
-                primary.status = decision.status
-                return UpdateControl.patchStatus(primary)
+                gateway.createMissing(desired)
+                return patchStatusIfChanged(primary, decision.status)
             }
 
-            is LifecycleDecision.Wait -> {
-                primary.status = decision.status
-                return UpdateControl.patchStatus(primary)
-            }
-
-            is LifecycleDecision.Successful -> {
-                primary.status = decision.status
-                return UpdateControl.patchStatus(primary)
-            }
-
-            is LifecycleDecision.Error -> {
-                primary.status = decision.status
-                return UpdateControl.patchStatus(primary)
-            }
-
+            is LifecycleDecision.Wait -> return patchStatusIfChanged(primary, decision.status)
+            is LifecycleDecision.Successful -> return patchStatusIfChanged(primary, decision.status)
+            is LifecycleDecision.Error -> return patchStatusIfChanged(primary, decision.status)
             LifecycleDecision.Noop -> return UpdateControl.noUpdate()
         }
     }
@@ -125,3 +121,23 @@ class AgentReviewRequestReconciler(
             owner.uid == requestUid
     } == true
 }
+
+internal fun patchStatusIfChanged(
+    primary: AgentReviewRequestCR,
+    desired: AgentReviewRequestStatus,
+): UpdateControl<AgentReviewRequestCR> {
+    if (sameStatus(primary.status, desired)) {
+        return UpdateControl.noUpdate()
+    }
+    primary.status = desired
+    return UpdateControl.patchStatus(primary)
+}
+
+internal fun sameStatus(
+    current: AgentReviewRequestStatus?,
+    desired: AgentReviewRequestStatus,
+): Boolean = current != null && current.phase == desired.phase &&
+    current.message == desired.message &&
+    current.jobName == desired.jobName &&
+    current.configMapName == desired.configMapName &&
+    current.reviewResultName == desired.reviewResultName

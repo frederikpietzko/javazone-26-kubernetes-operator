@@ -91,6 +91,15 @@ class AgentReviewLifecycleTest {
     }
 
     @Test
+    fun `missing job after all dependent resources were created makes request Error without rerun`() {
+        val observed = observedWithActiveJob().copy(job = null)
+        val decision = AgentReviewLifecycle.decide(request(), observed)
+        val error = assertIs<LifecycleDecision.Error>(decision)
+        assertEquals("Error", error.status.phase)
+        assertEquals("review-agent Job disappeared after dependent resources were created", error.status.message)
+    }
+
+    @Test
     fun `terminal request is Noop`() {
         val request = request().apply {
             status = AgentReviewRequestStatus().also { it.phase = "Successful" }

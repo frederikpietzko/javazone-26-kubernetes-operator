@@ -1,2 +1,3 @@
 agent-review:
   image: docker.io/jbfpietzko/review-agent:latest
+  open-ai-base-url: "${REVIEW_AGENT_OPENAI_BASE_URL:http://127.0.0.1:11434}"

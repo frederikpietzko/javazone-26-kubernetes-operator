@@ -28,7 +28,11 @@ object AgentReviewResourceFactory {
     private const val SPRING_CONFIG_LOCATION = "classpath:/,file:/config/review.yaml"
     private const val REVIEW_AGENT_SERVICE_ACCOUNT = "review-agent"
 
-    fun create(request: AgentReviewRequestCR, image: String): AgentReviewResources {
+    fun create(
+        request: AgentReviewRequestCR,
+        image: String,
+        openAiBaseUrl: String = "http://127.0.0.1:11434",
+    ): AgentReviewResources {
         val metadata = requireNotNull(request.metadata) { "request metadata is required" }
         val namespace = requireNotNull(metadata.namespace) { "request namespace is required" }
         val requestName = requireNotNull(metadata.name) { "request name is required" }
@@ -59,7 +63,7 @@ object AgentReviewResourceFactory {
                                 PodSpecBuilder()
                                     .withServiceAccountName(REVIEW_AGENT_SERVICE_ACCOUNT)
                                     .withRestartPolicy("Never")
-                                    .withContainers(reviewAgentContainer(image))
+                                    .withContainers(reviewAgentContainer(image, openAiBaseUrl))
                                     .withVolumes(
                                         VolumeBuilder()
                                             .withName(REVIEW_CONFIG_KEY)
@@ -81,13 +85,17 @@ object AgentReviewResourceFactory {
         return AgentReviewResources(configMap, job)
     }
 
-    private fun reviewAgentContainer(image: String): Container = ContainerBuilder()
+    private fun reviewAgentContainer(image: String, openAiBaseUrl: String): Container = ContainerBuilder()
         .withName("review-agent")
         .withImage(image)
         .withEnv(
             EnvVarBuilder()
                 .withName("SPRING_CONFIG_LOCATION")
                 .withValue(SPRING_CONFIG_LOCATION)
+                .build(),
+            EnvVarBuilder()
+                .withName("REVIEW_AGENT_OPENAI_BASE_URL")
+                .withValue(openAiBaseUrl)
                 .build(),
         )
         .withVolumeMounts(

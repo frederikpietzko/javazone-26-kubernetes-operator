@@ -4,6 +4,7 @@
 .pi-subagents/
 .worktrees/
 build/
+config/
 **/application-local.yaml
 **/*.log
 .DS_Store

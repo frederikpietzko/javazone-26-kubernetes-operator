@@ -15,7 +15,7 @@ class ReviewAgentPackagingTest {
 
     @Test
     fun `local profile supplies local OpenAI base URL`() {
-        val local = repositoryFile("review-agent/application-local.yaml.example").readText()
+        val local = repositoryFile("config/application-local.yaml").readText()
         assertTrue(local.contains("spring:"))
         assertTrue(local.contains("openai:"))
         assertTrue(local.contains("base-url:"))
@@ -41,6 +41,7 @@ class ReviewAgentPackagingTest {
         val dockerignore = repositoryFile(".dockerignore").readText()
         assertTrue(dockerignore.contains("**/application-local.yaml"))
         assertTrue(dockerignore.contains("build/"))
+        assertTrue(dockerignore.contains("config/"))
         assertTrue(dockerignore.contains(".git/"))
     }
 

@@ -7,6 +7,16 @@ import kotlin.test.assertTrue
 
 class AgentReviewResourceFactoryTest {
     @Test
+    fun `passes configured OpenAI base URL to review agent Job`() {
+        val resources = AgentReviewResourceFactory.create(request(), "review-agent:1", "https://api.example.test/v1")
+
+        assertEquals(
+            "https://api.example.test/v1",
+            resources.job.spec.template.spec.containers.single().env.first { it.name == "REVIEW_AGENT_OPENAI_BASE_URL" }.value,
+        )
+    }
+
+    @Test
     fun `builds owned review agent ConfigMap and Job`() {
         val resources = AgentReviewResourceFactory.create(request(), "review-agent:1")
 
@@ -17,11 +27,10 @@ class AgentReviewResourceFactoryTest {
         assertEquals("review-agent", resources.job.spec.template.spec.serviceAccountName)
         assertEquals(0, resources.job.spec.backoffLimit)
         assertEquals("Never", resources.job.spec.template.spec.restartPolicy)
-        assertEquals(
-            "classpath:/,file:/config/review.yaml",
-            resources.job.spec.template.spec.containers.single().env.single().value,
-        )
-        assertEquals("SPRING_CONFIG_LOCATION", resources.job.spec.template.spec.containers.single().env.single().name)
+        val environment = resources.job.spec.template.spec.containers.single().env
+        assertEquals(2, environment.size)
+        assertEquals("classpath:/,file:/config/review.yaml", environment.first { it.name == "SPRING_CONFIG_LOCATION" }.value)
+        assertEquals("http://127.0.0.1:11434", environment.first { it.name == "REVIEW_AGENT_OPENAI_BASE_URL" }.value)
         assertTrue(resources.configMap.immutable)
         assertEquals("review.yaml", resources.configMap.data.keys.single())
         assertTrue(resources.job.spec.template.spec.containers.single().volumeMounts.single().readOnly)

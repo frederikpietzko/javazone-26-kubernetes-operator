@@ -18,6 +18,15 @@ fun main(args: Array<String>) {
     runApplication<Application>(*args)
 }
 
+data class ReviewResult(
+    val comments: List<ReviewCommentResult> = emptyList(),
+)
+
+data class ReviewCommentResult(
+    val lines: List<Int> = emptyList(),
+    val comment: String = "",
+)
+
 class Reviewer :
     BeanRegistrarDsl({
         registerBean {
@@ -50,7 +59,7 @@ class Reviewer :
                             )
                         }
                         .call()
-                        .entity(ReviewResultCR::class.java)
+                        .entity(ReviewResult::class.java)
                 requireNotNull(reviewResult) { "Did not receive a response from the chat client" }
             }
         }

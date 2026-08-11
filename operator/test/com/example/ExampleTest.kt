@@ -5,11 +5,13 @@ import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAut
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @SpringBootTest
+@Import(TestOperatorConfiguration::class)
 class ExampleTest {
     @Autowired
     lateinit var properties: AgentReviewProperties

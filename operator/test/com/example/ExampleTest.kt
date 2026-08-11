@@ -18,7 +18,8 @@ class ExampleTest {
 
     @Test
     fun `context binds review agent image`() {
-        assertEquals("review-agent:latest", properties.image)
+        assertEquals("docker.io/jbfpietzko/review-agent:latest", properties.image)
+        assertEquals("http://127.0.0.1:11434", properties.openAiBaseUrl)
     }
 
     @Test
@@ -26,7 +27,7 @@ class ExampleTest {
         ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ConfigurationPropertiesAutoConfiguration::class.java))
             .withUserConfiguration(AgentReviewProperties::class.java)
-            .withPropertyValues("agent-review.image=")
+            .withPropertyValues("agent-review.image=", "agent-review.open-ai-base-url=http://127.0.0.1:11434")
             .run { context ->
                 assertNotNull(context.startupFailure)
             }

@@ -10,7 +10,7 @@ spring:
       chat:
         model: gemma4:31b-mlx
     openai:
-      base-url: "http://127.0.0.1:19516/wire/${TOKEN}/codex/openai"
+      base-url: "${REVIEW_AGENT_OPENAI_BASE_URL}"
       chat:
         model: gpt-5.6-luna
         reasoning-effort: none

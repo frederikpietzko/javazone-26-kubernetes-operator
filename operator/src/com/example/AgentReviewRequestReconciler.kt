@@ -56,7 +56,7 @@ class AgentReviewRequestReconciler(
 
         val baseName = ResourceNameGenerator.baseName(requestName)
         val observed = gateway.observe(namespace, baseName)
-        val desired = AgentReviewResourceFactory.create(primary, properties.image)
+        val desired = AgentReviewResourceFactory.create(primary, properties.image, properties.openAiBaseUrl)
         try {
             gateway.validateDesired(desired, observed)
         } catch (conflict: AgentReviewResourceConflict) {

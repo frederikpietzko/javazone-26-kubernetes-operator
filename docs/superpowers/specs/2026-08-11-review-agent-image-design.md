@@ -30,7 +30,7 @@ Add `.dockerignore` entries for Git metadata, build output, IDE files, and every
 spring:
   ai:
     openai:
-      base-url: ${REVIEW_AGENT_OPENAI_BASE_URL}
+      base-url: "${REVIEW_AGENT_OPENAI_BASE_URL}"
 ```
 
 `review-agent/resources/application-local.yaml` overrides the same Spring property with the existing local proxy URL containing `${TOKEN}`. Local development activates the `local` profile. Container deployments provide `REVIEW_AGENT_OPENAI_BASE_URL` through their runtime environment.

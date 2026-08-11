@@ -1,0 +1,58 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: agent-review-operator
+rules:
+  - apiGroups:
+      - example.com
+    resources:
+      - agentreviewrequests
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - example.com
+    resources:
+      - agentreviewrequests/status
+    verbs:
+      - get
+      - update
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - roles
+      - rolebindings
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+  - apiGroups:
+      - example.com
+    resources:
+      - reviewresults
+    verbs:
+      - get
+      - list
+      - watch

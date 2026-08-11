@@ -1,0 +1,9 @@
+apiVersion: example.com/v1
+kind: AgentReviewRequest
+metadata:
+  name: ebfs-jpa-pr-1
+  namespace: default
+spec:
+  repository:
+    url: https://github.com/frederikpietzko/ebfs-jpa.git
+  pr: "1"

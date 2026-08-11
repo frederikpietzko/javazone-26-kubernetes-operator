@@ -5,6 +5,9 @@ metadata:
 spec:
   failurePolicy: Fail
   matchConstraints:
+    matchConditions:
+      - name: default-namespace-only
+        expression: request.namespace == "default"
     resourceRules:
       - apiGroups:
           - example.com

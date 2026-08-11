@@ -22,31 +22,30 @@ class Fabric8AgentReviewResourceGateway(
     override fun observe(namespace: String, baseName: String): ObservedAgentReviewResources =
         ObservedAgentReviewResources(
             configMap = client.configMaps().inNamespace(namespace).withName(baseName).get(),
-            serviceAccount = client.serviceAccounts().inNamespace(namespace).withName("$baseName-agent").get(),
-            role = client.rbac().roles().inNamespace(namespace).withName("$baseName-agent").get(),
-            roleBinding = client.rbac().roleBindings().inNamespace(namespace).withName("$baseName-agent").get(),
             job = client.batch().jobs().inNamespace(namespace).withName(baseName).get(),
             reviewResult = client.resources(ReviewResultCR::class.java).inNamespace(namespace).withName(baseName).get(),
         )
 
     override fun validateDesired(resources: AgentReviewResources, observed: ObservedAgentReviewResources) {
         observed.configMap?.let { requireMatch(it, resources.configMap, AgentReviewResourceMatcher::configMapMatches) }
-        observed.serviceAccount?.let { requireMatch(it, resources.serviceAccount, AgentReviewResourceMatcher::serviceAccountMatches) }
-        observed.role?.let { requireMatch(it, resources.role, AgentReviewResourceMatcher::roleMatches) }
-        observed.roleBinding?.let { requireMatch(it, resources.roleBinding, AgentReviewResourceMatcher::roleBindingMatches) }
         observed.job?.let { requireMatch(it, resources.job, AgentReviewResourceMatcher::jobMatches) }
     }
 
     override fun createDependencies(resources: AgentReviewResources) {
-        ensure(resources.configMap, client.configMaps().inNamespace(namespace(resources.configMap)).withName(name(resources.configMap)), AgentReviewResourceMatcher::configMapMatches)
-        ensure(resources.serviceAccount, client.serviceAccounts().inNamespace(namespace(resources.serviceAccount)).withName(name(resources.serviceAccount)), AgentReviewResourceMatcher::serviceAccountMatches)
-        ensure(resources.role, client.rbac().roles().inNamespace(namespace(resources.role)).withName(name(resources.role)), AgentReviewResourceMatcher::roleMatches)
-        ensure(resources.roleBinding, client.rbac().roleBindings().inNamespace(namespace(resources.roleBinding)).withName(name(resources.roleBinding)), AgentReviewResourceMatcher::roleBindingMatches)
+        ensure(
+            resources.configMap,
+            client.configMaps().inNamespace(namespace(resources.configMap)).withName(name(resources.configMap)),
+            AgentReviewResourceMatcher::configMapMatches,
+        )
     }
 
     override fun createMissing(resources: AgentReviewResources) {
         createDependencies(resources)
-        ensure(resources.job, client.batch().jobs().inNamespace(namespace(resources.job)).withName(name(resources.job)), AgentReviewResourceMatcher::jobMatches)
+        ensure(
+            resources.job,
+            client.batch().jobs().inNamespace(namespace(resources.job)).withName(name(resources.job)),
+            AgentReviewResourceMatcher::jobMatches,
+        )
     }
 
     private fun <T : HasMetadata> ensure(

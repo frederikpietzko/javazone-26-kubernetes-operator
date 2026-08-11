@@ -13,6 +13,7 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -34,7 +35,7 @@ class AgentReviewRequestReconcilerTest {
         val reconciler = AgentReviewRequestReconciler(FakeGateway(), AgentReviewProperties("review-agent:1"))
         val decision = reconciler.reconcileOnce(
             request(),
-            ObservedAgentReviewResources(null, null, null, null, null, null),
+            ObservedAgentReviewResources(null, null, null),
         )
         assertIs<LifecycleDecision.EnsureResources>(decision)
     }
@@ -50,7 +51,23 @@ class AgentReviewRequestReconcilerTest {
     }
 
     @Test
-    fun `informer registrations cover owned resources without polling`() {
+    fun `unsupported namespace is rejected before resource access`() {
+        val gateway = FakeGateway()
+        val reconciler = AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+        val primary = request().apply { metadata.namespace = "other" }
+
+        assertTrue(
+            reconciler.reconcile(
+                primary,
+                Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java)
+                    as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>,
+            ).isNoUpdate,
+        )
+        assertFalse(gateway.observed)
+    }
+
+    @Test
+    fun `informer registrations are limited to default`() {
         val reconciler = AgentReviewRequestReconciler(FakeGateway(), AgentReviewProperties("review-agent:1"))
         @Suppress("UNCHECKED_CAST")
         val cache = Mockito.mock(io.javaoperatorsdk.operator.processing.event.source.IndexerResourceCache::class.java)
@@ -191,15 +208,19 @@ class AgentReviewRequestReconcilerTest {
 }
 
 private class FakeGateway(
-    private val resources: ObservedAgentReviewResources = ObservedAgentReviewResources(null, null, null, null, null, null),
+    private val resources: ObservedAgentReviewResources = ObservedAgentReviewResources(null, null, null),
     private val failJobCreationOnce: Boolean = false,
     private val conflictOnValidation: Boolean = false,
 ) : AgentReviewResourceGateway {
     var created: AgentReviewResources? = null
     var validated = false
+    var observed = false
     private var failedJobCreation = false
 
-    override fun observe(namespace: String, baseName: String): ObservedAgentReviewResources = resources
+    override fun observe(namespace: String, baseName: String): ObservedAgentReviewResources {
+        observed = true
+        return resources
+    }
 
     override fun validateDesired(resources: AgentReviewResources, observed: ObservedAgentReviewResources) {
         validated = true

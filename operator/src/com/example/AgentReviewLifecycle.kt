@@ -17,9 +17,6 @@ sealed interface LifecycleDecision {
 
 data class ObservedAgentReviewResources(
     val configMap: io.fabric8.kubernetes.api.model.ConfigMap?,
-    val serviceAccount: io.fabric8.kubernetes.api.model.ServiceAccount?,
-    val role: io.fabric8.kubernetes.api.model.rbac.Role?,
-    val roleBinding: io.fabric8.kubernetes.api.model.rbac.RoleBinding?,
     val job: Job?,
     val reviewResult: ReviewResultCR?,
 )
@@ -44,11 +41,11 @@ object AgentReviewLifecycle {
         val status = status(phase = IN_PROGRESS_PHASE, names = names)
         val allResourcesExist = observed.hasAllDependentResources()
 
-        if (currentPhase == IN_PROGRESS_PHASE && !observed.hasAllNonJobResources()) {
+        if (currentPhase == IN_PROGRESS_PHASE && observed.configMap == null) {
             return LifecycleDecision.Error(status(ERROR_PHASE, names, MISSING_RESOURCE_MESSAGE))
         }
 
-        if (observed.job == null && observed.hasAllNonJobResources()) {
+        if (observed.job == null && observed.configMap != null) {
             val creationPending = request.status?.message == JOB_CREATION_PENDING_MESSAGE
             if (currentPhase == null || currentPhase == "Pending" ||
                 (currentPhase == IN_PROGRESS_PHASE && creationPending)
@@ -136,10 +133,7 @@ object AgentReviewLifecycle {
 }
 
 private fun ObservedAgentReviewResources.hasAllDependentResources(): Boolean =
-    hasAllNonJobResources() && job != null
-
-private fun ObservedAgentReviewResources.hasAllNonJobResources(): Boolean =
-    configMap != null && serviceAccount != null && role != null && roleBinding != null
+    configMap != null && job != null
 
 private fun Job.failed(): Boolean =
     status?.failed?.let { it > 0 } == true ||

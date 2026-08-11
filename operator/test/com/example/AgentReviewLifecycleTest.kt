@@ -8,7 +8,7 @@ import kotlin.test.assertNull
 class AgentReviewLifecycleTest {
     @Test
     fun `new request asks for all dependent resources and InProgress status`() {
-        val decision = AgentReviewLifecycle.decide(request(), ObservedAgentReviewResources(null, null, null, null, null, null))
+        val decision = AgentReviewLifecycle.decide(request(), ObservedAgentReviewResources(null, null, null))
         val ensure = assertIs<LifecycleDecision.EnsureResources>(decision)
         assertEquals("InProgress", ensure.status.phase)
         assertEquals("agent-review-request-42", ensure.status.jobName)

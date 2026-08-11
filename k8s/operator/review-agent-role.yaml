@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: review-agent-result-publisher
+  namespace: default
+rules:
+  - apiGroups:
+      - example.com
+    resources:
+      - reviewresults
+    verbs:
+      - get
+      - create
+      - update
+      - patch
+  - apiGroups:
+      - example.com
+    resources:
+      - reviewresults/status
+    verbs:
+      - get
+      - update
+      - patch

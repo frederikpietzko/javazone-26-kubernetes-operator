@@ -15,11 +15,12 @@ class ReviewAgentPackagingTest {
 
     @Test
     fun `local profile supplies local OpenAI base URL`() {
-        val local = repositoryFile("review-agent/resources/application-local.yaml").readText()
+        val local = repositoryFile("review-agent/application-local.yaml.example").readText()
         assertTrue(local.contains("spring:"))
         assertTrue(local.contains("openai:"))
         assertTrue(local.contains("base-url:"))
         assertTrue(local.contains("127.0.0.1:19516"))
+        assertTrue(local.contains("\${TOKEN}"))
     }
 
     @Test

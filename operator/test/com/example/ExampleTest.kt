@@ -18,7 +18,7 @@ class ExampleTest {
 
     @Test
     fun `context binds review agent image`() {
-        assertEquals("review-agent:latest", properties.image)
+        assertEquals("docker.io/jbfpietzko/review-agent:latest", properties.image)
     }
 
     @Test

@@ -70,7 +70,7 @@ review:
 
 ## Module Wiring
 
-Register `shared-data-model` in the root module list before `review-agent`. Add the local module dependency using the Kotlin Toolchain module dependency syntax supported by this repository. `review-agent` retains all current Spring and Spring AI dependencies.
+Register `shared-data-model` in the root module list, preserving the Kotlin CLI's alphabetical module ordering. Add the local sibling dependency as `../shared-data-model`. `review-agent` retains all current Spring and Spring AI dependencies.
 
 The shared library must compile before `review-agent`, and `review-agent` must resolve `Review` from the shared module rather than from its own source set.
 

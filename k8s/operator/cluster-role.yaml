@@ -38,10 +38,23 @@ rules:
       - list
       - watch
       - create
+  # Kubernetes RBAC escalation checks require these meta-permissions when
+  # operator creates exact per-review Roles and binds them to exact ServiceAccounts.
+  # No ClusterRole or ReviewResult write permission is granted.
   - apiGroups:
       - rbac.authorization.k8s.io
     resources:
       - roles
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - escalate
+      - bind
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
       - rolebindings
     verbs:
       - get

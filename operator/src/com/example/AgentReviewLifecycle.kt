@@ -5,6 +5,7 @@ import io.fabric8.kubernetes.api.model.batch.v1.Job
 const val IN_PROGRESS_PHASE = "InProgress"
 const val SUCCESSFUL_PHASE = "Successful"
 const val ERROR_PHASE = "Error"
+const val JOB_CREATION_PENDING_MESSAGE = "review-agent dependencies created; creating Job"
 
 sealed interface LifecycleDecision {
     data class EnsureResources(val status: AgentReviewRequestStatus) : LifecycleDecision
@@ -43,11 +44,19 @@ object AgentReviewLifecycle {
         val status = status(phase = IN_PROGRESS_PHASE, names = names)
         val allResourcesExist = observed.hasAllDependentResources()
 
-        if (currentPhase == IN_PROGRESS_PHASE && !allResourcesExist) {
+        if (currentPhase == IN_PROGRESS_PHASE && !observed.hasAllNonJobResources()) {
             return LifecycleDecision.Error(status(ERROR_PHASE, names, MISSING_RESOURCE_MESSAGE))
         }
 
         if (observed.job == null && observed.hasAllNonJobResources()) {
+            val creationPending = request.status?.message == JOB_CREATION_PENDING_MESSAGE
+            if (currentPhase == null || currentPhase == "Pending" ||
+                (currentPhase == IN_PROGRESS_PHASE && creationPending)
+            ) {
+                return LifecycleDecision.EnsureResources(
+                    status(IN_PROGRESS_PHASE, names, JOB_CREATION_PENDING_MESSAGE),
+                )
+            }
             return LifecycleDecision.Error(status(ERROR_PHASE, names, MISSING_JOB_MESSAGE))
         }
 
@@ -95,7 +104,12 @@ object AgentReviewLifecycle {
         return if (allResourcesExist) {
             LifecycleDecision.Wait(status)
         } else {
-            LifecycleDecision.EnsureResources(status)
+            val ensureStatus = if (currentPhase == null && observed.job == null) {
+                status(IN_PROGRESS_PHASE, names, JOB_CREATION_PENDING_MESSAGE)
+            } else {
+                status
+            }
+            LifecycleDecision.EnsureResources(ensureStatus)
         }
     }
 

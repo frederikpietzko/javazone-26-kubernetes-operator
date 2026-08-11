@@ -11,6 +11,7 @@ class AgentReviewResourceConflict(message: String) : IllegalStateException(messa
 interface AgentReviewResourceGateway {
     fun observe(namespace: String, baseName: String): ObservedAgentReviewResources
     fun validateDesired(resources: AgentReviewResources, observed: ObservedAgentReviewResources)
+    fun createDependencies(resources: AgentReviewResources)
     fun createMissing(resources: AgentReviewResources)
 }
 
@@ -36,11 +37,15 @@ class Fabric8AgentReviewResourceGateway(
         observed.job?.let { requireMatch(it, resources.job, AgentReviewResourceMatcher::jobMatches) }
     }
 
-    override fun createMissing(resources: AgentReviewResources) {
+    override fun createDependencies(resources: AgentReviewResources) {
         ensure(resources.configMap, client.configMaps().inNamespace(namespace(resources.configMap)).withName(name(resources.configMap)), AgentReviewResourceMatcher::configMapMatches)
         ensure(resources.serviceAccount, client.serviceAccounts().inNamespace(namespace(resources.serviceAccount)).withName(name(resources.serviceAccount)), AgentReviewResourceMatcher::serviceAccountMatches)
         ensure(resources.role, client.rbac().roles().inNamespace(namespace(resources.role)).withName(name(resources.role)), AgentReviewResourceMatcher::roleMatches)
         ensure(resources.roleBinding, client.rbac().roleBindings().inNamespace(namespace(resources.roleBinding)).withName(name(resources.roleBinding)), AgentReviewResourceMatcher::roleBindingMatches)
+    }
+
+    override fun createMissing(resources: AgentReviewResources) {
+        createDependencies(resources)
         ensure(resources.job, client.batch().jobs().inNamespace(namespace(resources.job)).withName(name(resources.job)), AgentReviewResourceMatcher::jobMatches)
     }
 

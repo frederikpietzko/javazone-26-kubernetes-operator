@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component
 import kotlin.reflect.full.findAnnotation
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -104,11 +105,59 @@ class AgentReviewRequestReconcilerTest {
     }
 
     @Test
-    fun `missing job after dependent resources does not create a replacement`() {
+    fun `missing job after normal processing does not create a replacement`() {
         val gateway = FakeGateway(observedWithActiveJob().copy(job = null))
         val reconciler = AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
-        reconciler.reconcile(request(), Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java) as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>)
+        val primary = request().apply {
+            status = AgentReviewRequestStatus().also {
+                it.phase = "InProgress"
+                it.jobName = "agent-review-request-42"
+                it.configMapName = "agent-review-request-42"
+                it.reviewResultName = "agent-review-request-42"
+            }
+        }
+        reconciler.reconcile(primary, Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java) as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>)
         assertNull(gateway.created)
+        assertEquals("Error", primary.status?.phase)
+    }
+
+    @Test
+    fun `transient Job creation failure remains retryable during creation phase`() {
+        val gateway = FakeGateway(observedWithActiveJob().copy(job = null), failJobCreationOnce = true)
+        val reconciler = AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+        val primary = request().apply {
+            status = AgentReviewRequestStatus().also {
+                it.phase = "InProgress"
+                it.message = JOB_CREATION_PENDING_MESSAGE
+            }
+        }
+        assertFailsWith<RuntimeException> {
+            reconciler.reconcile(primary, Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java) as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>)
+        }
+        assertEquals(JOB_CREATION_PENDING_MESSAGE, primary.status?.message)
+        reconciler.reconcile(primary, Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java) as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>)
+        assertNotNull(gateway.created)
+    }
+
+    @Test
+    fun `missing repository URL becomes terminal Error`() {
+        val reconciler = AgentReviewRequestReconciler(FakeGateway(), AgentReviewProperties("review-agent:1"))
+        val primary = request().apply {
+            spec.repository = null
+        }
+        reconciler.reconcile(primary, Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java) as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>)
+        assertEquals("Error", primary.status?.phase)
+        assertEquals("repository URL is required", primary.status?.message)
+    }
+
+    @Test
+    fun `resource conflict becomes terminal Error`() {
+        val gateway = FakeGateway(observedWithActiveJob(), conflictOnValidation = true)
+        val reconciler = AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+        val primary = request()
+        reconciler.reconcile(primary, Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java) as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>)
+        assertEquals("Error", primary.status?.phase)
+        assertTrue(primary.status?.message?.contains("resource agent-review-request-42 conflicts") == true)
     }
 
     @Test
@@ -143,17 +192,31 @@ class AgentReviewRequestReconcilerTest {
 
 private class FakeGateway(
     private val resources: ObservedAgentReviewResources = ObservedAgentReviewResources(null, null, null, null, null, null),
+    private val failJobCreationOnce: Boolean = false,
+    private val conflictOnValidation: Boolean = false,
 ) : AgentReviewResourceGateway {
     var created: AgentReviewResources? = null
     var validated = false
+    private var failedJobCreation = false
 
     override fun observe(namespace: String, baseName: String): ObservedAgentReviewResources = resources
 
     override fun validateDesired(resources: AgentReviewResources, observed: ObservedAgentReviewResources) {
         validated = true
+        if (conflictOnValidation) {
+            throw AgentReviewResourceConflict("existing Job agent-review-request-42 does not match desired resource")
+        }
+    }
+
+    override fun createDependencies(resources: AgentReviewResources) {
+        created = resources
     }
 
     override fun createMissing(resources: AgentReviewResources) {
+        if (failJobCreationOnce && !failedJobCreation) {
+            failedJobCreation = true
+            throw RuntimeException("transient Job create failure")
+        }
         created = resources
     }
 }

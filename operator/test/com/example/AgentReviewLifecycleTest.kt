@@ -14,7 +14,7 @@ class AgentReviewLifecycleTest {
         assertEquals("agent-review-request-42", ensure.status.jobName)
         assertEquals("agent-review-request-42", ensure.status.configMapName)
         assertEquals("agent-review-request-42", ensure.status.reviewResultName)
-        assertNull(ensure.status.message)
+        assertEquals(JOB_CREATION_PENDING_MESSAGE, ensure.status.message)
     }
 
     @Test
@@ -93,16 +93,30 @@ class AgentReviewLifecycleTest {
     @Test
     fun `missing job after all dependent resources were created makes request Error without rerun`() {
         val observed = observedWithActiveJob().copy(job = null)
-        val decision = AgentReviewLifecycle.decide(request(), observed)
+        val request = request().apply {
+            status = AgentReviewRequestStatus().also {
+                it.phase = "InProgress"
+                it.message = "review-agent Job running"
+            }
+        }
+        val decision = AgentReviewLifecycle.decide(request, observed)
         val error = assertIs<LifecycleDecision.Error>(decision)
         assertEquals("Error", error.status.phase)
         assertEquals("review-agent Job disappeared after dependent resources were created", error.status.message)
     }
 
     @Test
-    fun `terminal request is Noop`() {
+    fun `terminal successful request is Noop`() {
         val request = request().apply {
             status = AgentReviewRequestStatus().also { it.phase = "Successful" }
+        }
+        assertIs<LifecycleDecision.Noop>(AgentReviewLifecycle.decide(request, observedWithActiveJob()))
+    }
+
+    @Test
+    fun `terminal error request is Noop`() {
+        val request = request().apply {
+            status = AgentReviewRequestStatus().also { it.phase = "Error" }
         }
         assertIs<LifecycleDecision.Noop>(AgentReviewLifecycle.decide(request, observedWithActiveJob()))
     }

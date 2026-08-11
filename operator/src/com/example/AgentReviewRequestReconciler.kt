@@ -49,13 +49,22 @@ class AgentReviewRequestReconciler(
         val metadata = requireNotNull(primary.metadata) { "request metadata is required" }
         val namespace = requireNotNull(metadata.namespace) { "request namespace is required" }
         val requestName = requireNotNull(metadata.name) { "request name is required" }
-        requireNotNull(primary.spec?.repository?.url) { "repository URL is required" }
-        requireNotNull(primary.spec?.pr) { "pull request number is required" }
+        requireNotNull(metadata.uid) { "request UID is required" }
+        if (primary.spec?.repository?.url == null) {
+            return patchStatusIfChanged(primary, terminalErrorStatus("repository URL is required"))
+        }
+        if (primary.spec.pr == null) {
+            return patchStatusIfChanged(primary, terminalErrorStatus("pull request number is required"))
+        }
 
         val baseName = ResourceNameGenerator.baseName(requestName)
         val observed = gateway.observe(namespace, baseName)
         val desired = AgentReviewResourceFactory.create(primary, properties.image)
-        gateway.validateDesired(desired, observed)
+        try {
+            gateway.validateDesired(desired, observed)
+        } catch (conflict: AgentReviewResourceConflict) {
+            return patchStatusIfChanged(primary, conflictStatus(baseName, conflict))
+        }
         val result = observed.reviewResult
         if (result != null && !hasExpectedOwner(result, metadata.name, metadata.uid)) {
             val deletionTimestamp = result.metadata?.deletionTimestamp
@@ -75,7 +84,15 @@ class AgentReviewRequestReconciler(
 
         when (val decision = reconcileOnce(primary, observed)) {
             is LifecycleDecision.EnsureResources -> {
-                gateway.createMissing(desired)
+                try {
+                    if (primary.status?.phase == null && observed.job == null) {
+                        gateway.createDependencies(desired)
+                    } else {
+                        gateway.createMissing(desired)
+                    }
+                } catch (conflict: AgentReviewResourceConflict) {
+                    return patchStatusIfChanged(primary, conflictStatus(baseName, conflict))
+                }
                 return patchStatusIfChanged(primary, decision.status)
             }
 
@@ -121,6 +138,20 @@ class AgentReviewRequestReconciler(
             owner.uid == requestUid
     } == true
 }
+
+private fun terminalErrorStatus(message: String): AgentReviewRequestStatus = AgentReviewRequestStatus().also {
+    it.phase = ERROR_PHASE
+    it.message = message
+}
+
+private fun conflictStatus(baseName: String, conflict: AgentReviewResourceConflict): AgentReviewRequestStatus =
+    AgentReviewRequestStatus().also {
+        it.phase = ERROR_PHASE
+        it.message = "resource $baseName conflicts with desired state: ${conflict.message ?: "unknown conflict"}"
+        it.jobName = baseName
+        it.configMapName = baseName
+        it.reviewResultName = baseName
+    }
 
 internal fun patchStatusIfChanged(
     primary: AgentReviewRequestCR,

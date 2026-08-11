@@ -24,7 +24,13 @@ class KubernetesReviewResultPublisher(
     override fun start() {
         val reviewResult =
             ReviewResultCR().apply {
-                metadata = ObjectMetaBuilder().withName(target.name).build()
+                metadata =
+                    ObjectMetaBuilder()
+                        .withName(target.name)
+                        .apply {
+                            target.ownerReference?.let { withOwnerReferences(it.toFabric8()) }
+                        }
+                        .build()
                 spec = ReviewResultSpec().also { it.comments = emptyList() }
                 status = ReviewResultStatus().also { it.status = "InProgress" }
             }

@@ -1,2 +1,2 @@
 agent-review:
-  image: review-agent:latest
+  image: docker.io/jbfpietzko/review-agent:latest

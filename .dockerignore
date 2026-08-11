@@ -1,0 +1,9 @@
+.git/
+.idea/
+.superpowers/
+.pi-subagents/
+.worktrees/
+build/
+**/application-local.yaml
+**/*.log
+.DS_Store

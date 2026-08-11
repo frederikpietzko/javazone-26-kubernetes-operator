@@ -1,8 +1,5 @@
 product: jvm/app
 
-plugins:
-  build-config: enabled
-
 settings:
   springBoot:
     enabled: true
@@ -18,7 +15,6 @@ dependencies:
   - bom: io.javaoperatorsdk:operator-framework-bom:5.5.1
   - $libs.spring.operator.framework
   - $libs.operator.framework
-  - $libs.fabrics.generator.apt
   - $libs.jackson.module.kotlin
 
 test-dependencies:

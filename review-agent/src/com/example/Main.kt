@@ -55,10 +55,3 @@ class Reviewer :
             }
         }
     })
-
-data class ReviewComment(
-    val lines: List<Int>,
-    val comment: String,
-)
-
-data class ReviewResult(val comments: List<ReviewComment>)

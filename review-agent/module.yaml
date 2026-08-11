@@ -5,6 +5,7 @@ settings:
     version: 4.1.0
 
 dependencies:
+  - ../crds
   - ../shared-data-model
   - $spring.boot.starter
   - $kotlin.reflect

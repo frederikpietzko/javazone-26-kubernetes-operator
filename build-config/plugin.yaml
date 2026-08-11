@@ -3,7 +3,7 @@ tasks:
     action: !com.example.generateCrds
       compilationArtifact: ${module.jar}
       compileClasspath: ${module.compileClasspath}
-      outputDir: ${module.rootDir}/resources/META-INF/fabric8
+      outputDir: ${module.rootDir}/../k8s/crds
 
 commands:
   - generateCrds

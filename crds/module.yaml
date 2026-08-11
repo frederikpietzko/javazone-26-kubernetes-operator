@@ -1,0 +1,7 @@
+product: jvm/lib
+
+plugins:
+  build-config: enabled
+
+dependencies:
+  - $libs.fabrics.generator.apt

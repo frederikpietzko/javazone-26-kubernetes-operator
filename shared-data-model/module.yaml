@@ -1,0 +1,4 @@
+product: jvm/lib
+
+test-dependencies:
+  - $kotlin.test.junit5

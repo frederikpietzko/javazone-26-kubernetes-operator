@@ -2,6 +2,7 @@ modules:
   - build-config
   - operator
   - review-agent
+  - shared-data-model
 
 plugins:
   - ./build-config

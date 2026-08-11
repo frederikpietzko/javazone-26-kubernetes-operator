@@ -12,10 +12,14 @@ settings:
 dependencies:
   - $kotlin.reflect
   - $spring.boot.starter
+  - $spring.boot.starter.validation
   - bom: io.javaoperatorsdk:operator-framework-bom:5.5.1
   - $libs.spring.operator.framework
   - $libs.operator.framework
   - $libs.jackson.module.kotlin
+  - ../crds
+  - ../shared-data-model
+  - $libs.jackson.dataformat.yaml
 
 test-dependencies:
   - $spring.boot.starter.test

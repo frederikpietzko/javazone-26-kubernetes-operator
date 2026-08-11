@@ -1,0 +1,23 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: agent-review-request-spec-immutable
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups:
+          - example.com
+        apiVersions:
+          - v1
+        operations:
+          - UPDATE
+        resources:
+          - agentreviewrequests
+        scope: Namespaced
+  validations:
+    - expression: >-
+        !has(oldObject.status.phase) ||
+        oldObject.status.phase == "Pending" ||
+        object.spec == oldObject.spec
+      message: AgentReviewRequest spec is immutable after processing starts

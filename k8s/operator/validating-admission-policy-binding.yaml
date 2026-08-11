@@ -1,0 +1,19 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: agent-review-request-spec-immutable
+spec:
+  policyName: agent-review-request-spec-immutable
+  validationActions:
+    - Deny
+  matchResources:
+    resourceRules:
+      - apiGroups:
+          - example.com
+        apiVersions:
+          - v1
+        operations:
+          - UPDATE
+        resources:
+          - agentreviewrequests
+        scope: Namespaced

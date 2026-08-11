@@ -32,6 +32,7 @@ class ReviewConfigurationTest {
         assertEquals("42", review.pr)
         assertEquals("reviews", review.kubernetes.namespace)
         assertEquals("review-result-42", review.kubernetes.name)
+        assertEquals(null, review.kubernetes.ownerReference)
     }
 
     @Test

@@ -1,10 +1,18 @@
 package com.example
 
-class ReviewWorkflow(
+class ReviewWorkflow
+private constructor(
     private val publisher: ReviewResultPublisher,
     private val review: () -> ReviewResult,
 ) {
-    fun run() {
+    companion object {
+        operator fun invoke(
+            publisher: ReviewResultPublisher,
+            review: () -> ReviewResult,
+        ) = ReviewWorkflow(publisher, review).run()
+    }
+
+    private fun run() {
         try {
             publisher.start()
             publisher.complete(review())
@@ -12,9 +20,7 @@ class ReviewWorkflow(
             try {
                 publisher.fail(exception)
             } catch (secondary: Exception) {
-                System.err.println(
-                    "Could not persist failed review status: ${secondary.message}",
-                )
+                System.err.println("Could not persist failed review status: ${secondary.message}")
             }
             throw exception
         }

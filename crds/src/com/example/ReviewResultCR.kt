@@ -8,6 +8,7 @@ import io.fabric8.kubernetes.model.annotation.Plural
 import io.fabric8.kubernetes.model.annotation.Version
 
 class ReviewResultSpec {
+    var file: String? = null
     var comments: List<ReviewComment>? = null
 }
 

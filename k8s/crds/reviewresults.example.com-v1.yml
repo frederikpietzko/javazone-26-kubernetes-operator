@@ -28,6 +28,8 @@ spec:
                       type: "array"
                   type: "object"
                 type: "array"
+              file:
+                type: "string"
             type: "object"
           status:
             properties:

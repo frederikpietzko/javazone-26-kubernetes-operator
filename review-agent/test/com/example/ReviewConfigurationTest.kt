@@ -28,6 +28,35 @@ class ReviewConfigurationTest {
     }
 
     @Test
+    fun `binds review result target`() {
+        val environment = StandardEnvironment().apply {
+            propertySources.addFirst(
+                MapPropertySource(
+                    "test",
+                    mapOf(
+                        "review.repository.url" to "https://github.com/example/project.git",
+                        "review.pr" to "42",
+                        "review.kubernetes.namespace" to "reviews",
+                        "review.kubernetes.name" to "review-result-42",
+                    ),
+                ),
+            )
+        }
+
+        val target = ReviewConfiguration().reviewResultTarget(environment)
+
+        assertEquals("reviews", target.namespace)
+        assertEquals("review-result-42", target.name)
+    }
+
+    @Test
+    fun `fails when review result target properties are missing`() {
+        assertFailsWith<IllegalStateException> {
+            ReviewConfiguration().reviewResultTarget(StandardEnvironment())
+        }
+    }
+
+    @Test
     fun `fails when review properties are missing`() {
         assertFailsWith<IllegalStateException> {
             ReviewConfiguration().review(StandardEnvironment())

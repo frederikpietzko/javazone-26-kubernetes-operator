@@ -2,3 +2,6 @@ review:
   repository:
     url: https://github.com/frederikpietzko/ebfs-jpa.git
   pr: 1
+  kubernetes:
+    namespace: default
+    name: review-result

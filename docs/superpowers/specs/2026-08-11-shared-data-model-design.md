@@ -2,29 +2,32 @@
 
 ## Goal
 
-Create a `shared-data-model` JVM module containing the review input model currently declared in `review-agent/src/Main.kt`. Keep the shared model independent of Spring so other modules can consume it without Spring Boot configuration annotations or dependencies.
+Create a `shared-data-model` JVM module containing the review input model currently declared in
+`../../../review-agent/src/com/example/Main.kt`. Keep the shared model independent of Spring so other modules can
+consume it without Spring Boot configuration annotations or dependencies.
 
 ## Scope
 
 ### Files
 
 - `project.yaml`
-  - Register the new `shared-data-model` module.
+    - Register the new `shared-data-model` module.
 - `shared-data-model/module.yaml`
-  - Define the module as a dependency-free JVM library.
+    - Define the module as a dependency-free JVM library.
 - `shared-data-model/src/com/example/Review.kt`
-  - Add plain `Review` and `Repository` data classes.
+    - Add plain `Review` and `Repository` data classes.
 - `review-agent/module.yaml`
-  - Add a dependency on `shared-data-model`.
-- `review-agent/src/Main.kt`
-  - Remove local `Review` and misspelled `Respository` declarations.
-  - Bind the shared `Review` bean from the `review.*` environment properties.
+    - Add a dependency on `shared-data-model`.
+- `../../../review-agent/src/com/example/Main.kt`
+    - Remove local `Review` and misspelled `Respository` declarations.
+    - Bind the shared `Review` bean from the `review.*` environment properties.
 - `review-agent/test/com/example/ReviewConfigurationTest.kt`
-  - Verify review properties bind into the shared model.
+    - Verify review properties bind into the shared model.
 - `docs/superpowers/specs/2026-08-11-shared-data-model-design.md`
-  - Record this design.
+    - Record this design.
 
-`ReviewResult` and `ReviewComment` remain local to `review-agent` because they describe review-agent output rather than shared input configuration.
+`ReviewResult` and `ReviewComment` remain local to `review-agent` because they describe review-agent output rather than
+shared input configuration.
 
 ## Shared Model
 
@@ -43,11 +46,13 @@ data class Review(
 
 Neither class receives Spring annotations. The module has no Spring dependency.
 
-`Respository` is corrected to `Repository`; this is a source-compatible change only for the current local declaration because no external shared API exists yet.
+`Respository` is corrected to `Repository`; this is a source-compatible change only for the current local declaration
+because no external shared API exists yet.
 
 ## Configuration Binding
 
-`review-agent` owns Spring configuration binding. Add a configuration class or equivalent bean definition that uses Spring Boot's `Binder` against the application `Environment`:
+`review-agent` owns Spring configuration binding. Add a configuration class or equivalent bean definition that uses
+Spring Boot's `Binder` against the application `Environment`:
 
 ```kotlin
 @Bean
@@ -57,7 +62,9 @@ fun review(environment: Environment): Review =
         .orElseThrow { IllegalStateException("Missing review configuration") }
 ```
 
-The actual implementation must use valid Kotlin syntax and existing project conventions. Binding remains under the `review-agent` module, so the shared module stays framework-neutral and the `review.*` prefix is not embedded in the data model.
+The actual implementation must use valid Kotlin syntax and existing project conventions. Binding remains under the
+`review-agent` module, so the shared module stays framework-neutral and the `review.*` prefix is not embedded in the
+data model.
 
 Existing consumers continue injecting `Review` from the Spring context. Existing YAML configuration remains unchanged:
 
@@ -70,9 +77,12 @@ review:
 
 ## Module Wiring
 
-Register `shared-data-model` in the root module list, preserving the Kotlin CLI's alphabetical module ordering. Add the local sibling dependency as `../shared-data-model`. `review-agent` retains all current Spring and Spring AI dependencies.
+Register `shared-data-model` in the root module list, preserving the Kotlin CLI's alphabetical module ordering. Add the
+local sibling dependency as `../shared-data-model`. `review-agent` retains all current Spring and Spring AI
+dependencies.
 
-The shared library must compile before `review-agent`, and `review-agent` must resolve `Review` from the shared module rather than from its own source set.
+The shared library must compile before `review-agent`, and `review-agent` must resolve `Review` from the shared module
+rather than from its own source set.
 
 ## Error Handling
 
@@ -86,23 +96,29 @@ Run through the Kotlin CLI after implementation:
 
 1. `./kotlin check`
 2. Run the existing `review-agent` Spring context test.
-3. Add a focused test that supplies `review.repository.url` and `review.pr`, creates the binding configuration, and asserts the resulting `Review` values.
+3. Add a focused test that supplies `review.repository.url` and `review.pr`, creates the binding configuration, and
+   asserts the resulting `Review` values.
 4. Run `git diff --check`.
-5. Confirm `Review` has no Spring imports or annotations and `review-agent` has no duplicate `Review`/`Respository` declaration.
+5. Confirm `Review` has no Spring imports or annotations and `review-agent` has no duplicate `Review`/`Respository`
+   declaration.
 
 ## Alternatives Considered
 
 ### Plain shared model with binding owned by `review-agent` — selected
 
-Keeps the data module reusable and framework-neutral. Configuration ownership stays with the application that understands the `review` prefix. Manual `Binder` registration avoids placing `@ConfigurationProperties` on shared classes.
+Keeps the data module reusable and framework-neutral. Configuration ownership stays with the application that
+understands the `review` prefix. Manual `Binder` registration avoids placing `@ConfigurationProperties` on shared
+classes.
 
 ### Annotated shared `Review`
 
-Simpler Spring Boot registration, but couples every consumer to Spring Boot and embeds application configuration concerns in a shared model. Rejected because the shared classes must remain unannotated.
+Simpler Spring Boot registration, but couples every consumer to Spring Boot and embeds application configuration
+concerns in a shared model. Rejected because the shared classes must remain unannotated.
 
 ### Duplicate local model plus mapping
 
-Avoids module dependency but duplicates the contract and adds mapping code. Rejected because the requested shared module should be the single source of truth.
+Avoids module dependency but duplicates the contract and adds mapping code. Rejected because the requested shared module
+should be the single source of truth.
 
 ## Design Decisions
 

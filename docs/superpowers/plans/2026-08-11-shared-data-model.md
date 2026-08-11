@@ -1,10 +1,14 @@
 # Shared Data Model Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:
+> executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Extract the review input model into a Spring-free `shared-data-model` JVM library and bind it inside `review-agent` without `@ConfigurationProperties` on shared classes.
+**Goal:** Extract the review input model into a Spring-free `shared-data-model` JVM library and bind it inside
+`review-agent` without `@ConfigurationProperties` on shared classes.
 
-**Architecture:** `shared-data-model` publishes plain `com.example.Repository` and `com.example.Review` data classes. `review-agent` depends on that module and exposes a Spring bean created by `Binder` from the `review` environment prefix. Review output types remain in `review-agent`.
+**Architecture:** `shared-data-model` publishes plain `com.example.Repository` and `com.example.Review` data classes.
+`review-agent` depends on that module and exposes a Spring bean created by `Binder` from the `review` environment
+prefix. Review output types remain in `review-agent`.
 
 **Tech Stack:** Kotlin, Kotlin Toolchain YAML modules, Spring Boot `Binder`, Spring Test, Kotlin Test.
 
@@ -13,7 +17,8 @@
 - Shared module name is `shared-data-model`.
 - Shared model classes have no Spring imports or annotations.
 - Shared module product type is `jvm/lib`.
-- `review-agent` depends on the local module using `../shared-data-model`, the relative sibling-module syntax accepted by this project’s Kotlin CLI.
+- `review-agent` depends on the local module using `../shared-data-model`, the relative sibling-module syntax accepted
+  by this project’s Kotlin CLI.
 - Configuration prefix remains `review`.
 - `Respository` is renamed to `Repository`.
 - `ReviewResult` and `ReviewComment` remain in `review-agent`.
@@ -30,18 +35,22 @@
 - Modify: `project.yaml` — include `shared-data-model` in the project module list.
 - Modify: `review-agent/module.yaml` — add `//shared-data-model` dependency.
 - Create: `review-agent/src/com/example/ReviewConfiguration.kt` — bind `review.*` into the shared `Review` bean.
-- Create: `review-agent/test/com/example/ReviewConfigurationTest.kt` — verify property binding and missing-property failure.
-- Modify: `review-agent/src/Main.kt` — remove local configuration model and configuration-properties scanning.
+- Create: `review-agent/test/com/example/ReviewConfigurationTest.kt` — verify property binding and missing-property
+  failure.
+- Modify: `../../../review-agent/src/com/example/Main.kt` — remove local configuration model and
+  configuration-properties scanning.
 
 ## Task 1: Add shared model module
 
 **Files:**
+
 - Create: `shared-data-model/module.yaml`
 - Create: `shared-data-model/src/com/example/Review.kt`
 - Create: `shared-data-model/test/com/example/ReviewTest.kt`
 - Modify: `project.yaml`
 
 **Interfaces:**
+
 - Produces `com.example.Repository(val url: String)`.
 - Produces `com.example.Review(val repository: Repository, val pr: String)`.
 - Exposes no Spring or Spring Boot dependency.
@@ -101,7 +110,9 @@ Run:
 ./kotlin test --include-module=shared-data-model --include-classes=com.example.ReviewTest
 ```
 
-Expected: compilation fails because `Review` and `Repository` do not exist yet. If the failure is caused by YAML/module configuration instead, fix that configuration and rerun until the failure specifically identifies the missing model declarations.
+Expected: compilation fails because `Review` and `Repository` do not exist yet. If the failure is caused by YAML/module
+configuration instead, fix that configuration and rerun until the failure specifically identifies the missing model
+declarations.
 
 - [ ] **Step 4: Add the minimal shared model implementation**
 
@@ -120,7 +131,8 @@ data class Review(
 )
 ```
 
-Do not add `@ConfigurationProperties`, `@NestedConfigurationProperty`, `@Component`, or any other Spring annotation/import.
+Do not add `@ConfigurationProperties`, `@NestedConfigurationProperty`, `@Component`, or any other Spring
+annotation/import.
 
 - [ ] **Step 5: Run the shared-model test and inspect dependencies**
 
@@ -146,19 +158,22 @@ git commit -m "feat: add shared review data model"
 ## Task 2: Bind shared model in review-agent
 
 **Files:**
+
 - Modify: `review-agent/module.yaml`
 - Create: `review-agent/src/com/example/ReviewConfiguration.kt`
 - Create: `review-agent/test/com/example/ReviewConfigurationTest.kt`
-- Modify: `review-agent/src/Main.kt`
+- Modify: `../../../review-agent/src/com/example/Main.kt`
 
 **Interfaces:**
+
 - Consumes `com.example.Review` and `com.example.Repository` from `../shared-data-model`.
 - Produces Spring bean method `ReviewConfiguration.review(environment: Environment): Review`.
 - Binds `review.repository.url` and `review.pr` from the Spring `Environment`.
 
 - [ ] **Step 1: Add the local module dependency**
 
-Add the shared sibling module to `review-agent/module.yaml` using the relative path syntax accepted by this project’s Kotlin CLI:
+Add the shared sibling module to `review-agent/module.yaml` using the relative path syntax accepted by this project’s
+Kotlin CLI:
 
 ```yaml
 dependencies:
@@ -215,7 +230,9 @@ Run:
 ./kotlin test --include-module=review-agent --include-classes=com.example.ReviewConfigurationTest
 ```
 
-Expected: compilation fails because `ReviewConfiguration` does not exist yet. The shared `Review` type must resolve from `//shared-data-model`; unresolved `Review` indicates the module dependency or project registration is wrong and must be fixed before continuing.
+Expected: compilation fails because `ReviewConfiguration` does not exist yet. The shared `Review` type must resolve from
+`//shared-data-model`; unresolved `Review` indicates the module dependency or project registration is wrong and must be
+fixed before continuing.
 
 - [ ] **Step 4: Add minimal manual Binder configuration**
 
@@ -244,13 +261,16 @@ class ReviewConfiguration {
 
 - [ ] **Step 5: Remove the local model and scanning annotations**
 
-In `review-agent/src/Main.kt`:
+In `../../../review-agent/src/com/example/Main.kt`:
 
 - Remove imports for `ConfigurationProperties`, `ConfigurationPropertiesScan`, and `NestedConfigurationProperty`.
 - Change the application declaration from:
 
 ```kotlin
-@SpringBootApplication @ConfigurationPropertiesScan @Import(Reviewer::class) class Application
+@SpringBootApplication
+@ConfigurationPropertiesScan
+@Import(Reviewer::class)
+class Application
 ```
 
 to:
@@ -273,7 +293,8 @@ Run:
 ./kotlin test --include-module=operator --include-classes=com.example.ExampleTest
 ```
 
-Expected: both test commands pass. `ReviewConfigurationTest` proves that the shared immutable data model receives values from the `review` prefix. `operator`'s `ExampleTest` remains a regression check for the existing Spring context.
+Expected: both test commands pass. `ReviewConfigurationTest` proves that the shared immutable data model receives values
+from the `review` prefix. `operator`'s `ExampleTest` remains a regression check for the existing Spring context.
 
 - [ ] **Step 7: Commit application wiring**
 
@@ -285,9 +306,11 @@ git commit -m "refactor(review-agent): bind shared review model"
 ## Task 3: Validate project integration
 
 **Files:**
+
 - No source changes expected.
 
 **Interfaces:**
+
 - `shared-data-model` appears in the module graph.
 - `review-agent` resolves `Review` from the shared module.
 - Shared model remains Spring-free.
@@ -344,5 +367,6 @@ git log -3 --oneline
 Expected:
 
 - `git diff --check` succeeds.
-- Only the pre-existing `.idea/workspace.xml` modification remains uncommitted, unless the implementation commits have already made the working tree clean.
+- Only the pre-existing `.idea/workspace.xml` modification remains uncommitted, unless the implementation commits have
+  already made the working tree clean.
 - Implementation commits are visible in the recent history.

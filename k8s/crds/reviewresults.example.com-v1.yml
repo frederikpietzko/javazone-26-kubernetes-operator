@@ -22,14 +22,14 @@ spec:
                   properties:
                     comment:
                       type: "string"
+                    file:
+                      type: "string"
                     lines:
                       items:
                         type: "integer"
                       type: "array"
                   type: "object"
                 type: "array"
-              file:
-                type: "string"
             type: "object"
           status:
             properties:

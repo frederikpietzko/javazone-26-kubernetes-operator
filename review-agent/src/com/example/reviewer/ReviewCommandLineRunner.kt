@@ -1,5 +1,6 @@
-package com.example
+package com.example.reviewer
 
+import com.example.Review
 import io.fabric8.kubernetes.client.KubernetesClientBuilder
 import org.springaicommunity.agent.tools.FileSystemTools
 import org.springaicommunity.agent.tools.GlobTool

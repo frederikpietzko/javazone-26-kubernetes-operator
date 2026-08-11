@@ -8,14 +8,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="progress">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewCommandLineRunner.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/ReviewCommandLineRunner.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewConfiguration.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/ReviewConfiguration.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewResultPublisher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/ReviewResultPublisher.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/AgentModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/Reviewer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crds/src/com/example/ReviewResultCR.kt" beforeDir="false" afterPath="$PROJECT_DIR$/crds/src/com/example/ReviewResultCR.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-review-agent-cr-status.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-review-agent-cr-status.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-shared-data-model.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-shared-data-model.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/crds/reviewresults.example.com-v1.yml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/crds/reviewresults.example.com-v1.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewCommandLineRunner.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewCommandLineRunner.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewConfiguration.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewConfiguration.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewResultMapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewResultMapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewResultPublisher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewResultPublisher.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewWorkflow.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewWorkflow.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/review-agent/test/com/example/ReviewConfigurationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/test/com/example/ReviewConfigurationTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-agent/test/com/example/ReviewResultMapperTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/test/com/example/ReviewResultMapperTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/review-agent/test/com/example/ReviewWorkflowTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/test/com/example/ReviewWorkflowTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared-data-model/src/com/example/Review.kt" beforeDir="false" afterPath="$PROJECT_DIR$/shared-data-model/src/com/example/Review.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared-data-model/test/com/example/ReviewTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/shared-data-model/test/com/example/ReviewTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,61 +68,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0000000000029354" />
-      <entry key="S30" value="1.0005391479472907" />
-      <entry key="S60" value="1.0821411377354562" />
-      <entry key="M2" value="2.119905964860828" />
-      <entry key="M5" value="7.253202231329874" />
-      <entry key="M10" value="12.907898278585613" />
-      <entry key="M15" value="16.02645110635613" />
-      <entry key="M30" value="23.41880061967509" />
-      <entry key="H1" value="48.98672454697351" />
-      <entry key="H2" value="110.32707560124605" />
-      <entry key="H4" value="270.4583644386002" />
-      <entry key="D1" value="1276.1755389754157" />
-      <entry key="W1" value="1812.7946523770374" />
+      <entry key="MS100" value="1.0000000000000004" />
+      <entry key="MS500" value="1.0008419370556811" />
+      <entry key="S2" value="1.1703412798900645" />
+      <entry key="S5" value="1.4926380612595005" />
+      <entry key="S10" value="1.7018818000628744" />
+      <entry key="S30" value="1.8886989457876973" />
+      <entry key="S60" value="1.942813092314669" />
+      <entry key="M2" value="1.991792999953927" />
+      <entry key="M5" value="3.1304639550651996" />
+      <entry key="M10" value="7.116365901831086" />
+      <entry key="M15" value="10.650550183187782" />
+      <entry key="M30" value="19.20745987427157" />
+      <entry key="H1" value="43.99224436036828" />
+      <entry key="H2" value="104.14813498920603" />
+      <entry key="H4" value="262.2407007028234" />
+      <entry key="D1" value="1270.0107557875272" />
+      <entry key="W1" value="1813.1332376331495" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="2.8997863859500177E-112" />
-      <entry key="MS500" value="4.9257595806955343E-23" />
-      <entry key="S2" value="2.6813669122407087E-6" />
-      <entry key="S5" value="0.006912392242797437" />
-      <entry key="S10" value="0.11365154313946713" />
-      <entry key="S30" value="0.915415601509164" />
-      <entry key="S60" value="1.6628787412004284" />
-      <entry key="M2" value="2.7176792669374574" />
-      <entry key="M5" value="5.610109998197982" />
-      <entry key="M10" value="8.226291496592037" />
-      <entry key="M15" value="9.512901829703274" />
-      <entry key="M30" value="11.373119014653394" />
-      <entry key="H1" value="14.098623047249166" />
-      <entry key="H2" value="19.24294831661538" />
-      <entry key="H4" value="35.184578684509916" />
-      <entry key="D1" value="157.1149191324666" />
-      <entry key="W1" value="225.46672915965522" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.0230240308921994E-126" />
+      <entry key="S5" value="4.701540807394936E-51" />
+      <entry key="S10" value="9.37305692831618E-26" />
+      <entry key="S30" value="8.58460431940747E-9" />
+      <entry key="S60" value="1.6103177034892558E-4" />
+      <entry key="M2" value="0.026743835627158468" />
+      <entry key="M5" value="0.8834491838645953" />
+      <entry key="M10" value="3.2644437768106447" />
+      <entry key="M15" value="5.137081005455845" />
+      <entry key="M30" value="8.35759425979191" />
+      <entry key="H1" value="12.0858597114032" />
+      <entry key="H2" value="17.816485482412915" />
+      <entry key="H4" value="33.85537022690445" />
+      <entry key="D1" value="156.10972605825157" />
+      <entry key="W1" value="225.26009106750573" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="8.222861186924383E-5" />
-      <entry key="MS500" value="0.1524068867595379" />
-      <entry key="S2" value="0.6248158477705688" />
-      <entry key="S5" value="0.833573021428429" />
-      <entry key="S10" value="1.006880520990068" />
-      <entry key="S30" value="1.8384215942232274" />
-      <entry key="S60" value="2.687504186881409" />
-      <entry key="M2" value="4.795172933007402" />
-      <entry key="M5" value="12.83147023747338" />
-      <entry key="M10" value="21.111653507246857" />
-      <entry key="M15" value="25.522164352058134" />
-      <entry key="M30" value="34.78157976068974" />
-      <entry key="H1" value="63.07832303809571" />
-      <entry key="H2" value="129.56444974068796" />
-      <entry key="H4" value="305.63675570752275" />
-      <entry key="D1" value="1433.284878330108" />
-      <entry key="W1" value="2038.2602143575946" />
+      <entry key="MS100" value="0.9460576467255959" />
+      <entry key="MS500" value="0.9893081415879978" />
+      <entry key="S2" value="1.1327439541941238" />
+      <entry key="S5" value="1.4484560723120552" />
+      <entry key="S10" value="1.6699413429295555" />
+      <entry key="S30" value="1.8750649553760357" />
+      <entry key="S60" value="1.9357156799431885" />
+      <entry key="M2" value="2.014378815261919" />
+      <entry key="M5" value="4.007374466408717" />
+      <entry key="M10" value="10.37109966928003" />
+      <entry key="M15" value="15.777836802068927" />
+      <entry key="M30" value="27.557199122361492" />
+      <entry key="H1" value="56.07195387880611" />
+      <entry key="H2" value="121.95939522789072" />
+      <entry key="H4" value="296.0900851172698" />
+      <entry key="D1" value="1426.1149324075984" />
+      <entry key="W1" value="2038.3921618256911" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -179,6 +186,7 @@
       <recent name="$PROJECT_DIR$/operator" />
     </key>
     <key name="K2MoveDeclarationsDialog.RECENT_PACKAGE_KEY">
+      <recent name="com.example.reviewer" />
       <recent name="com.example.com.example" />
     </key>
   </component>

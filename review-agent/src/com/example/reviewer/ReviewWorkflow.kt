@@ -1,4 +1,4 @@
-package com.example
+package com.example.reviewer
 
 class ReviewWorkflow
 private constructor(

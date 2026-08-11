@@ -1,12 +1,18 @@
 # Review Agent Custom Resource Status Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:
+> executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make `review-agent` create and update a namespaced `ReviewResult` CR through the full `InProgress`/`Completed`/`Failed` review lifecycle.
+**Goal:** Make `review-agent` create and update a namespaced `ReviewResult` CR through the full `InProgress`/
+`Completed`/`Failed` review lifecycle.
 
-**Architecture:** Keep Spring AI output separate from the Fabric8 CR model. A pure mapper converts local review data into `ReviewResultSpec`; an injected publisher owns typed Fabric8 CRUD and status-subresource updates; a small workflow coordinates start, review, success, failure persistence, and rethrow. `ReviewConfiguration.kt` binds the CR target from `application-review.yaml`.
+**Architecture:** Keep Spring AI output separate from the Fabric8 CR model. A pure mapper converts local review data
+into `ReviewResultSpec`; an injected publisher owns typed Fabric8 CRUD and status-subresource updates; a small workflow
+coordinates start, review, success, failure persistence, and rethrow. `ReviewConfiguration.kt` binds the CR target from
+`application-review.yaml`.
 
-**Tech Stack:** Kotlin Toolchain CLI, Spring Boot 4.1.0, Spring AI 2.0.0, Fabric8 Kubernetes Client 7.8.0, Fabric8 CRD Generator v2, kind, `.kubeconfig`.
+**Tech Stack:** Kotlin Toolchain CLI, Spring Boot 4.1.0, Spring AI 2.0.0, Fabric8 Kubernetes Client 7.8.0, Fabric8 CRD
+Generator v2, kind, `.kubeconfig`.
 
 ## Global Constraints
 
@@ -17,10 +23,12 @@
 - Keep Spring AI structured output separate from `ReviewResultCR`.
 - Treat `crds/src/com/example/ReviewResultCR.kt` as CRD source of truth.
 - Generate CRD YAML with `./kotlin task :crds:generateCrds@build-config`; do not manually edit generated YAML.
-- Catch review workflow exceptions, best-effort persist `Failed` and `status.error`, then rethrow the original exception.
+- Catch review workflow exceptions, best-effort persist `Failed` and `status.error`, then rethrow the original
+  exception.
 - Do not add automated tests that invoke a real LLM or require a live Kubernetes cluster.
 - Preserve unrelated existing `.idea/workspace.xml` modification.
-- Manually run the review agent with both `local` and `review` profiles against the kind cluster and inspect the resulting CR.
+- Manually run the review agent with both `local` and `review` profiles against the kind cluster and inspect the
+  resulting CR.
 
 ---
 
@@ -29,15 +37,18 @@
 - Modify `libs.versions.toml`: add explicit Fabric8 Kubernetes client alias at version `7.8.0`.
 - Modify `review-agent/module.yaml`: depend on the Fabric8 client alias.
 - Modify `review-agent/resources/application-review.yaml`: add configured CR namespace/name.
-- Modify `review-agent/src/com/example/ReviewConfiguration.kt`: bind typed CR target configuration.
+- Modify `../../../review-agent/src/com/example/reviewer/ReviewConfiguration.kt`: bind typed CR target configuration.
 - Modify `review-agent/src/com/example/Main.kt`: add local Spring AI result data classes and wire workflow/publisher.
-- Create `review-agent/src/com/example/ReviewResultMapper.kt`: map local review output into CR spec.
-- Create `review-agent/src/com/example/ReviewResultPublisher.kt`: define publisher boundary and Fabric8 implementation.
-- Create `review-agent/src/com/example/ReviewWorkflow.kt`: coordinate lifecycle and failure propagation.
+- Create `../../../review-agent/src/com/example/reviewer/ReviewResultMapper.kt`: map local review output into CR spec.
+- Create `../../../review-agent/src/com/example/reviewer/ReviewResultPublisher.kt`: define publisher boundary and
+  Fabric8 implementation.
+- Create `../../../review-agent/src/com/example/reviewer/ReviewWorkflow.kt`: coordinate lifecycle and failure
+  propagation.
 - Modify `crds/src/com/example/ReviewResultCR.kt`: add `ReviewResultStatus.error`.
 - Modify `review-agent/test/com/example/ReviewConfigurationTest.kt`: test target binding and missing target values.
 - Create `review-agent/test/com/example/ReviewResultMapperTest.kt`: test result-to-spec mapping.
-- Create `review-agent/test/com/example/ReviewWorkflowTest.kt`: test success, failure persistence, and rethrow with fake publisher.
+- Create `review-agent/test/com/example/ReviewWorkflowTest.kt`: test success, failure persistence, and rethrow with fake
+  publisher.
 - Generated/updated `k8s/crds/reviewresults.example.com-v1.yml`: produced only by the Kotlin generation task.
 
 ---
@@ -45,11 +56,13 @@
 ### Task 1: Add failing configuration tests and bind CR target
 
 **Files:**
+
 - Modify: `review-agent/test/com/example/ReviewConfigurationTest.kt`
-- Modify: `review-agent/src/com/example/ReviewConfiguration.kt`
+- Modify: `../../../review-agent/src/com/example/reviewer/ReviewConfiguration.kt`
 - Modify: `review-agent/resources/application-review.yaml`
 
 **Interfaces:**
+
 - Produce `data class ReviewResultTarget(val namespace: String, val name: String)` in package `com.example`.
 - Produce `ReviewConfiguration.reviewResultTarget(environment): ReviewResultTarget`.
 - Preserve existing `ReviewConfiguration.review(environment): Review` behavior.
@@ -142,11 +155,13 @@ git commit -m "feat(review-agent): bind review result target"
 ### Task 2: Add CR status error and Fabric8 dependency
 
 **Files:**
+
 - Modify: `crds/src/com/example/ReviewResultCR.kt`
 - Modify: `libs.versions.toml`
 - Modify: `review-agent/module.yaml`
 
 **Interfaces:**
+
 - `ReviewResultStatus.status` remains nullable string.
 - `ReviewResultStatus.error` becomes nullable string.
 - Fabric8 client alias is `libs.fabrics8.kubernetes.client` and resolves to `io.fabric8:kubernetes-client:7.8.0`.
@@ -196,11 +211,13 @@ git commit -m "feat(review-agent): add Kubernetes client and error status"
 ### Task 3: Add failing mapper tests and pure CR mapping
 
 **Files:**
+
 - Create: `review-agent/test/com/example/ReviewResultMapperTest.kt`
-- Create: `review-agent/src/com/example/ReviewResultMapper.kt`
+- Create: `../../../review-agent/src/com/example/reviewer/ReviewResultMapper.kt`
 - Modify: `review-agent/src/com/example/Main.kt`
 
 **Interfaces:**
+
 - `ReviewResult` in `Main.kt` is Spring AI output only:
 
 ```kotlin
@@ -218,7 +235,8 @@ data class ReviewCommentResult(
 
 - [ ] **Step 1: Write failing mapping tests**
 
-Create tests covering populated and empty comments. These tests intentionally reference the not-yet-created local result classes and mapper:
+Create tests covering populated and empty comments. These tests intentionally reference the not-yet-created local result
+classes and mapper:
 
 ```kotlin
 @Test
@@ -252,7 +270,9 @@ Expected: failure because the local result classes and `toSpec` are not implemen
 
 - [ ] **Step 3: Implement local result classes and minimal mapper**
 
-In `Main.kt`, before the application/runner declarations, add exactly the two local output data classes from the interface block. Use `.entity(ReviewResult::class.java)` and do not use `ReviewResultCR`, `ReviewResultSpec`, or `ReviewComment` as the structured-output type.
+In `Main.kt`, before the application/runner declarations, add exactly the two local output data classes from the
+interface block. Use `.entity(ReviewResult::class.java)` and do not use `ReviewResultCR`, `ReviewResultSpec`, or
+`ReviewComment` as the structured-output type.
 
 Create `ReviewResultMapper.kt`:
 
@@ -292,11 +312,13 @@ git commit -m "feat(review-agent): map review output into CR spec"
 ### Task 4: Add failing workflow tests and lifecycle orchestration
 
 **Files:**
+
 - Create: `review-agent/test/com/example/ReviewWorkflowTest.kt`
-- Create: `review-agent/src/com/example/ReviewWorkflow.kt`
-- Create: `review-agent/src/com/example/ReviewResultPublisher.kt`
+- Create: `../../../review-agent/src/com/example/reviewer/ReviewWorkflow.kt`
+- Create: `../../../review-agent/src/com/example/reviewer/ReviewResultPublisher.kt`
 
 **Interfaces:**
+
 - `interface ReviewResultPublisher`:
 
 ```kotlin
@@ -307,8 +329,10 @@ interface ReviewResultPublisher {
 }
 ```
 
-- `class ReviewWorkflow(private val publisher: ReviewResultPublisher, private val review: () -> ReviewResult)` with `fun run()`.
-- `run()` calls `start`, invokes review, calls `complete`; on `Exception`, calls `fail`, then rethrows the original exception. If `fail` throws, preserve/log the secondary error without replacing the original.
+- `class ReviewWorkflow(private val publisher: ReviewResultPublisher, private val review: () -> ReviewResult)` with
+  `fun run()`.
+- `run()` calls `start`, invokes review, calls `complete`; on `Exception`, calls `fail`, then rethrows the original
+  exception. If `fail` throws, preserve/log the secondary error without replacing the original.
 
 - [ ] **Step 1: Write failing workflow tests**
 
@@ -372,7 +396,8 @@ fun `preserves original exception when failed status update throws`() {
 }
 ```
 
-The fake records calls and throws its configured failure; tests assert publisher behavior, not mock invocation counts from an unexecuted code path.
+The fake records calls and throws its configured failure; tests assert publisher behavior, not mock invocation counts
+from an unexecuted code path.
 
 - [ ] **Step 2: Run workflow tests and verify expected failure**
 
@@ -428,13 +453,18 @@ git commit -m "feat(review-agent): orchestrate review result lifecycle"
 ### Task 5: Implement typed Fabric8 publisher and wire Spring runner
 
 **Files:**
-- Modify: `review-agent/src/com/example/ReviewResultPublisher.kt`
+
+- Modify: `../../../review-agent/src/com/example/reviewer/ReviewResultPublisher.kt`
 - Modify: `review-agent/src/com/example/Main.kt`
 
 **Interfaces:**
-- Add `class KubernetesReviewResultPublisher(client: KubernetesClient, target: ReviewResultTarget) : ReviewResultPublisher, AutoCloseable`.
-- Publisher creates/replaces the configured namespaced `ReviewResultCR`, updates status separately, maps completion spec, and records whether create succeeded.
-- `Main.kt` injects `Review`, `ReviewResultTarget`, and `ChatClient.Builder` into the runner workflow; the runner creates `KubernetesClient` with `KubernetesClientBuilder` and closes it with `use`.
+
+- Add
+  `class KubernetesReviewResultPublisher(client: KubernetesClient, target: ReviewResultTarget) : ReviewResultPublisher, AutoCloseable`.
+- Publisher creates/replaces the configured namespaced `ReviewResultCR`, updates status separately, maps completion
+  spec, and records whether create succeeded.
+- `Main.kt` injects `Review`, `ReviewResultTarget`, and `ChatClient.Builder` into the runner workflow; the runner
+  creates `KubernetesClient` with `KubernetesClientBuilder` and closes it with `use`.
 
 - [ ] **Step 1: Add the typed resource handles and compile the adapter boundary**
 
@@ -452,13 +482,16 @@ Run:
 ./kotlin check
 ```
 
-Expected: project compiles with the Fabric8 typed resource handles. Keep all Kubernetes calls typed; do not switch to shelling out to `kubectl`. The workflow tests from Task 4 cover lifecycle orchestration without a cluster; Task 7 covers the concrete Fabric8 adapter manually against kind.
+Expected: project compiles with the Fabric8 typed resource handles. Keep all Kubernetes calls typed; do not switch to
+shelling out to `kubectl`. The workflow tests from Task 4 cover lifecycle orchestration without a cluster; Task 7 covers
+the concrete Fabric8 adapter manually against kind.
 
 - [ ] **Step 2: Implement start lifecycle**
 
 In `KubernetesReviewResultPublisher.start()`:
 
-1. Build `ReviewResultCR` with configured name and empty `ReviewResultSpec`; initialize status with `ReviewResultStatus().also { it.status = "InProgress" }`.
+1. Build `ReviewResultCR` with configured name and empty `ReviewResultSpec`; initialize status with
+   `ReviewResultStatus().also { it.status = "InProgress" }`.
 2. Call typed `createOrReplace` in `target.namespace`.
 3. Set internal `created = true` only after create succeeds.
 4. Update the status subresource to `InProgress` separately.
@@ -485,13 +518,17 @@ Do not write stack traces or kubeconfig contents into the CR.
 
 - [ ] **Step 5: Wire the runner and Spring AI output type**
 
-Change the runner to obtain `Review`, `ReviewResultTarget`, and `ChatClient.Builder` beans. Inside the runner, create `KubernetesClient` with `KubernetesClientBuilder().build().use { client -> }` and place the publisher/workflow invocation inside that `use` block so Fabric8 uses `KUBECONFIG` locally and in-cluster configuration later. Build the chat client as today, but call:
+Change the runner to obtain `Review`, `ReviewResultTarget`, and `ChatClient.Builder` beans. Inside the runner, create
+`KubernetesClient` with `KubernetesClientBuilder().build().use { client -> }` and place the publisher/workflow
+invocation inside that `use` block so Fabric8 uses `KUBECONFIG` locally and in-cluster configuration later. Build the
+chat client as today, but call:
 
 ```kotlin
 .entity(ReviewResult::class.java)
 ```
 
-Run the resulting chat call through `ReviewWorkflow` and `KubernetesReviewResultPublisher`. Ensure the publisher/client is closed after the runner completes while preserving the original workflow exception.
+Run the resulting chat call through `ReviewWorkflow` and `KubernetesReviewResultPublisher`. Ensure the publisher/client
+is closed after the runner completes while preserving the original workflow exception.
 
 - [ ] **Step 6: Compile and run all automated tests**
 
@@ -516,6 +553,7 @@ git commit -m "feat(review-agent): publish review lifecycle to Kubernetes"
 ### Task 6: Regenerate CRD and apply it to kind
 
 **Files:**
+
 - Update generated: `k8s/crds/reviewresults.example.com-v1.yml`
 
 - [ ] **Step 1: Generate CRD from Kotlin source**
@@ -563,10 +601,12 @@ git commit -m "chore(crds): regenerate review result schema"
 ### Task 7: Manually run review agent against kind and inspect CR
 
 **Files:**
+
 - No source changes expected.
 - Runtime artifact: configured `ReviewResult` in the local cluster.
 
 **Interfaces:**
+
 - Run task: `:review-agent:runJvm`.
 - Profiles: `local,review`.
 - Kubeconfig: `$PWD/.kubeconfig`.
@@ -594,7 +634,8 @@ KUBECONFIG="$PWD/.kubeconfig" \
 ./kotlin task :review-agent:runJvm
 ```
 
-Expected: agent starts, creates/updates `default/review-result`, runs configured Spring AI review, and exits `0` only on successful review. Provider/model output may take time; no automated LLM test is added.
+Expected: agent starts, creates/updates `default/review-result`, runs configured Spring AI review, and exits `0` only on
+successful review. Provider/model output may take time; no automated LLM test is added.
 
 - [ ] **Step 3: Inspect successful CR**
 
@@ -612,7 +653,8 @@ Verify manually:
 
 - [ ] **Step 4: Optionally exercise failure path manually**
 
-Run a second invocation with a deliberately invalid model endpoint/profile configuration. Verify the process exits nonzero and:
+Run a second invocation with a deliberately invalid model endpoint/profile configuration. Verify the process exits
+nonzero and:
 
 ```bash
 kubectl --kubeconfig .kubeconfig get reviewresult review-result -n default -o jsonpath='{.status.status}{"\n"}{.status.error}{"\n"}'
@@ -631,13 +673,19 @@ git diff --check
 git status --short
 ```
 
-Expected: checks/tests exit `0`; only intentional source/generated changes remain plus pre-existing `.idea/workspace.xml`.
+Expected: checks/tests exit `0`; only intentional source/generated changes remain plus pre-existing
+`.idea/workspace.xml`.
 
 ---
 
 ## Plan Self-Review
 
-- Spec coverage: configuration, typed Fabric8 client, separate Spring AI result, mapper, status/error schema, complete exception flow, process failure propagation, generated CRD, local kind installation, automated deterministic tests, manual real-agent verification, and future RBAC note are covered by Tasks 1–7.
-- Placeholder scan: no incomplete markers or unspecified implementation steps remain. Task 5 uses concrete typed Fabric8 handles and compiler verification, while Task 7 manually verifies the concrete adapter against kind.
-- Type consistency: `ReviewResultTarget`, `ReviewResult`, `ReviewCommentResult`, `ReviewResultPublisher`, `ReviewWorkflow`, and `ReviewResult.toSpec()` are defined before use. `ReviewConfigurationTest` calls the exact new binding method.
+- Spec coverage: configuration, typed Fabric8 client, separate Spring AI result, mapper, status/error schema, complete
+  exception flow, process failure propagation, generated CRD, local kind installation, automated deterministic tests,
+  manual real-agent verification, and future RBAC note are covered by Tasks 1–7.
+- Placeholder scan: no incomplete markers or unspecified implementation steps remain. Task 5 uses concrete typed Fabric8
+  handles and compiler verification, while Task 7 manually verifies the concrete adapter against kind.
+- Type consistency: `ReviewResultTarget`, `ReviewResult`, `ReviewCommentResult`, `ReviewResultPublisher`,
+  `ReviewWorkflow`, and `ReviewResult.toSpec()` are defined before use. `ReviewConfigurationTest` calls the exact new
+  binding method.
 - Scope: no real-LLM automated test, operator controller, or RBAC manifest is added.

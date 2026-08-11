@@ -8,7 +8,6 @@ import io.fabric8.kubernetes.model.annotation.Plural
 import io.fabric8.kubernetes.model.annotation.Version
 
 class ReviewResultSpec {
-    var file: String? = null
     var comments: List<ReviewComment>? = null
 }
 
@@ -18,6 +17,7 @@ class ReviewResultStatus {
 }
 
 class ReviewComment {
+    var file: String? = null
     var lines: List<Int>? = null
     var comment: String? = null
 }

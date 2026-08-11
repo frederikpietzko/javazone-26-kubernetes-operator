@@ -34,7 +34,8 @@ prefix. Review output types remain in `review-agent`.
 - Create: `shared-data-model/test/com/example/ReviewTest.kt` — direct model construction test.
 - Modify: `project.yaml` — include `shared-data-model` in the project module list.
 - Modify: `review-agent/module.yaml` — add `//shared-data-model` dependency.
-- Create: `review-agent/src/com/example/ReviewConfiguration.kt` — bind `review.*` into the shared `Review` bean.
+- Create: `../../../review-agent/src/com/example/reviewer/ReviewConfiguration.kt` — bind `review.*` into the shared
+  `Review` bean.
 - Create: `review-agent/test/com/example/ReviewConfigurationTest.kt` — verify property binding and missing-property
   failure.
 - Modify: `../../../review-agent/src/com/example/Main.kt` — remove local configuration model and
@@ -160,7 +161,7 @@ git commit -m "feat: add shared review data model"
 **Files:**
 
 - Modify: `review-agent/module.yaml`
-- Create: `review-agent/src/com/example/ReviewConfiguration.kt`
+- Create: `../../../review-agent/src/com/example/reviewer/ReviewConfiguration.kt`
 - Create: `review-agent/test/com/example/ReviewConfigurationTest.kt`
 - Modify: `../../../review-agent/src/com/example/Main.kt`
 
@@ -236,7 +237,7 @@ fixed before continuing.
 
 - [ ] **Step 4: Add minimal manual Binder configuration**
 
-Create `review-agent/src/com/example/ReviewConfiguration.kt`:
+Create `../../../review-agent/src/com/example/reviewer/ReviewConfiguration.kt`:
 
 ```kotlin
 package com.example

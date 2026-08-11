@@ -1,5 +1,6 @@
-package com.example
+package com.example.reviewer
 
+import com.example.*
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder
 import io.fabric8.kubernetes.client.KubernetesClient
 

@@ -1,5 +1,9 @@
 package com.example
 
+import com.example.reviewer.ReviewCommentResult
+import com.example.reviewer.ReviewResult
+import com.example.reviewer.ReviewResultPublisher
+import com.example.reviewer.ReviewWorkflow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -8,9 +12,8 @@ class ReviewWorkflowTest {
     @Test
     fun `publishes completed result after successful review`() {
         val publisher = RecordingPublisher()
-        val result = ReviewResult(
-            comments = listOf(ReviewCommentResult(comment = "Review comment")),
-        )
+        val result =
+            ReviewResult(comments = listOf(ReviewCommentResult(comment = "Review comment")))
 
         ReviewWorkflow(publisher) { result }
 
@@ -31,19 +34,20 @@ class ReviewWorkflowTest {
 
     @Test
     fun `preserves original exception when failed status update throws`() {
-        val publisher = RecordingPublisher(failException = IllegalStateException("status unavailable"))
+        val publisher =
+            RecordingPublisher(failException = IllegalStateException("status unavailable"))
         val failure = IllegalStateException("model unavailable")
 
-        val thrown = assertFailsWith<IllegalStateException> {
-            ReviewWorkflow(publisher) { throw failure }
-        }
+        val thrown =
+            assertFailsWith<IllegalStateException> {
+                ReviewWorkflow(publisher) { throw failure }
+            }
 
         assertEquals("model unavailable", thrown.message)
     }
 
-    private class RecordingPublisher(
-        private val failException: Exception? = null,
-    ) : ReviewResultPublisher {
+    private class RecordingPublisher(private val failException: Exception? = null) :
+        ReviewResultPublisher {
         val events = mutableListOf<String>()
 
         override fun start() {

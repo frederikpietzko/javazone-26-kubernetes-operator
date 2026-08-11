@@ -1,12 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
-  name: agent-review-operator
+  name: review-agent-result-publisher
+  namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: agent-review-operator
+  kind: Role
+  name: review-agent-result-publisher
 subjects:
   - kind: ServiceAccount
-    name: agent-review-operator
+    name: review-agent
     namespace: default

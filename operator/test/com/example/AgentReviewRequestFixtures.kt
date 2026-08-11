@@ -12,7 +12,7 @@ import io.fabric8.kubernetes.api.model.rbac.RoleBuilder
 fun request(): AgentReviewRequestCR = AgentReviewRequestCR().apply {
     metadata = ObjectMetaBuilder()
         .withName("request-42")
-        .withNamespace("reviews")
+        .withNamespace("default")
         .withUid("uid-42")
         .build()
     spec = AgentReviewRequestSpec().apply {
@@ -46,7 +46,7 @@ private fun observed(
         .build()
     fun metadata(name: String) = ObjectMetaBuilder()
         .withName(name)
-        .withNamespace("reviews")
+        .withNamespace("default")
         .withOwnerReferences(ownerReference)
         .build()
     result?.metadata = result.metadata ?: metadata("agent-review-request-42")

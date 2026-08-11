@@ -2,29 +2,13 @@ package com.example
 
 import io.fabric8.kubernetes.api.model.ConfigMap
 import io.fabric8.kubernetes.api.model.HasMetadata
-import io.fabric8.kubernetes.api.model.ServiceAccount
 import io.fabric8.kubernetes.api.model.batch.v1.Job
-import io.fabric8.kubernetes.api.model.rbac.Role
-import io.fabric8.kubernetes.api.model.rbac.RoleBinding
 
 object AgentReviewResourceMatcher {
     fun configMapMatches(existing: ConfigMap, desired: ConfigMap): Boolean =
         sameIdentity(existing, desired) &&
             existing.data == desired.data &&
             existing.immutable == desired.immutable
-
-    fun serviceAccountMatches(existing: ServiceAccount, desired: ServiceAccount): Boolean =
-        sameIdentity(existing, desired) &&
-            existing.imagePullSecrets == desired.imagePullSecrets &&
-            existing.automountServiceAccountToken == desired.automountServiceAccountToken
-
-    fun roleMatches(existing: Role, desired: Role): Boolean =
-        sameIdentity(existing, desired) && existing.rules == desired.rules
-
-    fun roleBindingMatches(existing: RoleBinding, desired: RoleBinding): Boolean =
-        sameIdentity(existing, desired) &&
-            existing.roleRef == desired.roleRef &&
-            existing.subjects == desired.subjects
 
     fun jobMatches(existing: Job, desired: Job): Boolean =
         sameIdentity(existing, desired) && sameJobSpec(existing, desired)

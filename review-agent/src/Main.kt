@@ -9,13 +9,12 @@ import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor
 import org.springframework.beans.factory.BeanRegistrarDsl
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan
-import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Import
 
-@SpringBootApplication @ConfigurationPropertiesScan @Import(Reviewer::class) class Application
+@SpringBootApplication
+@Import(Reviewer::class)
+class Application
 
 fun main(args: Array<String>) {
     runApplication<Application>(*args)
@@ -58,14 +57,6 @@ class Reviewer :
             }
         }
     })
-
-data class Respository(val url: String)
-
-@ConfigurationProperties(prefix = "review")
-data class Review(
-    @NestedConfigurationProperty val repository: Respository,
-    val pr: String,
-)
 
 data class ReviewComment(
     val lines: List<Int>,

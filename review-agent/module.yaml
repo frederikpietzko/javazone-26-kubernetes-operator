@@ -5,6 +5,7 @@ settings:
     version: 4.1.0
 
 dependencies:
+  - ../shared-data-model
   - $spring.boot.starter
   - $kotlin.reflect
   - bom: org.springframework.ai:spring-ai-bom:2.0.0

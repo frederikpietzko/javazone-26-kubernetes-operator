@@ -3,3 +3,4 @@ build/
 .kubeconfig
 **/*/application-local.yaml
 .air/worktree.json
+.worktrees

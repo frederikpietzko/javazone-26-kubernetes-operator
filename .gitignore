@@ -1,2 +1,4 @@
 build/
 .pi-subagents/
+.kubeconfig
+**/*/application-local.yaml

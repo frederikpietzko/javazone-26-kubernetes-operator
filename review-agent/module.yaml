@@ -8,6 +8,7 @@ dependencies:
   - $spring.boot.starter
   - $kotlin.reflect
   - bom: org.springframework.ai:spring-ai-bom:2.0.0
-  - $libs.spring.ai.ollama.starter
+  #  - $libs.spring.ai.ollama.starter
+  - $libs.spring.ai.openai.starter
   - $libs.jackson.module.kotlin
   - $libs.spring.ai.community.agent.utils

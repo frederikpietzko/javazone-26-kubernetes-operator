@@ -3,9 +3,6 @@ package com.example
 import io.fabric8.kubernetes.api.model.ConfigMap
 import io.fabric8.kubernetes.api.model.HasMetadata
 import io.fabric8.kubernetes.api.model.batch.v1.Job
-import io.fabric8.kubernetes.api.model.ServiceAccount
-import io.fabric8.kubernetes.api.model.rbac.Role
-import io.fabric8.kubernetes.api.model.rbac.RoleBinding
 import io.javaoperatorsdk.operator.api.config.informer.InformerEventSourceConfiguration
 import io.javaoperatorsdk.operator.api.reconciler.Context
 import io.javaoperatorsdk.operator.api.reconciler.ControllerConfiguration
@@ -19,9 +16,6 @@ import org.springframework.stereotype.Component
 
 internal val AGENT_REVIEW_EVENT_SOURCE_NAMES = listOf(
     "configmaps",
-    "serviceaccounts",
-    "roles",
-    "rolebindings",
     "jobs",
     "reviewresults",
 )
@@ -48,6 +42,9 @@ class AgentReviewRequestReconciler(
 
         val metadata = requireNotNull(primary.metadata) { "request metadata is required" }
         val namespace = requireNotNull(metadata.namespace) { "request namespace is required" }
+        if (namespace != "default") {
+            return UpdateControl.noUpdate()
+        }
         val requestName = requireNotNull(metadata.name) { "request name is required" }
         requireNotNull(metadata.uid) { "request UID is required" }
         if (primary.spec?.repository?.url == null) {
@@ -107,9 +104,6 @@ class AgentReviewRequestReconciler(
         context: EventSourceContext<AgentReviewRequestCR>,
     ): List<EventSource<*, AgentReviewRequestCR>> = listOf(
         informer("configmaps", ConfigMap::class.java, context),
-        informer("serviceaccounts", ServiceAccount::class.java, context),
-        informer("roles", Role::class.java, context),
-        informer("rolebindings", RoleBinding::class.java, context),
         informer("jobs", Job::class.java, context),
         informer("reviewresults", ReviewResultCR::class.java, context),
     )
@@ -122,7 +116,7 @@ class AgentReviewRequestReconciler(
         InformerEventSourceConfiguration.from(resourceClass, AgentReviewRequestCR::class.java)
             .withName(name)
             .withSecondaryToPrimaryMapper(Mappers.fromOwnerReferences(AgentReviewRequestCR::class.java))
-            .withWatchAllNamespaces()
+            .withNamespaces("default")
             .build(),
         context,
     )

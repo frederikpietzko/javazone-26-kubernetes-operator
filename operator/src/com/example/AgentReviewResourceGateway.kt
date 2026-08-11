@@ -22,9 +22,6 @@ class Fabric8AgentReviewResourceGateway(
     override fun observe(namespace: String, baseName: String): ObservedAgentReviewResources =
         ObservedAgentReviewResources(
             configMap = client.configMaps().inNamespace(namespace).withName(baseName).get(),
-            serviceAccount = null,
-            role = null,
-            roleBinding = null,
             job = client.batch().jobs().inNamespace(namespace).withName(baseName).get(),
             reviewResult = client.resources(ReviewResultCR::class.java).inNamespace(namespace).withName(baseName).get(),
         )

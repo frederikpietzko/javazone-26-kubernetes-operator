@@ -3,11 +3,8 @@ package com.example
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder
 import io.fabric8.kubernetes.api.model.OwnerReferenceBuilder
-import io.fabric8.kubernetes.api.model.ServiceAccountBuilder
 import io.fabric8.kubernetes.api.model.batch.v1.JobBuilder
 import io.fabric8.kubernetes.api.model.batch.v1.JobStatusBuilder
-import io.fabric8.kubernetes.api.model.rbac.RoleBindingBuilder
-import io.fabric8.kubernetes.api.model.rbac.RoleBuilder
 
 fun request(): AgentReviewRequestCR = AgentReviewRequestCR().apply {
     metadata = ObjectMetaBuilder()
@@ -53,9 +50,6 @@ private fun observed(
     job.metadata = job.metadata ?: metadata("agent-review-request-42")
     return ObservedAgentReviewResources(
         configMap = ConfigMapBuilder().withMetadata(metadata("agent-review-request-42")).build(),
-        serviceAccount = ServiceAccountBuilder().withMetadata(metadata("agent-review-request-42-agent")).build(),
-        role = RoleBuilder().withMetadata(metadata("agent-review-request-42-agent")).build(),
-        roleBinding = RoleBindingBuilder().withMetadata(metadata("agent-review-request-42-agent")).build(),
         job = job,
         reviewResult = result,
     )

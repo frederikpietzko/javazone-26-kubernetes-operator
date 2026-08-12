@@ -1,13 +1,17 @@
 package com.example
 
+import org.springframework.stereotype.Component
 import java.security.MessageDigest
 import java.util.*
 
-object ResourceNameGenerator {
-    private const val MAX_LENGTH = 63
-    private const val PREFIX = "agent-review-"
+@Component
+class ResourceNameGenerator {
+    companion object {
+        private const val MAX_LENGTH = 63
+        private const val PREFIX = "agent-review-"
+    }
 
-    fun baseName(requestName: String): String {
+    fun generateName(requestName: String): String {
         require(requestName.isNotEmpty()) { "request name must not be empty" }
 
         val normalized =

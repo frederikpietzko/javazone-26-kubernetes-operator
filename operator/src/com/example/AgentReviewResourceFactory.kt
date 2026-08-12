@@ -3,18 +3,22 @@ package com.example
 import io.fabric8.kubernetes.api.model.ConfigMap
 import io.fabric8.kubernetes.api.model.Container
 import io.fabric8.kubernetes.api.model.batch.v1.Job
+import org.springframework.stereotype.Component
 
 data class AgentReviewResources(
     val configMap: ConfigMap,
     val job: Job,
 )
 
-object AgentReviewResourceFactory {
-    private const val REVIEW_CONFIG_KEY = "review.yaml"
-    private const val REVIEW_CONFIG_VOLUME = "review-config"
-    private const val REVIEW_CONFIG_MOUNT = "/config/review.yaml"
-    private const val SPRING_CONFIG_LOCATION = "classpath:/,file:/config/review.yaml"
-    private const val REVIEW_AGENT_SERVICE_ACCOUNT = "review-agent"
+@Component
+class AgentReviewResourceFactory(private val nameGenerator: ResourceNameGenerator) {
+    companion object {
+        private const val REVIEW_CONFIG_KEY = "review.yaml"
+        private const val REVIEW_CONFIG_VOLUME = "review-config"
+        private const val REVIEW_CONFIG_MOUNT = "/config/review.yaml"
+        private const val SPRING_CONFIG_LOCATION = "classpath:/,file:/config/review.yaml"
+        private const val REVIEW_AGENT_SERVICE_ACCOUNT = "review-agent"
+    }
 
     fun create(
         request: AgentReviewRequestCR,
@@ -25,7 +29,7 @@ object AgentReviewResourceFactory {
         val namespace = requireNotNull(metadata.namespace) { "request namespace is required" }
         val requestName = requireNotNull(metadata.name) { "request name is required" }
         val requestUid = requireNotNull(metadata.uid) { "request UID is required" }
-        val baseName = ResourceNameGenerator.baseName(requestName)
+        val baseName = nameGenerator.generateName(requestName)
         val ownerMetadata = objectMeta {
             this.name = baseName
             this.namespace = namespace

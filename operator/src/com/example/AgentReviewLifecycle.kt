@@ -2,6 +2,7 @@ package com.example
 
 import io.fabric8.kubernetes.api.model.ConfigMap
 import io.fabric8.kubernetes.api.model.batch.v1.Job
+import org.springframework.stereotype.Component
 
 const val IN_PROGRESS_PHASE = "InProgress"
 const val SUCCESSFUL_PHASE = "Successful"
@@ -9,15 +10,19 @@ const val ERROR_PHASE = "Error"
 const val JOB_CREATION_PENDING_MESSAGE = "review-agent dependencies created; creating Job"
 
 sealed interface LifecycleDecision {
-    data class EnsureResources(val status: AgentReviewRequestStatus) : LifecycleDecision
+    val status: AgentReviewRequestStatus
 
-    data class Wait(val status: AgentReviewRequestStatus) : LifecycleDecision
+    data class EnsureResources(override val status: AgentReviewRequestStatus) : LifecycleDecision
 
-    data class Successful(val status: AgentReviewRequestStatus) : LifecycleDecision
+    data class Wait(override val status: AgentReviewRequestStatus) : LifecycleDecision
 
-    data class Error(val status: AgentReviewRequestStatus) : LifecycleDecision
+    data class Successful(override val status: AgentReviewRequestStatus) : LifecycleDecision
 
-    data object Noop : LifecycleDecision
+    data class Error(override val status: AgentReviewRequestStatus) : LifecycleDecision
+
+    data object Noop : LifecycleDecision {
+        override val status: AgentReviewRequestStatus = AgentReviewRequestStatus()
+    }
 }
 
 data class ObservedAgentReviewResources(
@@ -26,14 +31,17 @@ data class ObservedAgentReviewResources(
     val reviewResult: ReviewResultCR?,
 )
 
-object AgentReviewLifecycle {
-    private const val MISSING_RESOURCE_MESSAGE =
-        "owned review-agent resource disappeared after processing started"
-    private const val MISSING_RESULT_MESSAGE =
-        "review-agent Job completed without publishing a result"
-    private const val FAILED_RESULT_MESSAGE = "review-agent reported failure"
-    private const val MISSING_JOB_MESSAGE =
-        "review-agent Job disappeared after dependent resources were created"
+@Component
+class AgentReviewLifecycle(private val nameGenerator: ResourceNameGenerator) {
+    companion object {
+        private const val MISSING_RESOURCE_MESSAGE =
+            "owned review-agent resource disappeared after processing started"
+        private const val MISSING_RESULT_MESSAGE =
+            "review-agent Job completed without publishing a result"
+        private const val FAILED_RESULT_MESSAGE = "review-agent reported failure"
+        private const val MISSING_JOB_MESSAGE =
+            "review-agent Job disappeared after dependent resources were created"
+    }
 
     fun decide(
         request: AgentReviewRequestCR,
@@ -131,7 +139,7 @@ object AgentReviewLifecycle {
 
     private fun desiredNames(request: AgentReviewRequestCR): DesiredNames {
         val requestName = requireNotNull(request.metadata?.name) { "request name is required" }
-        val baseName = ResourceNameGenerator.baseName(requestName)
+        val baseName = nameGenerator.generateName(requestName)
         return DesiredNames(baseName, baseName, baseName)
     }
 

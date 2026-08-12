@@ -1,5 +1,11 @@
 product: jvm/lib
 
+settings:
+  kotlin:
+    noArg:
+      enabled: true
+      annotations:
+        - com.example.NoArg
 plugins:
   build-config: enabled
 

@@ -14,16 +14,18 @@ request event
   -> wait for the next Kubernetes event
 ```
 
-Do not start with a tour of every helper, status type, or manifest. Introduce those naturally when the next line of `reconcile` needs them.
+Do not start with a tour of every helper, status type, or manifest. Introduce those naturally when the next line of
+`reconcile` needs them.
 
 ## Starting Point
 
-Begin in `AgentReviewRequestReconciler.kt` with the existing method removed or reduced to its smallest shell. Keep existing helper methods and collaborators available:
+Begin in `AgentReviewRequestReconciler.kt` with the existing method removed or reduced to its smallest shell. Keep
+existing helper methods and collaborators available:
 
 - `AgentReviewLifecycle.decide`
-- `AgentReviewResourceGateway`
+- `AgentReviewClient`
 - `AgentReviewResourceFactory`
-- `patchStatusIfChanged`
+- `updateIfStatusChanged`
 - `prepareEventSources`
 
 The live-coding target is the method body. Do not redesign helpers during this pass.
@@ -40,7 +42,8 @@ Add the first guard clauses:
 
 This gives the method its first useful behavior: terminal requests are stable and the demo remains namespace-scoped.
 
-**Checkpoint:** Explain that reconciliation can run many times. Returning early prevents terminal requests from starting work again.
+**Checkpoint:** Explain that reconciliation can run many times. Returning early prevents terminal requests from starting
+work again.
 
 ### 2. Read the request and reject invalid input
 
@@ -57,7 +60,8 @@ Then validate the request fields:
 
 For invalid input, return a terminal error through the existing status helper. Keep this before any gateway call.
 
-**Checkpoint:** Create a malformed request if useful. Show that the operator reports an error without creating a ConfigMap or Job.
+**Checkpoint:** Create a malformed request if useful. Show that the operator reports an error without creating a
+ConfigMap or Job.
 
 ### 3. Observe the current resources
 
@@ -67,13 +71,15 @@ Derive the deterministic base name from the request name and ask the gateway for
 - Job
 - ReviewResult
 
-At this point, pause and state the key reconciliation rule: never assume this is the first invocation. The method must work when resources are absent, partially created, running, completed, or conflicting.
+At this point, pause and state the key reconciliation rule: never assume this is the first invocation. The method must
+work when resources are absent, partially created, running, completed, or conflicting.
 
 ### 4. Build the desired resources
 
 Create the desired ConfigMap and Job through `AgentReviewResourceFactory`.
 
-Pass the request, configured image, and configured OpenAI base URL. Do not construct Kubernetes objects inside `reconcile`; only call the existing factory.
+Pass the request, configured image, and configured OpenAI base URL. Do not construct Kubernetes objects inside
+`reconcile`; only call the existing factory.
 
 The method now has both sides of the comparison:
 
@@ -85,17 +91,21 @@ observed resources + desired resources
 
 Add the gateway validation call.
 
-If an existing ConfigMap or Job does not match the desired resource, return the existing conflict status instead of overwriting it.
+If an existing ConfigMap or Job does not match the desired resource, return the existing conflict status instead of
+overwriting it.
 
-Then check an observed ReviewResult's owner reference. If it belongs to another request, return an error; if it is terminating, preserve the existing conflict behavior.
+Then check an observed ReviewResult's owner reference. If it belongs to another request, return an error; if it is
+terminating, preserve the existing conflict behavior.
 
-**Checkpoint:** Show why owner references are a safety boundary. A request may manage only its own result and dependent resources.
+**Checkpoint:** Show why owner references are a safety boundary. A request may manage only its own result and dependent
+resources.
 
 ### 6. Ask the lifecycle helper what the state means
 
 Call `AgentReviewLifecycle.decide(primary, observed)` and store the decision.
 
-Do not repeat lifecycle rules in the reconciler. From this point onward, the method translates each decision into a small Kubernetes action or status response.
+Do not repeat lifecycle rules in the reconciler. From this point onward, the method translates each decision into a
+small Kubernetes action or status response.
 
 ### 7. Implement `EnsureResources`
 
@@ -106,7 +116,8 @@ Handle the creation path first because it is the easiest path to demonstrate:
 3. On the next reconciliation, create the missing Job as well.
 4. Use the gateway's idempotent create methods instead of calling the Kubernetes client directly.
 
-The audience should see why the operator creates the ConfigMap before the Job: the Job mounts the ConfigMap's review configuration.
+The audience should see why the operator creates the ConfigMap before the Job: the Job mounts the ConfigMap's review
+configuration.
 
 ### 8. Add the remaining decision branches
 
@@ -128,7 +139,8 @@ Finish by checking the behavior for repeated calls:
 - Successful and failed requests remain terminal.
 - No polling, sleep, timer, or reschedule is added.
 
-Point out that ConfigMap, Job, and ReviewResult events cause the next invocation. The method does not wait for work synchronously.
+Point out that ConfigMap, Job, and ReviewResult events cause the next invocation. The method does not wait for work
+synchronously.
 
 ### 10. Run the complete flow
 
@@ -153,7 +165,8 @@ For each step:
 4. Trigger the relevant branch when practical.
 5. Move to the next branch.
 
-Keep the method visible throughout. Avoid switching to helper implementations unless a line cannot be understood without them.
+Keep the method visible throughout. Avoid switching to helper implementations unless a line cannot be understood without
+them.
 
 ## Deferred Refactoring
 
@@ -165,4 +178,5 @@ After the live-coding behavior works, start a separate refactoring pass for:
 - making observed-resource state less nullable
 - extracting small coordinator functions only where they improve the live-coding story
 
-Do not mix those changes into the first pass. The first pass should teach the reconciliation flow; the second should improve its shape.
+Do not mix those changes into the first pass. The first pass should teach the reconciliation flow; the second should
+improve its shape.

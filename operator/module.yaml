@@ -6,9 +6,13 @@ settings:
     version: 4.1.0
   kotlin:
     version: 2.4.10
+    freeCompilerArgs:
+      - -Xcollection-literals
+      - -Xname-based-destructuring=complete
   jvm:
     mainClass: com.example.MainKt
     runtimeClasspathMode: jars
+
 
 dependencies:
   - $kotlin.reflect

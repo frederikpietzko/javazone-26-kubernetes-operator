@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class AgentReviewResourceGatewayTest {
+class AgentReviewClientTest {
     @Test
     fun `matching resources are reusable without create or update`() {
         val desired = AgentReviewResourceFactory.create(request(), "review-agent:1")
@@ -14,35 +14,37 @@ class AgentReviewResourceGatewayTest {
             AgentReviewResourceMatcher.configMapMatches(
                 ConfigMapBuilder(desired.configMap).build(),
                 desired.configMap,
-            ),
+            )
         )
         assertTrue(
             AgentReviewResourceMatcher.jobMatches(
                 JobBuilder(desired.job).build(),
                 desired.job,
-            ),
+            )
         )
     }
 
     @Test
     fun `config map data and job image drift conflict`() {
         val desired = AgentReviewResourceFactory.create(request(), "review-agent:1")
-        val changedConfigMap = ConfigMapBuilder(desired.configMap)
-            .addToData("review.yaml", "drift")
-            .build()
-        val changedJob = JobBuilder(desired.job)
-            .editSpec()
-            .editTemplate()
-            .editSpec()
-            .editContainer(0)
-            .withImage("review-agent:2")
-            .endContainer()
-            .endSpec()
-            .endTemplate()
-            .endSpec()
-            .build()
+        val changedConfigMap =
+            ConfigMapBuilder(desired.configMap).addToData("review.yaml", "drift").build()
+        val changedJob =
+            JobBuilder(desired.job)
+                .editSpec()
+                .editTemplate()
+                .editSpec()
+                .editContainer(0)
+                .withImage("review-agent:2")
+                .endContainer()
+                .endSpec()
+                .endTemplate()
+                .endSpec()
+                .build()
 
-        assertFalse(AgentReviewResourceMatcher.configMapMatches(changedConfigMap, desired.configMap))
+        assertFalse(
+            AgentReviewResourceMatcher.configMapMatches(changedConfigMap, desired.configMap)
+        )
         assertFalse(AgentReviewResourceMatcher.jobMatches(changedJob, desired.job))
     }
 

@@ -21,25 +21,21 @@ class AgentReviewResourceFactory(private val nameGenerator: ResourceNameGenerato
     }
 
     fun create(
-        request: AgentReviewRequestCR,
+        desiredState: DesiredAgentReviewState,
         image: String,
         openAiBaseUrl: String = "http://127.0.0.1:11434",
     ): AgentReviewResources {
-        val metadata = requireNotNull(request.metadata) { "request metadata is required" }
-        val namespace = requireNotNull(metadata.namespace) { "request namespace is required" }
-        val requestName = requireNotNull(metadata.name) { "request name is required" }
-        val requestUid = requireNotNull(metadata.uid) { "request UID is required" }
-        val baseName = nameGenerator.generateName(requestName)
+        val baseName = nameGenerator.generateName(desiredState.requestName)
         val ownerMetadata = objectMeta {
             this.name = baseName
-            this.namespace = namespace
+            this.namespace = desiredState.namespace
             this.ownerReferences =
                 listOf(
                     ownerReference {
                         apiVersion = "example.com/v1"
                         kind = "AgentReviewRequest"
-                        name = requestName
-                        uid = requestUid
+                        name = desiredState.requestName
+                        uid = desiredState.uid
                         controller = true
                         blockOwnerDeletion = false
                     }
@@ -49,7 +45,7 @@ class AgentReviewResourceFactory(private val nameGenerator: ResourceNameGenerato
         val configMap = configMap {
             this.metadata = ownerMetadata
             this.immutable = true
-            this.data[REVIEW_CONFIG_KEY] = ReviewYamlFactory.create(request, baseName)
+            this.data[REVIEW_CONFIG_KEY] = ReviewYamlFactory.create(desiredState, baseName)
         }
 
         val job = job {

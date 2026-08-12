@@ -10,7 +10,7 @@ class AgentReviewResourceFactoryTest {
 
     @Test
     fun `passes configured OpenAI base URL to review agent Job`() {
-        val resources = factory.create(request(), "review-agent:1", "https://api.example.test/v1")
+        val resources = factory.create(desiredState(), "review-agent:1", "https://api.example.test/v1")
 
         assertEquals(
             "https://api.example.test/v1",
@@ -20,7 +20,7 @@ class AgentReviewResourceFactoryTest {
 
     @Test
     fun `builds owned review agent ConfigMap and Job`() {
-        val resources = factory.create(request(), "review-agent:1")
+        val resources = factory.create(desiredState(), "review-agent:1")
 
         assertEquals("agent-review-request-42", resources.configMap.metadata.name)
         assertEquals("agent-review-request-42", resources.job.metadata.name)

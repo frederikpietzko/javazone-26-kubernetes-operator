@@ -20,6 +20,20 @@ fun request(): AgentReviewRequestCR = AgentReviewRequestCR().apply {
     }
 }
 
+fun desiredState(request: AgentReviewRequestCR = request()): DesiredAgentReviewState {
+    val metadata = requireNotNull(request.metadata)
+    val spec = requireNotNull(request.spec)
+    val repository = requireNotNull(spec.repository)
+    return DesiredAgentReviewState(
+        metadata = metadata,
+        namespace = requireNotNull(metadata.namespace),
+        requestName = requireNotNull(metadata.name),
+        uid = requireNotNull(metadata.uid),
+        repositoryUrl = requireNotNull(repository.url),
+        pr = requireNotNull(spec.pr),
+    )
+}
+
 fun observedWithActiveJob(result: ReviewResultCR? = null): ObservedAgentReviewResources =
     observed(job = JobBuilder().withStatus(JobStatusBuilder().withActive(1).build()).build(), result = result)
 

@@ -24,7 +24,7 @@ class ReviewYamlFactoryTest {
         }
 
         val tree = YAMLMapper.builder().build().readTree(
-            ReviewYamlFactory.create(request, "agent-review-request-42"),
+            ReviewYamlFactory.create(desiredState(request), "agent-review-request-42"),
         )
 
         assertEquals("https://github.com/example/repository.git", tree.at("/review/repository/url").asText())

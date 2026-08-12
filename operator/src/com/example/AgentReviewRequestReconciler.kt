@@ -1,5 +1,7 @@
 package com.example
 
+import com.example.AgentReviewRequestStatus.Companion.ERROR_PHASE
+import com.example.AgentReviewRequestStatus.Companion.SUCCESSFUL_PHASE
 import io.fabric8.kubernetes.api.model.ConfigMap
 import io.fabric8.kubernetes.api.model.HasMetadata
 import io.fabric8.kubernetes.api.model.ObjectMeta
@@ -30,26 +32,32 @@ class AgentReviewRequestReconciler(
     fun reconcileOnce(
         primary: AgentReviewRequestCR,
         observed: ObservedAgentReviewResources,
-    ): LifecycleDecision = lifecycle.decide(primary, observed)
+        desiredState: DesiredAgentReviewState,
+    ): LifecycleDecision =
+        lifecycle.decide(
+            request = primary,
+            observed = observed,
+            desiredState = desiredState,
+        )
 
     @Suppress("ReturnCount")
     override fun reconcile(
         primary: AgentReviewRequestCR,
         context: Context<AgentReviewRequestCR>,
     ): UpdateControl<AgentReviewRequestCR> {
-        val reconciliationRequest =
+        val desiredState =
             when (val result = checkPreconditions(primary)) {
                 is PreconditionResult.Invalid -> return result.update
-                is PreconditionResult.Valid -> result.request
+                is PreconditionResult.Valid -> result.state
             }
 
-        val (metadata, namespace, requestName) = reconciliationRequest
+        val (metadata, namespace, requestName) = desiredState
 
         val baseName = nameGenerator.generateName(requestName)
         val observed = agentReviewClient.observe(namespace, baseName)
         val desired =
             agentReviewFactory.create(
-                request = primary,
+                desiredState = desiredState,
                 image = properties.image,
                 openAiBaseUrl = properties.openAiBaseUrl,
             )
@@ -63,7 +71,14 @@ class AgentReviewRequestReconciler(
                 .updateIfChanged(primary)
         }
 
-        return when (val decision = reconcileOnce(primary, observed)) {
+        val decision =
+            reconcileOnce(
+                primary = primary,
+                observed = observed,
+                desiredState = desiredState,
+            )
+
+        return when (decision) {
             is LifecycleDecision.EnsureResources -> {
                 val conflict = agentReviewClient.createMissing(desired)
                 if (conflict is ResourceComparisonResult.Conflict) {
@@ -106,46 +121,27 @@ class AgentReviewRequestReconciler(
         )
 }
 
-internal fun updateIfStatusChanged(
-    current: AgentReviewRequestCR,
-    desired: AgentReviewRequestStatus,
-): UpdateControl<AgentReviewRequestCR> {
-    if (sameStatus(current.status, desired)) {
-        return UpdateControl.noUpdate()
-    }
-    current.status = desired
-    return UpdateControl.patchStatus(current)
-}
-
 fun AgentReviewRequestStatus.updateIfChanged(
     current: AgentReviewRequestCR
 ): UpdateControl<AgentReviewRequestCR> =
-    if (sameStatus(current.status, this)) {
+    if (this == current.status) {
         UpdateControl.noUpdate()
     } else {
         current.status = this
         UpdateControl.patchStatus(current)
     }
 
-internal fun sameStatus(
-    current: AgentReviewRequestStatus?,
-    desired: AgentReviewRequestStatus,
-): Boolean =
-    current != null &&
-        current.phase == desired.phase &&
-        current.message == desired.message &&
-        current.jobName == desired.jobName &&
-        current.configMapName == desired.configMapName &&
-        current.reviewResultName == desired.reviewResultName
-
-private data class ReconciliationRequest(
+data class DesiredAgentReviewState(
     val metadata: ObjectMeta,
     val namespace: String,
     val requestName: String,
+    val uid: String,
+    val repositoryUrl: String,
+    val pr: String,
 )
 
 private sealed interface PreconditionResult {
-    data class Valid(val request: ReconciliationRequest) : PreconditionResult
+    data class Valid(val state: DesiredAgentReviewState) : PreconditionResult
 
     data class Invalid(val update: UpdateControl<AgentReviewRequestCR>) : PreconditionResult
 }
@@ -154,7 +150,9 @@ private fun checkPreconditions(primary: AgentReviewRequestCR): PreconditionResul
     val metadata = requireNotNull(primary.metadata) { "request metadata is required" }
     val namespace = requireNotNull(metadata.namespace) { "request namespace is required" }
     val requestName = requireNotNull(primary.metadata.name) { "request name is required" }
-    requireNotNull(metadata.uid) { "request UID is required" }
+    val uid = requireNotNull(metadata.uid) { "request UID is required" }
+    val repositoryUrl = primary.spec.repository?.url
+    val pr = primary.spec.pr
 
     return when {
         namespace != "default" -> PreconditionResult.Invalid(UpdateControl.noUpdate())
@@ -162,17 +160,27 @@ private fun checkPreconditions(primary: AgentReviewRequestCR): PreconditionResul
         primary.status?.phase in [SUCCESSFUL_PHASE, ERROR_PHASE] ->
             PreconditionResult.Invalid(UpdateControl.noUpdate())
 
-        primary.spec.repository?.url == null ->
+        repositoryUrl == null ->
             PreconditionResult.Invalid(
                 AgentReviewRequestStatus.error("repository URL is required")
                     .updateIfChanged(primary)
             )
 
-        primary.spec.pr == null ->
+        pr == null ->
             PreconditionResult.Invalid(
                 AgentReviewRequestStatus.error("PR number is required").updateIfChanged(primary)
             )
 
-        else -> PreconditionResult.Valid(ReconciliationRequest(metadata, namespace, requestName))
+        else ->
+            PreconditionResult.Valid(
+                DesiredAgentReviewState(
+                    metadata,
+                    namespace,
+                    requestName,
+                    uid,
+                    repositoryUrl,
+                    pr,
+                )
+            )
     }
 }

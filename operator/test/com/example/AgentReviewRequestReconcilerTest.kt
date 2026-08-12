@@ -15,7 +15,9 @@ import org.springframework.stereotype.Component
 @SpringBootTest
 @Import(TestOperatorConfiguration::class)
 class AgentReviewRequestReconcilerTest {
-    private fun newReconciler(gateway: AgentReviewClient = FakeGateway()): AgentReviewRequestReconciler {
+    private fun newReconciler(
+        gateway: AgentReviewClient = FakeGateway()
+    ): AgentReviewRequestReconciler {
         val nameGenerator = ResourceNameGenerator()
         return AgentReviewRequestReconciler(
             gateway,
@@ -35,12 +37,12 @@ class AgentReviewRequestReconcilerTest {
 
     @Test
     fun `new request produces EnsureResources decision`() {
-        val reconciler =
-            newReconciler()
+        val reconciler = newReconciler()
         val decision =
             reconciler.reconcileOnce(
                 request(),
                 ObservedAgentReviewResources(null, null, null),
+                desiredState(),
             )
         assertIs<LifecycleDecision.EnsureResources>(decision)
     }
@@ -51,17 +53,19 @@ class AgentReviewRequestReconcilerTest {
             ReviewResultCR().apply {
                 status = ReviewResultStatus().also { it.status = "Completed" }
             }
-        val reconciler =
-            newReconciler()
-        val decision = reconciler.reconcileOnce(request(), observedWithCompletedJob(result))
+        val reconciler = newReconciler()
+        val decision = reconciler.reconcileOnce(
+            request(),
+            observedWithCompletedJob(result),
+            desiredState(),
+        )
         assertEquals("Successful", assertIs<LifecycleDecision.Successful>(decision).status.phase)
     }
 
     @Test
     fun `unsupported namespace is rejected before resource access`() {
         val gateway = FakeGateway()
-        val reconciler =
-            newReconciler(gateway)
+        val reconciler = newReconciler(gateway)
         val primary = request().apply { metadata.namespace = "other" }
 
         assertTrue(
@@ -78,8 +82,7 @@ class AgentReviewRequestReconcilerTest {
 
     @Test
     fun `informer registrations are limited to default`() {
-        val reconciler =
-            newReconciler()
+        val reconciler = newReconciler()
         @Suppress("UNCHECKED_CAST")
         val cache =
             Mockito.mock(
@@ -109,8 +112,7 @@ class AgentReviewRequestReconcilerTest {
     @Test
     fun `reconcile validates desired resources before waiting`() {
         val gateway = FakeGateway(observedWithActiveJob())
-        val reconciler =
-            newReconciler(gateway)
+        val reconciler = newReconciler(gateway)
         val primary =
             request().apply {
                 status =
@@ -143,8 +145,7 @@ class AgentReviewRequestReconcilerTest {
                     .build()
             )
         val gateway = FakeGateway(observedWithActiveJob(result))
-        val reconciler =
-            newReconciler(gateway)
+        val reconciler = newReconciler(gateway)
         val primary = request()
         reconciler.reconcile(
             primary,
@@ -158,8 +159,7 @@ class AgentReviewRequestReconcilerTest {
     @Test
     fun `missing job after normal processing does not create a replacement`() {
         val gateway = FakeGateway(observedWithActiveJob().copy(job = null))
-        val reconciler =
-            newReconciler(gateway)
+        val reconciler = newReconciler(gateway)
         val primary =
             request().apply {
                 status =
@@ -183,8 +183,7 @@ class AgentReviewRequestReconcilerTest {
     fun `transient Job creation failure remains retryable during creation phase`() {
         val gateway =
             FakeGateway(observedWithActiveJob().copy(job = null), failJobCreationOnce = true)
-        val reconciler =
-            newReconciler(gateway)
+        val reconciler = newReconciler(gateway)
         val primary =
             request().apply {
                 status =
@@ -211,8 +210,7 @@ class AgentReviewRequestReconcilerTest {
 
     @Test
     fun `missing repository URL becomes terminal Error`() {
-        val reconciler =
-            newReconciler()
+        val reconciler = newReconciler()
         val primary =
             request().apply {
                 spec.repository = null
@@ -229,8 +227,7 @@ class AgentReviewRequestReconcilerTest {
     @Test
     fun `resource conflict becomes terminal Error`() {
         val gateway = FakeGateway(observedWithActiveJob(), conflictOnValidation = true)
-        val reconciler =
-            newReconciler(gateway)
+        val reconciler = newReconciler(gateway)
         val primary = request()
         reconciler.reconcile(
             primary,
@@ -238,8 +235,9 @@ class AgentReviewRequestReconcilerTest {
                 as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>,
         )
         assertEquals("Error", primary.status?.phase)
-        assertTrue(
-            primary.status?.message?.contains("resource agent-review-request-42 conflicts") == true
+        assertEquals(
+            true,
+            primary.status?.message?.contains("resource agent-review-request-42 conflicts"),
         )
     }
 
@@ -252,21 +250,18 @@ class AgentReviewRequestReconcilerTest {
                 it.configMapName = "agent-review-request-42"
                 it.reviewResultName = "agent-review-request-42"
             }
-        assertTrue(
-            sameStatus(
-                status,
-                AgentReviewRequestStatus().also {
-                    it.phase = "InProgress"
-                    it.jobName = "agent-review-request-42"
-                    it.configMapName = "agent-review-request-42"
-                    it.reviewResultName = "agent-review-request-42"
-                },
-            )
+        assertEquals(
+            status,
+            AgentReviewRequestStatus().also {
+                it.phase = "InProgress"
+                it.jobName = "agent-review-request-42"
+                it.configMapName = "agent-review-request-42"
+                it.reviewResultName = "agent-review-request-42"
+            },
         )
         val primary = request().apply { this.status = status }
         assertTrue(status.updateIfChanged(primary).isNoUpdate)
-        val reconciler =
-            newReconciler(FakeGateway(observedWithActiveJob()))
+        val reconciler = newReconciler(FakeGateway(observedWithActiveJob()))
         assertTrue(
             reconciler
                 .reconcile(

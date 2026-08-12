@@ -20,7 +20,7 @@ class AgentReviewRequestSpec {
 }
 
 @NoArg
-class AgentReviewRequestStatus(
+data class AgentReviewRequestStatus(
     var phase: String? = null,
     var message: String? = null,
     var jobName: String? = null,
@@ -29,11 +29,21 @@ class AgentReviewRequestStatus(
 ) {
     companion object {
         const val ERROR_PHASE = "Error"
+        const val IN_PROGRESS_PHASE = "InProgress"
+        const val SUCCESSFUL_PHASE = "Successful"
 
-        fun error(message: String) =
+        fun error(
+            message: String,
+            jobName: String? = null,
+            configMapName: String? = null,
+            reviewResultName: String? = null,
+        ) =
             AgentReviewRequestStatus(
                 phase = ERROR_PHASE,
                 message = message,
+                jobName = jobName,
+                configMapName = configMapName,
+                reviewResultName = reviewResultName,
             )
 
         fun stateConflict(message: String?, name: String) =
@@ -53,6 +63,32 @@ class AgentReviewRequestStatus(
                 jobName = name,
                 configMapName = name,
                 reviewResultName = name,
+            )
+
+        fun inProgress(
+            message: String? = null,
+            jobName: String,
+            configMapName: String,
+            reviewResultName: String,
+        ) =
+            AgentReviewRequestStatus(
+                phase = IN_PROGRESS_PHASE,
+                message = message,
+                jobName = jobName,
+                configMapName = configMapName,
+                reviewResultName = reviewResultName,
+            )
+
+        fun success(
+            jobName: String,
+            configMapName: String,
+            reviewResultName: String,
+        ): AgentReviewRequestStatus =
+            AgentReviewRequestStatus(
+                phase = SUCCESSFUL_PHASE,
+                jobName = jobName,
+                configMapName = configMapName,
+                reviewResultName = reviewResultName,
             )
     }
 }

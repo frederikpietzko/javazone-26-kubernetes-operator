@@ -33,6 +33,8 @@ class AgentReviewResourceFactoryTest {
         assertEquals("http://127.0.0.1:11434", environment.first { it.name == "REVIEW_AGENT_OPENAI_BASE_URL" }.value)
         assertTrue(resources.configMap.immutable)
         assertEquals("review.yaml", resources.configMap.data.keys.single())
+        assertEquals("review-config", resources.job.spec.template.spec.volumes.single().name)
+        assertEquals("review-config", resources.job.spec.template.spec.containers.single().volumeMounts.single().name)
         assertTrue(resources.job.spec.template.spec.containers.single().volumeMounts.single().readOnly)
         assertEquals("review.yaml", resources.job.spec.template.spec.containers.single().volumeMounts.single().subPath)
         assertEquals("/config/review.yaml", resources.job.spec.template.spec.containers.single().volumeMounts.single().mountPath)

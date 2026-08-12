@@ -11,6 +11,7 @@ data class AgentReviewResources(
 
 object AgentReviewResourceFactory {
     private const val REVIEW_CONFIG_KEY = "review.yaml"
+    private const val REVIEW_CONFIG_VOLUME = "review-config"
     private const val REVIEW_CONFIG_MOUNT = "/config/review.yaml"
     private const val SPRING_CONFIG_LOCATION = "classpath:/,file:/config/review.yaml"
     private const val REVIEW_AGENT_SERVICE_ACCOUNT = "review-agent"
@@ -59,7 +60,7 @@ object AgentReviewResourceFactory {
                         volumes =
                             listOf(
                                 volume {
-                                    name = REVIEW_CONFIG_KEY
+                                    name = REVIEW_CONFIG_VOLUME
                                     this.configMap = configMapVolumeSource {
                                         name = baseName
                                     }
@@ -89,7 +90,7 @@ object AgentReviewResourceFactory {
         volumeMounts =
             listOf(
                 volumeMount {
-                    name = REVIEW_CONFIG_KEY
+                    name = REVIEW_CONFIG_VOLUME
                     mountPath = REVIEW_CONFIG_MOUNT
                     subPath = REVIEW_CONFIG_KEY
                     readOnly = true

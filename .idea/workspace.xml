@@ -8,20 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="progress">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/crds_jvm.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/review_agent_jvm_executable.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/shared_data_model_jvm.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operator/src/com/example/K8sDsl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/application-local.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/module.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/operator/module.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewProperties.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewProperties.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceGateway.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceGateway.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/module.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/module.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewResourceFactoryTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewResourceFactoryTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

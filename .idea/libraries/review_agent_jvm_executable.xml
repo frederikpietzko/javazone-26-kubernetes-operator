@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="review-agent-jvm-executable">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.worktrees/review-agent-image/build/tasks/_review-agent_executableJarJvm/review-agent-jvm-executable.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.worktrees/review-agent-image/build/tasks/_review-agent_executableJarJvm/review-agent-jvm-executable.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/tasks/_review-agent_executableJarJvm/review-agent-jvm-executable.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/tasks/_review-agent_executableJarJvm/review-agent-jvm-executable.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

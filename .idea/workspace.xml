@@ -8,21 +8,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="progress">
-      <change afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/AgentModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/Reviewer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crds/src/com/example/ReviewResultCR.kt" beforeDir="false" afterPath="$PROJECT_DIR$/crds/src/com/example/ReviewResultCR.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-review-agent-cr-status.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-review-agent-cr-status.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-shared-data-model.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-shared-data-model.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/crds/reviewresults.example.com-v1.yml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/crds/reviewresults.example.com-v1.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewCommandLineRunner.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewCommandLineRunner.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewConfiguration.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewConfiguration.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewResultMapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewResultMapper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewResultPublisher.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewResultPublisher.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/src/com/example/ReviewWorkflow.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/src/com/example/reviewer/ReviewWorkflow.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/test/com/example/ReviewConfigurationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/test/com/example/ReviewConfigurationTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/test/com/example/ReviewResultMapperTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/test/com/example/ReviewResultMapperTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review-agent/test/com/example/ReviewWorkflowTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/test/com/example/ReviewWorkflowTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/crds_jvm.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/review_agent_jvm_executable.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/shared_data_model_jvm.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/operator/src/com/example/K8sDsl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/application-local.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/module.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/operator/module.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewProperties.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewProperties.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceGateway.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceGateway.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review-agent/module.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/review-agent/module.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +29,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="121" />
+    <option name="cachedIndexableFilesCount" value="237" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -46,18 +45,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "frederikpietzko"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;frederikpietzko&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:frederikpietzko/javazone-26-kubernetes-operator.git",
-    "accountId": "d3ae2ea2-89fc-4c5d-8385-2e21ed315108"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:frederikpietzko/javazone-26-kubernetes-operator.git&quot;,
+    &quot;accountId&quot;: &quot;d3ae2ea2-89fc-4c5d-8385-2e21ed315108&quot;
   }
-}]]></component>
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/Library/Caches/JetBrains/Kotlin/.m2.cache/io/fabric8/kubernetes-client-api/7.8.0/kubernetes-client-api-7.8.0-sources.jar!/io/fabric8/kubernetes/client/KubernetesClientBuilder.java" root0="SKIP_INSPECTION" />
+  </component>
   <component name="KmpPackageLockUpdaterState">{
   &quot;jsModulesKotlinGradlePluginVersion&quot;: {},
   &quot;wasmModulesKotlinGradlePluginVersion&quot;: {}
@@ -68,61 +70,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000000004" />
-      <entry key="MS500" value="1.0008419370556811" />
-      <entry key="S2" value="1.1703412798900645" />
-      <entry key="S5" value="1.4926380612595005" />
-      <entry key="S10" value="1.7018818000628744" />
-      <entry key="S30" value="1.8886989457876973" />
-      <entry key="S60" value="1.942813092314669" />
-      <entry key="M2" value="1.991792999953927" />
-      <entry key="M5" value="3.1304639550651996" />
-      <entry key="M10" value="7.116365901831086" />
-      <entry key="M15" value="10.650550183187782" />
-      <entry key="M30" value="19.20745987427157" />
-      <entry key="H1" value="43.99224436036828" />
-      <entry key="H2" value="104.14813498920603" />
-      <entry key="H4" value="262.2407007028234" />
-      <entry key="D1" value="1270.0107557875272" />
-      <entry key="W1" value="1813.1332376331495" />
+      <entry key="MS100" value="1.0000029517459745" />
+      <entry key="MS500" value="1.0783458137775432" />
+      <entry key="S2" value="1.5290588078499021" />
+      <entry key="S5" value="1.7751783532808316" />
+      <entry key="S10" value="1.8810315564745586" />
+      <entry key="S30" value="2.283568398365624" />
+      <entry key="S60" value="4.097394508009889" />
+      <entry key="M2" value="9.862029523691357" />
+      <entry key="M5" value="29.613320508476978" />
+      <entry key="M10" value="50.59977430978727" />
+      <entry key="M15" value="61.98291678236515" />
+      <entry key="M30" value="76.97078436625605" />
+      <entry key="H1" value="86.242190005834" />
+      <entry key="H2" value="91.59193788227533" />
+      <entry key="H4" value="104.28468880097702" />
+      <entry key="D1" value="850.3835584192606" />
+      <entry key="W1" value="1870.2791716189172" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="1.0230240308921994E-126" />
-      <entry key="S5" value="4.701540807394936E-51" />
-      <entry key="S10" value="9.37305692831618E-26" />
-      <entry key="S30" value="8.58460431940747E-9" />
-      <entry key="S60" value="1.6103177034892558E-4" />
-      <entry key="M2" value="0.026743835627158468" />
-      <entry key="M5" value="0.8834491838645953" />
-      <entry key="M10" value="3.2644437768106447" />
-      <entry key="M15" value="5.137081005455845" />
-      <entry key="M30" value="8.35759425979191" />
-      <entry key="H1" value="12.0858597114032" />
-      <entry key="H2" value="17.816485482412915" />
-      <entry key="H4" value="33.85537022690445" />
-      <entry key="D1" value="156.10972605825157" />
-      <entry key="W1" value="225.26009106750573" />
+      <entry key="MS100" value="0.009752582413293841" />
+      <entry key="MS500" value="0.3961174054624846" />
+      <entry key="S2" value="0.7933338431911431" />
+      <entry key="S5" value="0.9115550784161434" />
+      <entry key="S10" value="0.9568915320632191" />
+      <entry key="S30" value="1.4184371230604076" />
+      <entry key="S60" value="2.8533939404643736" />
+      <entry key="M2" value="6.086513889567929" />
+      <entry key="M5" value="15.481326924582676" />
+      <entry key="M10" value="25.248018265978725" />
+      <entry key="M15" value="30.65067041856467" />
+      <entry key="M30" value="37.932458200770604" />
+      <entry key="H1" value="42.54314652886711" />
+      <entry key="H2" value="45.16986886269416" />
+      <entry key="H4" value="47.51982093317556" />
+      <entry key="D1" value="134.29633110727096" />
+      <entry key="W1" value="257.9225888365511" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9460576467255959" />
-      <entry key="MS500" value="0.9893081415879978" />
-      <entry key="S2" value="1.1327439541941238" />
-      <entry key="S5" value="1.4484560723120552" />
-      <entry key="S10" value="1.6699413429295555" />
-      <entry key="S30" value="1.8750649553760357" />
-      <entry key="S60" value="1.9357156799431885" />
-      <entry key="M2" value="2.014378815261919" />
-      <entry key="M5" value="4.007374466408717" />
-      <entry key="M10" value="10.37109966928003" />
-      <entry key="M15" value="15.777836802068927" />
-      <entry key="M30" value="27.557199122361492" />
-      <entry key="H1" value="56.07195387880611" />
-      <entry key="H2" value="121.95939522789072" />
-      <entry key="H4" value="296.0900851172698" />
-      <entry key="D1" value="1426.1149324075984" />
-      <entry key="W1" value="2038.3921618256911" />
+      <entry key="MS100" value="0.3462818519894776" />
+      <entry key="MS500" value="0.9273510484629431" />
+      <entry key="S2" value="1.9159931383064237" />
+      <entry key="S5" value="2.472485024886083" />
+      <entry key="S10" value="2.7197888915334856" />
+      <entry key="S30" value="3.6440469109839873" />
+      <entry key="S60" value="6.892105188543768" />
+      <entry key="M2" value="15.88243806490892" />
+      <entry key="M5" value="45.01926830643834" />
+      <entry key="M10" value="75.78310119952462" />
+      <entry key="M15" value="92.58049494371629" />
+      <entry key="M30" value="114.87005406332985" />
+      <entry key="H1" value="128.76666750358748" />
+      <entry key="H2" value="136.7518855574887" />
+      <entry key="H4" value="151.79923130970974" />
+      <entry key="D1" value="984.6759705494236" />
+      <entry key="W1" value="2128.2005551263096" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -152,8 +154,10 @@
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
@@ -172,7 +176,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "rearrange.code.on.save": "true",
-    "settings.editor.selected.configurable": "ml.llm.AcpAgentsConfigurable",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
@@ -215,9 +219,10 @@
       </EXTENSION>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="Application" factoryName="Application">
+    <configuration default="true" type="AppleRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" IS_LOCATION_SIMULATION_SUPPORTED="false" IS_LOCATION_SIMULATION_ALLOWED="true" APPLICATION_LANGUAGE="IDELaunchSchemeLanguageUseSystemLanguage" APPLICATION_REGION="" DEVELOPMENT_TEAM="" MAKE_ACTIVE="TRUE" SHOULD_DEBUG_EXTENSIONS="false">
+      <embedded_app_extension_list />
       <method v="2">
-        <option name="Make" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="JetRunConfigurationType">

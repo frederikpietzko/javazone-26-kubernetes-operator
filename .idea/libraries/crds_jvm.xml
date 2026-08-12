@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="crds-jvm">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/tasks/_crds_jarJvm/crds-jvm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/tasks/_crds_jarJvm/crds-jvm.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

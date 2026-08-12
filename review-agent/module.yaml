@@ -3,6 +3,10 @@ settings:
   springBoot:
     enabled: true
     version: 4.1.0
+  jvm:
+    mainClass: com.example.MainKt
+    runtimeClasspathMode: jars
+
 
 dependencies:
   - ../crds

@@ -6,5 +6,6 @@
 build/
 config/
 **/application-local.yaml
+**/application-review.yaml
 **/*.log
 .DS_Store

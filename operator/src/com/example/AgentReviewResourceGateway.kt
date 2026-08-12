@@ -1,7 +1,6 @@
 package com.example
 
 import io.fabric8.kubernetes.api.model.HasMetadata
-import io.fabric8.kubernetes.api.model.batch.v1.Job
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.fabric8.kubernetes.client.dsl.Resource
 import org.springframework.stereotype.Component
@@ -10,31 +9,48 @@ class AgentReviewResourceConflict(message: String) : IllegalStateException(messa
 
 interface AgentReviewResourceGateway {
     fun observe(namespace: String, baseName: String): ObservedAgentReviewResources
+
     fun validateDesired(resources: AgentReviewResources, observed: ObservedAgentReviewResources)
+
     fun createDependencies(resources: AgentReviewResources)
+
     fun createMissing(resources: AgentReviewResources)
 }
 
 @Component
-class Fabric8AgentReviewResourceGateway(
-    private val client: KubernetesClient,
-) : AgentReviewResourceGateway {
+class Fabric8AgentReviewResourceGateway(private val client: KubernetesClient) :
+    AgentReviewResourceGateway {
     override fun observe(namespace: String, baseName: String): ObservedAgentReviewResources =
         ObservedAgentReviewResources(
             configMap = client.configMaps().inNamespace(namespace).withName(baseName).get(),
-            job = client.batch().jobs().inNamespace(namespace).withName(baseName).get(),
-            reviewResult = client.resources(ReviewResultCR::class.java).inNamespace(namespace).withName(baseName).get(),
+            job = client.batch().v1().jobs().inNamespace(namespace).withName(baseName).get(),
+            reviewResult =
+                client
+                    .resources(ReviewResultCR::class.java)
+                    .inNamespace(namespace)
+                    .withName(baseName)
+                    .get(),
         )
 
-    override fun validateDesired(resources: AgentReviewResources, observed: ObservedAgentReviewResources) {
-        observed.configMap?.let { requireMatch(it, resources.configMap, AgentReviewResourceMatcher::configMapMatches) }
-        observed.job?.let { requireMatch(it, resources.job, AgentReviewResourceMatcher::jobMatches) }
+    override fun validateDesired(
+        resources: AgentReviewResources,
+        observed: ObservedAgentReviewResources,
+    ) {
+        observed.configMap?.let {
+            requireMatch(it, resources.configMap, AgentReviewResourceMatcher::configMapMatches)
+        }
+        observed.job?.let {
+            requireMatch(it, resources.job, AgentReviewResourceMatcher::jobMatches)
+        }
     }
 
     override fun createDependencies(resources: AgentReviewResources) {
         ensure(
             resources.configMap,
-            client.configMaps().inNamespace(namespace(resources.configMap)).withName(name(resources.configMap)),
+            client
+                .configMaps()
+                .inNamespace(namespace(resources.configMap))
+                .withName(name(resources.configMap)),
             AgentReviewResourceMatcher::configMapMatches,
         )
     }
@@ -43,7 +59,12 @@ class Fabric8AgentReviewResourceGateway(
         createDependencies(resources)
         ensure(
             resources.job,
-            client.batch().jobs().inNamespace(namespace(resources.job)).withName(name(resources.job)),
+            client
+                .batch()
+                .v1()
+                .jobs()
+                .inNamespace(namespace(resources.job))
+                .withName(name(resources.job)),
             AgentReviewResourceMatcher::jobMatches,
         )
     }
@@ -68,7 +89,7 @@ class Fabric8AgentReviewResourceGateway(
     ) {
         if (!matches(existing, desired)) {
             throw AgentReviewResourceConflict(
-                "existing ${desired.kind ?: desired.javaClass.simpleName} ${name(desired)} does not match desired resource",
+                "existing ${desired.kind ?: desired.javaClass.simpleName} ${name(desired)} does not match desired resource"
             )
         }
     }

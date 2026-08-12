@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="shared-data-model-jvm">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/tasks/_shared-data-model_jarJvm/shared-data-model-jvm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/tasks/_shared-data-model_jarJvm/shared-data-model-jvm.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

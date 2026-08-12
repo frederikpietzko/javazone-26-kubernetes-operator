@@ -6,9 +6,11 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 
 class AgentReviewLifecycleTest {
+    private val lifecycle = AgentReviewLifecycle(ResourceNameGenerator())
+
     @Test
     fun `new request asks for all dependent resources and InProgress status`() {
-        val decision = AgentReviewLifecycle.decide(request(), ObservedAgentReviewResources(null, null, null))
+        val decision = lifecycle.decide(request(), ObservedAgentReviewResources(null, null, null))
         val ensure = assertIs<LifecycleDecision.EnsureResources>(decision)
         assertEquals("InProgress", ensure.status.phase)
         assertEquals("agent-review-request-42", ensure.status.jobName)
@@ -19,7 +21,7 @@ class AgentReviewLifecycleTest {
 
     @Test
     fun `matching resources are reused and request remains InProgress`() {
-        val decision = AgentReviewLifecycle.decide(request(), observedWithActiveJob())
+        val decision = lifecycle.decide(request(), observedWithActiveJob())
         val wait = assertIs<LifecycleDecision.Wait>(decision)
         assertEquals("InProgress", wait.status.phase)
         assertEquals("agent-review-request-42", wait.status.jobName)
@@ -31,7 +33,7 @@ class AgentReviewLifecycleTest {
         val result = ReviewResultCR().apply {
             status = ReviewResultStatus().also { it.status = "Completed" }
         }
-        val decision = AgentReviewLifecycle.decide(request(), observedWithCompletedJob(result))
+        val decision = lifecycle.decide(request(), observedWithCompletedJob(result))
         val successful = assertIs<LifecycleDecision.Successful>(decision)
         assertEquals("Successful", successful.status.phase)
         assertEquals("agent-review-request-42", successful.status.reviewResultName)
@@ -43,7 +45,7 @@ class AgentReviewLifecycleTest {
         val result = ReviewResultCR().apply {
             status = ReviewResultStatus().also { it.status = "InProgress" }
         }
-        val decision = AgentReviewLifecycle.decide(request(), observedWithActiveJob(result))
+        val decision = lifecycle.decide(request(), observedWithActiveJob(result))
         val wait = assertIs<LifecycleDecision.Wait>(decision)
         assertEquals("InProgress", wait.status.phase)
         assertNull(wait.status.message)
@@ -57,7 +59,7 @@ class AgentReviewLifecycleTest {
                 it.error = "model unavailable"
             }
         }
-        val decision = AgentReviewLifecycle.decide(request(), observedWithActiveJob(result))
+        val decision = lifecycle.decide(request(), observedWithActiveJob(result))
         val error = assertIs<LifecycleDecision.Error>(decision)
         assertEquals("Error", error.status.phase)
         assertEquals("model unavailable", error.status.message)
@@ -65,7 +67,7 @@ class AgentReviewLifecycleTest {
 
     @Test
     fun `failed job makes request Error`() {
-        val decision = AgentReviewLifecycle.decide(request(), observedWithFailedJob())
+        val decision = lifecycle.decide(request(), observedWithFailedJob())
         val error = assertIs<LifecycleDecision.Error>(decision)
         assertEquals("Error", error.status.phase)
         assertEquals("review-agent Job failed", error.status.message)
@@ -73,7 +75,7 @@ class AgentReviewLifecycleTest {
 
     @Test
     fun `successful job without result makes request Error`() {
-        val decision = AgentReviewLifecycle.decide(request(), observedWithCompletedJob(null))
+        val decision = lifecycle.decide(request(), observedWithCompletedJob(null))
         val error = assertIs<LifecycleDecision.Error>(decision)
         assertEquals("Error", error.status.phase)
         assertEquals("review-agent Job completed without publishing a result", error.status.message)
@@ -84,7 +86,7 @@ class AgentReviewLifecycleTest {
         val request = request().apply {
             status = AgentReviewRequestStatus().also { it.phase = "InProgress" }
         }
-        val decision = AgentReviewLifecycle.decide(request, observedWithActiveJob().copy(configMap = null))
+        val decision = lifecycle.decide(request, observedWithActiveJob().copy(configMap = null))
         val error = assertIs<LifecycleDecision.Error>(decision)
         assertEquals("Error", error.status.phase)
         assertEquals("owned review-agent resource disappeared after processing started", error.status.message)
@@ -99,7 +101,7 @@ class AgentReviewLifecycleTest {
                 it.message = "review-agent Job running"
             }
         }
-        val decision = AgentReviewLifecycle.decide(request, observed)
+        val decision = lifecycle.decide(request, observed)
         val error = assertIs<LifecycleDecision.Error>(decision)
         assertEquals("Error", error.status.phase)
         assertEquals("review-agent Job disappeared after dependent resources were created", error.status.message)
@@ -110,7 +112,7 @@ class AgentReviewLifecycleTest {
         val request = request().apply {
             status = AgentReviewRequestStatus().also { it.phase = "Successful" }
         }
-        assertIs<LifecycleDecision.Noop>(AgentReviewLifecycle.decide(request, observedWithActiveJob()))
+        assertIs<LifecycleDecision.Noop>(lifecycle.decide(request, observedWithActiveJob()))
     }
 
     @Test
@@ -118,6 +120,6 @@ class AgentReviewLifecycleTest {
         val request = request().apply {
             status = AgentReviewRequestStatus().also { it.phase = "Error" }
         }
-        assertIs<LifecycleDecision.Noop>(AgentReviewLifecycle.decide(request, observedWithActiveJob()))
+        assertIs<LifecycleDecision.Noop>(lifecycle.decide(request, observedWithActiveJob()))
     }
 }

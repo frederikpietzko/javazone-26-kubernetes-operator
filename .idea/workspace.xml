@@ -8,23 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="progress">
-      <change afterPath="$PROJECT_DIR$/crds/src/com/example/NoArg.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crds/module.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/crds/module.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crds/src/com/example/AgentReviewRequestCR.kt" beforeDir="false" afterPath="$PROJECT_DIR$/crds/src/com/example/AgentReviewRequestCR.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crds/src/com/example/Example.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/live-coding/2026-08-12-agent-review-reconciler-live-coding-overview.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/live-coding/2026-08-12-agent-review-reconciler-live-coding-overview.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-agent-review-request-operator-plan.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-agent-review-request-operator-plan.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-default-only-agent-review-operator-plan.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-default-only-agent-review-operator-plan.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/specs/2026-08-11-default-only-agent-review-operator-design.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/superpowers/specs/2026-08-11-default-only-agent-review-operator-design.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/module.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/operator/module.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewLifecycle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewLifecycle.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewRequestReconciler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewRequestReconciler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceGateway.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewClient.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/ResourceNameGenerator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/ResourceNameGenerator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewClientTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewClientTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewLifecycleTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewLifecycleTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewRequestReconcilerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewRequestReconcilerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewResourceGatewayTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewClientTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewResourceFactoryTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewResourceFactoryTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/test/com/example/ResourceNameGeneratorTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/ResourceNameGeneratorTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

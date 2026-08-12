@@ -7,9 +7,11 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class AgentReviewClientTest {
+    private val factory = AgentReviewResourceFactory(ResourceNameGenerator())
+
     @Test
     fun `matching resources are reusable without create or update`() {
-        val desired = AgentReviewResourceFactory.create(request(), "review-agent:1")
+        val desired = factory.create(request(), "review-agent:1")
         assertTrue(
             AgentReviewResourceMatcher.configMapMatches(
                 ConfigMapBuilder(desired.configMap).build(),
@@ -26,7 +28,7 @@ class AgentReviewClientTest {
 
     @Test
     fun `config map data and job image drift conflict`() {
-        val desired = AgentReviewResourceFactory.create(request(), "review-agent:1")
+        val desired = factory.create(request(), "review-agent:1")
         val changedConfigMap =
             ConfigMapBuilder(desired.configMap).addToData("review.yaml", "drift").build()
         val changedJob =
@@ -50,7 +52,7 @@ class AgentReviewClientTest {
 
     @Test
     fun `owner UID drift conflicts`() {
-        val desired = AgentReviewResourceFactory.create(request(), "review-agent:1")
+        val desired = factory.create(request(), "review-agent:1")
         val changed = ConfigMapBuilder(desired.configMap).build()
         changed.metadata.ownerReferences[0].uid = "different-uid"
 

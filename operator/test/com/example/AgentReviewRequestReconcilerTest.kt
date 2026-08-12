@@ -15,6 +15,17 @@ import org.springframework.stereotype.Component
 @SpringBootTest
 @Import(TestOperatorConfiguration::class)
 class AgentReviewRequestReconcilerTest {
+    private fun newReconciler(gateway: AgentReviewClient = FakeGateway()): AgentReviewRequestReconciler {
+        val nameGenerator = ResourceNameGenerator()
+        return AgentReviewRequestReconciler(
+            gateway,
+            AgentReviewProperties("review-agent:1"),
+            nameGenerator,
+            AgentReviewLifecycle(nameGenerator),
+            AgentReviewResourceFactory(nameGenerator),
+        )
+    }
+
     @Autowired lateinit var applicationContext: ApplicationContext
 
     @Test
@@ -25,7 +36,7 @@ class AgentReviewRequestReconcilerTest {
     @Test
     fun `new request produces EnsureResources decision`() {
         val reconciler =
-            AgentReviewRequestReconciler(FakeGateway(), AgentReviewProperties("review-agent:1"))
+            newReconciler()
         val decision =
             reconciler.reconcileOnce(
                 request(),
@@ -41,7 +52,7 @@ class AgentReviewRequestReconcilerTest {
                 status = ReviewResultStatus().also { it.status = "Completed" }
             }
         val reconciler =
-            AgentReviewRequestReconciler(FakeGateway(), AgentReviewProperties("review-agent:1"))
+            newReconciler()
         val decision = reconciler.reconcileOnce(request(), observedWithCompletedJob(result))
         assertEquals("Successful", assertIs<LifecycleDecision.Successful>(decision).status.phase)
     }
@@ -50,7 +61,7 @@ class AgentReviewRequestReconcilerTest {
     fun `unsupported namespace is rejected before resource access`() {
         val gateway = FakeGateway()
         val reconciler =
-            AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+            newReconciler(gateway)
         val primary = request().apply { metadata.namespace = "other" }
 
         assertTrue(
@@ -68,7 +79,7 @@ class AgentReviewRequestReconcilerTest {
     @Test
     fun `informer registrations are limited to default`() {
         val reconciler =
-            AgentReviewRequestReconciler(FakeGateway(), AgentReviewProperties("review-agent:1"))
+            newReconciler()
         @Suppress("UNCHECKED_CAST")
         val cache =
             Mockito.mock(
@@ -99,7 +110,7 @@ class AgentReviewRequestReconcilerTest {
     fun `reconcile validates desired resources before waiting`() {
         val gateway = FakeGateway(observedWithActiveJob())
         val reconciler =
-            AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+            newReconciler(gateway)
         val primary =
             request().apply {
                 status =
@@ -133,7 +144,7 @@ class AgentReviewRequestReconcilerTest {
             )
         val gateway = FakeGateway(observedWithActiveJob(result))
         val reconciler =
-            AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+            newReconciler(gateway)
         val primary = request()
         reconciler.reconcile(
             primary,
@@ -148,7 +159,7 @@ class AgentReviewRequestReconcilerTest {
     fun `missing job after normal processing does not create a replacement`() {
         val gateway = FakeGateway(observedWithActiveJob().copy(job = null))
         val reconciler =
-            AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+            newReconciler(gateway)
         val primary =
             request().apply {
                 status =
@@ -173,7 +184,7 @@ class AgentReviewRequestReconcilerTest {
         val gateway =
             FakeGateway(observedWithActiveJob().copy(job = null), failJobCreationOnce = true)
         val reconciler =
-            AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+            newReconciler(gateway)
         val primary =
             request().apply {
                 status =
@@ -201,7 +212,7 @@ class AgentReviewRequestReconcilerTest {
     @Test
     fun `missing repository URL becomes terminal Error`() {
         val reconciler =
-            AgentReviewRequestReconciler(FakeGateway(), AgentReviewProperties("review-agent:1"))
+            newReconciler()
         val primary =
             request().apply {
                 spec.repository = null
@@ -219,7 +230,7 @@ class AgentReviewRequestReconcilerTest {
     fun `resource conflict becomes terminal Error`() {
         val gateway = FakeGateway(observedWithActiveJob(), conflictOnValidation = true)
         val reconciler =
-            AgentReviewRequestReconciler(gateway, AgentReviewProperties("review-agent:1"))
+            newReconciler(gateway)
         val primary = request()
         reconciler.reconcile(
             primary,
@@ -255,10 +266,7 @@ class AgentReviewRequestReconcilerTest {
         val primary = request().apply { this.status = status }
         assertTrue(status.updateIfChanged(primary).isNoUpdate)
         val reconciler =
-            AgentReviewRequestReconciler(
-                FakeGateway(observedWithActiveJob()),
-                AgentReviewProperties("review-agent:1"),
-            )
+            newReconciler(FakeGateway(observedWithActiveJob()))
         assertTrue(
             reconciler
                 .reconcile(
@@ -298,6 +306,7 @@ private class FakeGateway(
 
     override fun validateDesired(
         resources: AgentReviewResources,
+        metadata: io.fabric8.kubernetes.api.model.ObjectMeta,
         observed: ObservedAgentReviewResources,
     ): List<ResourceComparisonResult.Conflict> {
         validated = true
@@ -308,18 +317,36 @@ private class FakeGateway(
                 )
             )
         }
+        val result = observed.reviewResult
+        if (
+            result != null &&
+                result.metadata?.ownerReferences?.none { owner ->
+                    owner.apiVersion == "example.com/v1" &&
+                        owner.kind == "AgentReviewRequest" &&
+                        owner.name == metadata.name &&
+                        owner.uid == metadata.uid
+                } == true
+        ) {
+            return listOf(
+                ResourceComparisonResult.Conflict(
+                    "review result ${result.metadata?.name} has a conflicting owner"
+                )
+            )
+        }
         return emptyList()
     }
 
-    override fun createDependencies(resources: AgentReviewResources) {
+    override fun createDependencies(resources: AgentReviewResources): ResourceComparisonResult {
         created = resources
+        return ResourceComparisonResult.Equal
     }
 
-    override fun createMissing(resources: AgentReviewResources) {
+    override fun createMissing(resources: AgentReviewResources): ResourceComparisonResult {
         if (failJobCreationOnce && !failedJobCreation) {
             failedJobCreation = true
             throw RuntimeException("transient Job create failure")
         }
         created = resources
+        return ResourceComparisonResult.Equal
     }
 }

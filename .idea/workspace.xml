@@ -8,8 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="progress">
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewResourceFactoryTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewResourceFactoryTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewLifecycle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewLifecycle.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

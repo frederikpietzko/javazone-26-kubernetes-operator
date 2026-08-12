@@ -3,9 +3,7 @@ package com.example
 import tools.jackson.dataformat.yaml.YAMLMapper
 
 object ReviewYamlFactory {
-    private val mapper: YAMLMapper = YAMLMapper.builder()
-        .findAndAddModules()
-        .build()
+    private val mapper: YAMLMapper = YAMLMapper.builder().findAndAddModules().build()
 
     fun create(request: AgentReviewRequestCR, baseName: String): String {
         val metadata = requireNotNull(request.metadata) { "request metadata is required" }
@@ -17,20 +15,23 @@ object ReviewYamlFactory {
         val requestName = requireNotNull(metadata.name) { "request name is required" }
         val requestUid = requireNotNull(metadata.uid) { "request UID is required" }
 
-        val review = Review(
-            repository = Repository(repositoryUrl),
-            pr = pullRequest,
-            kubernetes = Review.Kubernetes(
-                namespace = namespace,
-                name = baseName,
-                ownerReference = Review.OwnerReference(
-                    apiVersion = "example.com/v1",
-                    kind = "AgentReviewRequest",
-                    name = requestName,
-                    uid = requestUid,
-                ),
-            ),
-        )
+        val review =
+            Review(
+                repository = Repository(repositoryUrl),
+                pr = pullRequest,
+                kubernetes =
+                    Review.Kubernetes(
+                        namespace = namespace,
+                        name = baseName,
+                        ownerReference =
+                            Review.OwnerReference(
+                                apiVersion = "example.com/v1",
+                                kind = "AgentReviewRequest",
+                                name = requestName,
+                                uid = requestUid,
+                            ),
+                    ),
+            )
         return mapper.writeValueAsString(mapOf("review" to review))
     }
 }

@@ -1,5 +1,6 @@
 package com.example
 
+import io.fabric8.kubernetes.api.model.ConfigMap
 import io.fabric8.kubernetes.api.model.batch.v1.Job
 
 const val IN_PROGRESS_PHASE = "InProgress"
@@ -9,24 +10,30 @@ const val JOB_CREATION_PENDING_MESSAGE = "review-agent dependencies created; cre
 
 sealed interface LifecycleDecision {
     data class EnsureResources(val status: AgentReviewRequestStatus) : LifecycleDecision
+
     data class Wait(val status: AgentReviewRequestStatus) : LifecycleDecision
+
     data class Successful(val status: AgentReviewRequestStatus) : LifecycleDecision
+
     data class Error(val status: AgentReviewRequestStatus) : LifecycleDecision
+
     data object Noop : LifecycleDecision
 }
 
 data class ObservedAgentReviewResources(
-    val configMap: io.fabric8.kubernetes.api.model.ConfigMap?,
+    val configMap: ConfigMap?,
     val job: Job?,
     val reviewResult: ReviewResultCR?,
 )
 
 object AgentReviewLifecycle {
-    private const val MISSING_RESOURCE_MESSAGE = "owned review-agent resource disappeared after processing started"
-    private const val MISSING_RESULT_MESSAGE = "review-agent Job completed without publishing a result"
-    private const val FAILED_JOB_MESSAGE = "review-agent Job failed"
+    private const val MISSING_RESOURCE_MESSAGE =
+        "owned review-agent resource disappeared after processing started"
+    private const val MISSING_RESULT_MESSAGE =
+        "review-agent Job completed without publishing a result"
     private const val FAILED_RESULT_MESSAGE = "review-agent reported failure"
-    private const val MISSING_JOB_MESSAGE = "review-agent Job disappeared after dependent resources were created"
+    private const val MISSING_JOB_MESSAGE =
+        "review-agent Job disappeared after dependent resources were created"
 
     fun decide(
         request: AgentReviewRequestCR,
@@ -47,11 +54,13 @@ object AgentReviewLifecycle {
 
         if (observed.job == null && observed.configMap != null) {
             val creationPending = request.status?.message == JOB_CREATION_PENDING_MESSAGE
-            if (currentPhase == null || currentPhase == "Pending" ||
-                (currentPhase == IN_PROGRESS_PHASE && creationPending)
+            if (
+                currentPhase == null ||
+                    currentPhase == "Pending" ||
+                    (currentPhase == IN_PROGRESS_PHASE && creationPending)
             ) {
                 return LifecycleDecision.EnsureResources(
-                    status(IN_PROGRESS_PHASE, names, JOB_CREATION_PENDING_MESSAGE),
+                    status(IN_PROGRESS_PHASE, names, JOB_CREATION_PENDING_MESSAGE)
                 )
             }
             return LifecycleDecision.Error(status(ERROR_PHASE, names, MISSING_JOB_MESSAGE))
@@ -59,36 +68,45 @@ object AgentReviewLifecycle {
 
         observed.job?.let { job ->
             if (job.failed()) {
-                return LifecycleDecision.Error(
-                    status(ERROR_PHASE, names, job.failureMessage()),
-                )
+                return LifecycleDecision.Error(status(ERROR_PHASE, names, job.failureMessage()))
             }
         }
 
         observed.reviewResult?.let { result ->
             val resultStatus = result.status?.status
             return when (resultStatus) {
-                "Completed" -> LifecycleDecision.Successful(
-                    status(
-                        SUCCESSFUL_PHASE,
-                        names,
-                        null,
-                    ).also { it.reviewResultName = result.metadata?.name ?: names.reviewResultName },
-                )
+                "Completed" ->
+                    LifecycleDecision.Successful(
+                        status(
+                                SUCCESSFUL_PHASE,
+                                names,
+                                null,
+                            )
+                            .also {
+                                it.reviewResultName =
+                                    result.metadata?.name ?: names.reviewResultName
+                            }
+                    )
 
-                "Failed" -> LifecycleDecision.Error(
-                    status(
-                        ERROR_PHASE,
-                        names,
-                        result.status?.error ?: FAILED_RESULT_MESSAGE,
-                    ).also { it.reviewResultName = result.metadata?.name ?: names.reviewResultName },
-                )
+                "Failed" ->
+                    LifecycleDecision.Error(
+                        status(
+                                ERROR_PHASE,
+                                names,
+                                result.status?.error ?: FAILED_RESULT_MESSAGE,
+                            )
+                            .also {
+                                it.reviewResultName =
+                                    result.metadata?.name ?: names.reviewResultName
+                            }
+                    )
 
-                else -> LifecycleDecision.Wait(
-                    status(IN_PROGRESS_PHASE, names).also {
-                        it.reviewResultName = result.metadata?.name ?: names.reviewResultName
-                    },
-                )
+                else ->
+                    LifecycleDecision.Wait(
+                        status(IN_PROGRESS_PHASE, names).also {
+                            it.reviewResultName = result.metadata?.name ?: names.reviewResultName
+                        }
+                    )
             }
         }
 
@@ -101,11 +119,12 @@ object AgentReviewLifecycle {
         return if (allResourcesExist) {
             LifecycleDecision.Wait(status)
         } else {
-            val ensureStatus = if (currentPhase == null && observed.job == null) {
-                status(IN_PROGRESS_PHASE, names, JOB_CREATION_PENDING_MESSAGE)
-            } else {
-                status
-            }
+            val ensureStatus =
+                if (currentPhase == null && observed.job == null) {
+                    status(IN_PROGRESS_PHASE, names, JOB_CREATION_PENDING_MESSAGE)
+                } else {
+                    status
+                }
             LifecycleDecision.EnsureResources(ensureStatus)
         }
     }
@@ -116,7 +135,11 @@ object AgentReviewLifecycle {
         return DesiredNames(baseName, baseName, baseName)
     }
 
-    private fun status(phase: String, names: DesiredNames, message: String? = null): AgentReviewRequestStatus =
+    private fun status(
+        phase: String,
+        names: DesiredNames,
+        message: String? = null,
+    ): AgentReviewRequestStatus =
         AgentReviewRequestStatus().also {
             it.phase = phase
             it.message = message
@@ -144,8 +167,8 @@ private fun Job.completed(): Boolean =
         status?.conditions?.any { it.type == "Complete" && it.status == "True" } == true
 
 private fun Job.failureMessage(): String =
-    status?.conditions
+    status
+        ?.conditions
         ?.firstOrNull { it.type == "Failed" && it.status == "True" }
         ?.message
-        ?.takeIf { it.isNotBlank() }
-        ?: "review-agent Job failed"
+        ?.takeIf { it.isNotBlank() } ?: "review-agent Job failed"

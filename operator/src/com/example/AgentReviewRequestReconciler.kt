@@ -29,7 +29,7 @@ class AgentReviewRequestReconciler(
     private val lifecycle: AgentReviewLifecycle,
     private val agentReviewFactory: AgentReviewResourceFactory,
 ) : Reconciler<AgentReviewRequestCR> {
-    fun reconcileOnce(
+    fun identifyLifecycleDecision(
         primary: AgentReviewRequestCR,
         observed: ObservedAgentReviewResources,
         desiredState: DesiredAgentReviewState,
@@ -72,7 +72,7 @@ class AgentReviewRequestReconciler(
         }
 
         val decision =
-            reconcileOnce(
+            identifyLifecycleDecision(
                 primary = primary,
                 observed = observed,
                 desiredState = desiredState,

@@ -3,14 +3,14 @@ package com.example
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.javaoperatorsdk.operator.api.reconciler.ControllerConfiguration
 import io.javaoperatorsdk.operator.api.reconciler.EventSourceContext
-import kotlin.reflect.full.findAnnotation
-import kotlin.test.*
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Component
+import kotlin.reflect.full.findAnnotation
+import kotlin.test.*
 
 @SpringBootTest
 @Import(TestOperatorConfiguration::class)
@@ -39,7 +39,7 @@ class AgentReviewRequestReconcilerTest {
     fun `new request produces EnsureResources decision`() {
         val reconciler = newReconciler()
         val decision =
-            reconciler.reconcileOnce(
+            reconciler.identifyLifecycleDecision(
                 request(),
                 ObservedAgentReviewResources(null, null, null),
                 desiredState(),
@@ -54,11 +54,12 @@ class AgentReviewRequestReconcilerTest {
                 status = ReviewResultStatus().also { it.status = "Completed" }
             }
         val reconciler = newReconciler()
-        val decision = reconciler.reconcileOnce(
-            request(),
-            observedWithCompletedJob(result),
-            desiredState(),
-        )
+        val decision =
+            reconciler.identifyLifecycleDecision(
+                request(),
+                observedWithCompletedJob(result),
+                desiredState(),
+            )
         assertEquals("Successful", assertIs<LifecycleDecision.Successful>(decision).status.phase)
     }
 

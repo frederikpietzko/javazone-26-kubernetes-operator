@@ -7,20 +7,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="more refactoring of ai slop">
+    <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="cleanup">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-10-crd-generation.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-agent-review-request-operator-plan.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-default-only-agent-review-operator-plan.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-review-agent-cr-status.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-review-agent-image-plan.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/plans/2026-08-11-shared-data-model.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/specs/2026-08-10-crd-generation-design.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/specs/2026-08-11-agent-review-request-operator-design.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/specs/2026-08-11-default-only-agent-review-operator-design.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/specs/2026-08-11-review-agent-cr-status-design.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/specs/2026-08-11-review-agent-image-design.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/superpowers/specs/2026-08-11-shared-data-model-design.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewRequestReconciler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewRequestReconciler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewRequestReconcilerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewRequestReconcilerTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,61 +60,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0542083015561972" />
-      <entry key="MS500" value="1.9583514206836385" />
-      <entry key="S2" value="3.7417315756203178" />
-      <entry key="S5" value="4.851487336821371" />
-      <entry key="S10" value="5.372904536407916" />
-      <entry key="S30" value="5.805942260839668" />
-      <entry key="S60" value="6.159090984091322" />
-      <entry key="M2" value="7.0366473743362485" />
-      <entry key="M5" value="10.949787855045287" />
-      <entry key="M10" value="22.828271410066694" />
-      <entry key="M15" value="38.484664861281956" />
-      <entry key="M30" value="82.30544504934754" />
-      <entry key="H1" value="138.7038525349336" />
-      <entry key="H2" value="214.72682212190827" />
-      <entry key="H4" value="320.09078773804595" />
-      <entry key="D1" value="1088.5133518510388" />
-      <entry key="W1" value="2295.1250624544487" />
+      <entry key="MS100" value="1.0000000000000002" />
+      <entry key="MS500" value="1.000793357388952" />
+      <entry key="S2" value="1.1872390456711372" />
+      <entry key="S5" value="1.6963800214449516" />
+      <entry key="S10" value="2.154402515463305" />
+      <entry key="S30" value="2.656733559243394" />
+      <entry key="S60" value="2.8191193109811596" />
+      <entry key="M2" value="2.907108815511286" />
+      <entry key="M5" value="2.9622365188464457" />
+      <entry key="M10" value="2.981015479902621" />
+      <entry key="M15" value="2.987320692382036" />
+      <entry key="M30" value="2.993686458423423" />
+      <entry key="H1" value="3.0891367374040124" />
+      <entry key="H2" value="8.533316387138761" />
+      <entry key="H4" value="54.43692010131017" />
+      <entry key="D1" value="806.1381933702878" />
+      <entry key="W1" value="2201.9012809266965" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="2.419668634422626E-100" />
-      <entry key="S2" value="1.2472082464584298E-25" />
-      <entry key="S5" value="1.0923853366972315E-10" />
-      <entry key="S10" value="1.0465734149051609E-5" />
-      <entry key="S30" value="0.027593419093394453" />
-      <entry key="S60" value="0.2990916482383352" />
-      <entry key="M2" value="1.282734338945274" />
-      <entry key="M5" value="5.445661074590239" />
-      <entry key="M10" value="15.110888214752395" />
-      <entry key="M15" value="26.778637897385494" />
-      <entry key="M30" value="59.14842782690577" />
-      <entry key="H1" value="100.37577066323392" />
-      <entry key="H2" value="152.12974636200244" />
-      <entry key="H4" value="217.91882247994445" />
-      <entry key="D1" value="410.8074458259335" />
-      <entry key="W1" value="585.1036595076737" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="1.4241855128025744E-192" />
+      <entry key="M2" value="2.7990964266319187E-96" />
+      <entry key="M5" value="2.962122833306856E-38" />
+      <entry key="M10" value="1.1144644525485089E-18" />
+      <entry key="M15" value="4.709476504751642E-12" />
+      <entry key="M30" value="2.4804774397791367E-5" />
+      <entry key="H1" value="0.0650017322861545" />
+      <entry key="H2" value="3.871347535210812" />
+      <entry key="H4" value="34.763120436019555" />
+      <entry key="D1" value="302.53501142905577" />
+      <entry key="W1" value="560.0830551804339" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.046585272545029" />
-      <entry key="MS500" value="1.9545209843498534" />
-      <entry key="S2" value="3.738228098683034" />
-      <entry key="S5" value="4.849191182977672" />
-      <entry key="S10" value="5.371536332677195" />
-      <entry key="S30" value="5.8314147758595425" />
-      <entry key="S60" value="6.449106422429235" />
-      <entry key="M2" value="8.299822498736033" />
-      <entry key="M5" value="16.36272406561219" />
-      <entry key="M10" value="37.89431891484929" />
-      <entry key="M15" value="65.21098923777964" />
-      <entry key="M30" value="141.39746976648084" />
-      <entry key="H1" value="239.0324128644653" />
-      <entry key="H2" value="366.82077953891906" />
-      <entry key="H4" value="537.9838281994314" />
-      <entry key="D1" value="1499.3116838721642" />
-      <entry key="W1" value="2880.2266011979355" />
+      <entry key="MS100" value="0.9330329915368076" />
+      <entry key="MS500" value="0.9870160874251885" />
+      <entry key="S2" value="1.1711690316134054" />
+      <entry key="S5" value="1.6276852155575268" />
+      <entry key="S10" value="2.0727906106654532" />
+      <entry key="S30" value="2.60796558229409" />
+      <entry key="S60" value="2.7908874996497484" />
+      <entry key="M2" value="2.89191876878562" />
+      <entry key="M5" value="2.955887018777826" />
+      <entry key="M10" value="2.977793782998945" />
+      <entry key="M15" value="2.9851623583895566" />
+      <entry key="M30" value="2.992626778441735" />
+      <entry key="H1" value="3.153564336855075" />
+      <entry key="H2" value="12.403481047889407" />
+      <entry key="H4" value="89.19579152115618" />
+      <entry key="D1" value="1108.666470297641" />
+      <entry key="W1" value="2761.98230278366" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -303,10 +293,10 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="initial" />
-    <MESSAGE value="cleanup" />
     <MESSAGE value="progress" />
     <MESSAGE value="more refactoring of ai slop" />
-    <option name="LAST_COMMIT_MESSAGE" value="more refactoring of ai slop" />
+    <MESSAGE value="cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleanup" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

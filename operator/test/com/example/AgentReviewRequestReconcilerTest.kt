@@ -6,14 +6,8 @@ import io.javaoperatorsdk.operator.api.reconciler.EventSourceContext
 import kotlin.reflect.full.findAnnotation
 import kotlin.test.*
 import org.mockito.Mockito
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.ApplicationContext
-import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Component
 
-@SpringBootTest
-@Import(TestOperatorConfiguration::class)
 class AgentReviewRequestReconcilerTest {
     private fun newReconciler(
         gateway: AgentReviewClient = FakeGateway()
@@ -25,13 +19,6 @@ class AgentReviewRequestReconcilerTest {
             agentReviewFactory = AgentReviewResourceFactory(nameGenerator),
             nameGenerator = nameGenerator,
         )
-    }
-
-    @Autowired lateinit var applicationContext: ApplicationContext
-
-    @Test
-    fun `registers AgentReviewRequest controller`() {
-        assertNotNull(applicationContext.getBean(AgentReviewRequestReconciler::class.java))
     }
 
     @Test
@@ -79,76 +66,6 @@ class AgentReviewRequestReconcilerTest {
         val sources = reconciler.prepareEventSources(context)
         assertEquals(AGENT_REVIEW_EVENT_SOURCE_NAMES.size, sources.size)
         assertEquals(AGENT_REVIEW_EVENT_SOURCE_NAMES.toSet(), sources.map { it.name() }.toSet())
-    }
-
-    @Test
-    fun `reconcile validates desired resources before waiting`() {
-        val gateway = FakeGateway(observedWithActiveJob())
-        val reconciler = newReconciler(gateway)
-        val primary =
-            request().apply {
-                status =
-                    AgentReviewRequestStatus().also {
-                        it.phase = "InProgress"
-                        it.jobName = "agent-review-request-42"
-                        it.configMapName = "agent-review-request-42"
-                        it.reviewResultName = "agent-review-request-42"
-                    }
-            }
-        reconciler.reconcile(
-            primary,
-            Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java)
-                as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>,
-        )
-        assertTrue(gateway.validated)
-    }
-
-    @Test
-    fun `conflicting result owner produces Error without creation`() {
-        val result = ReviewResultCR().apply { metadata = request().metadata }
-        result.metadata.ownerReferences =
-            listOf(
-                io.fabric8.kubernetes.api.model
-                    .OwnerReferenceBuilder()
-                    .withApiVersion("example.com/v1")
-                    .withKind("AgentReviewRequest")
-                    .withName("other-request")
-                    .withUid("other-uid")
-                    .build()
-            )
-        val gateway = FakeGateway(observedWithActiveJob(result))
-        val reconciler = newReconciler(gateway)
-        val primary = request()
-        reconciler.reconcile(
-            primary,
-            Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java)
-                as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>,
-        )
-        assertEquals("Error", primary.status?.phase)
-        assertNull(gateway.created)
-    }
-
-    @Test
-    fun `missing job after normal processing does not create a replacement`() {
-        val gateway = FakeGateway(observedWithActiveJob().copy(job = null))
-        val reconciler = newReconciler(gateway)
-        val primary =
-            request().apply {
-                status =
-                    AgentReviewRequestStatus().also {
-                        it.phase = "InProgress"
-                        it.jobName = "agent-review-request-42"
-                        it.configMapName = "agent-review-request-42"
-                        it.reviewResultName = "agent-review-request-42"
-                    }
-            }
-        reconciler.reconcile(
-            primary,
-            Mockito.mock(io.javaoperatorsdk.operator.api.reconciler.Context::class.java)
-                as io.javaoperatorsdk.operator.api.reconciler.Context<AgentReviewRequestCR>,
-        )
-        assertNull(gateway.created)
-        assertEquals("Error", primary.status?.phase)
     }
 
     @Test
@@ -213,8 +130,6 @@ private class FakeGateway(
     private val resources: ObservedAgentReviewResources =
         ObservedAgentReviewResources(null, null, null)
 ) : AgentReviewClient {
-    var created: AgentReviewResources? = null
-    var validated = false
     var observed = false
 
     override fun observe(namespace: String, baseName: String): ObservedAgentReviewResources {

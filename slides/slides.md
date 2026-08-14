@@ -7,6 +7,8 @@ drawings:
   persist: false
 comark: true
 duration: 60min
+addons:
+  - slidev-addon-excalidraw
 ---
 
 ---
@@ -56,7 +58,12 @@ kodee:
 
 # The Reconciliation Loop
 
-- TODO: Image
+<Excalidraw
+  drawFilePath="./painting1.excalidraw"
+  class="w-70%"
+  :darkMode="true"
+  :background="false"
+/>
 
 <!--
 - k8s reconciles desired state into actual state in a loop
@@ -68,14 +75,19 @@ kodee:
 
 ---
 kodee:
-variant: drinking
-size: small
-position: corner
+  variant: drinking
+  size: small
+  position: corner
 ---
 
 # What are Operators made of?
 
-- TODO: Image
+<Excalidraw
+  drawFilePath="./painting2.excalidraw"
+  class="w-70% mt-10%"
+  :darkMode="true"
+  :background="false"
+/>
 
 <!--
 - Operators are made of 2 parts
@@ -153,7 +165,12 @@ kodee:
 
 # How do Controllers work?
 
-- TODO: Image
+<Excalidraw
+  drawFilePath="./painting3.excalidraw"
+  class="w-100% mt--10%"
+  :darkMode="true"
+  :background="false"
+/>
 
 <!--
 - Controllers are essentially just normal pods with elevated permissions interacting with the k8s api
@@ -167,6 +184,40 @@ kodee:
 
 - You operator runs reconciliation loop to process them
 - inside reconciliation loop you can interact with k8s api & update the CR that is being reconciled
+-->
+
+---
+kodee:
+variant: drinking
+size: small
+position: corner
+---
+
+# Reconciliation
+
+
+<Excalidraw
+  drawFilePath="./painting4.excalidraw"
+  class="w-100% mt--10%"
+  :darkMode="true"
+  :background="false"
+/>
+
+<!--
+- Reconciliation mostly follows this diagram
+
+- first compute dependen resources
+- eg. A Pod, Deployment, Job, ConfigMap, etc
+
+- next check if they exist in the cluster
+
+- if they don't exist create them
+
+- if they do exist check if their state is correct
+- if it isn't then update them
+
+- if it is correct then do nothing
+
 -->
   
 ---

@@ -17,6 +17,9 @@ importers:
       '@slidev/theme-seriph':
         specifier: latest
         version: 0.25.0
+      slidev-addon-excalidraw:
+        specifier: ^1.1.1
+        version: 1.1.1
       slidev-theme-kotlin:
         specifier: ^0.0.8
         version: 0.0.8(@modelcontextprotocol/server@2.0.0)(@nuxt/kit@3.21.11)(@vue/compiler-sfc@3.5.41)(cac@7.0.0)(rolldown@1.2.4)(srvx@0.12.5)(typescript@6.0.3)(vite@8.2.1(@types/node@22.20.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -2479,6 +2482,9 @@ packages:
 
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
+
+  slidev-addon-excalidraw@1.1.1:
+    resolution: {integrity: sha512-nrlUtEchQmH2QM4F3p7v6umNWY8hhuR1GOFFlUtiEsbKNl96hKQEisOfQB6uLsMs3b27beN1em6PG0nJhjuYoQ==}
 
   slidev-theme-kotlin@0.0.8:
     resolution: {integrity: sha512-+RsW4o6Cic5NJUanlTnmIJUBnPhINf9+q4Yisn/XzYj4SBPGJP9oOpAzLhLdWJlrJ9c17Lwk3tA4r6fW1LxCUA==}
@@ -5911,6 +5917,8 @@ snapshots:
       totalist: 3.0.1
 
   sisteransi@1.0.5: {}
+
+  slidev-addon-excalidraw@1.1.1: {}
 
   slidev-theme-kotlin@0.0.8(@modelcontextprotocol/server@2.0.0)(@nuxt/kit@3.21.11)(@vue/compiler-sfc@3.5.41)(cac@7.0.0)(rolldown@1.2.4)(srvx@0.12.5)(typescript@6.0.3)(vite@8.2.1(@types/node@22.20.1)(jiti@2.7.0)(yaml@2.9.0)):
     dependencies:

@@ -3,12 +3,15 @@ package com.example
 import io.fabric8.kubernetes.client.Config
 import io.fabric8.kubernetes.client.KubernetesClient
 import io.fabric8.kubernetes.client.KubernetesClientBuilder
+import io.javaoperatorsdk.operator.api.config.ConfigurationServiceOverrider
+import io.javaoperatorsdk.operator.api.config.LeaderElectionConfigurationBuilder
+import java.io.File
+import java.util.function.Consumer
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import java.io.File
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -23,6 +26,15 @@ class Application {
         }
         val config = Config.fromKubeconfig(kubeconfig)
         return KubernetesClientBuilder().withConfig(config).build()
+    }
+
+    @Bean
+    fun operatorConfiguration(): Consumer<ConfigurationServiceOverrider> = Consumer { overrider ->
+        val leaderConfig =
+            LeaderElectionConfigurationBuilder.aLeaderElectionConfiguration("review-agent-operator")
+                .withLeaseNamespace("default")
+                .build()
+        overrider.withLeaderElectionConfiguration(leaderConfig)
     }
 }
 

@@ -8,19 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="cleanup">
-      <change afterPath="$PROJECT_DIR$/operator/src/com/example/Model.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operator/src/com/example/Utils.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/slides/.npmrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewClient.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewLifecycle.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewRequestReconciler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewRequestReconciler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceMatcher.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/src/com/example/K8sDsl.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/operator/src/com/example/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewClientTest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewLifecycleTest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewRequestReconcilerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewRequestReconcilerTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +31,76 @@
   </component>
   <component name="FormatOnSaveOptions">
     <option name="myRunOnSave" value="true" />
+    <option name="myAllFileTypesSelected" value="false" />
+    <option name="mySelectedFileTypes">
+      <set>
+        <option value="Angular2Html" />
+        <option value="Asset Catalog Contents" />
+        <option value="CSS" />
+        <option value="CassandraQL" />
+        <option value="ChildProcessDebugging" />
+        <option value="DGM" />
+        <option value="DTD" />
+        <option value="EditorConfig" />
+        <option value="FTL" />
+        <option value="Flow" />
+        <option value="Gradle" />
+        <option value="Gradle Declarative Configuration Language" />
+        <option value="Groovy" />
+        <option value="HTML" />
+        <option value="HTTP Request" />
+        <option value="Helmfile" />
+        <option value="HiveQL" />
+        <option value="JAVA" />
+        <option value="JSHELL" />
+        <option value="JSHint" />
+        <option value="JSON" />
+        <option value="JSON-lines" />
+        <option value="JSON5" />
+        <option value="JSP" />
+        <option value="JSPX" />
+        <option value="JSX" />
+        <option value="Java module" />
+        <option value="JavaScript" />
+        <option value="Kotlin" />
+        <option value="Kubernetes Yaml" />
+        <option value="Less" />
+        <option value="Mermaid" />
+        <option value="Natjmc" />
+        <option value="Natstepfilter" />
+        <option value="Natvis" />
+        <option value="ObjectiveC" />
+        <option value="PostCSS" />
+        <option value="Properties" />
+        <option value="Qute" />
+        <option value="RNG Compact" />
+        <option value="Redis" />
+        <option value="SARIF" />
+        <option value="SCSS" />
+        <option value="SQL" />
+        <option value="SVG" />
+        <option value="Sass" />
+        <option value="Shell Script" />
+        <option value="SourceMap" />
+        <option value="Storyboard" />
+        <option value="Swift" />
+        <option value="TOML" />
+        <option value="TypeScript" />
+        <option value="TypeScript JSX" />
+        <option value="VTL" />
+        <option value="Vue.js" />
+        <option value="XHTML" />
+        <option value="XIB" />
+        <option value="XML" />
+        <option value="YAML" />
+        <option value="gdsl" />
+        <option value="intentdefinition" />
+        <option value="logback" />
+        <option value="protobuf" />
+        <option value="prototext" />
+        <option value="tsconfig" />
+      </set>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -75,61 +135,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="5.857531509399665E-135" />
-      <entry key="MS500" value="1.4241080018964693E-27" />
-      <entry key="S2" value="1.942610499388902E-7" />
-      <entry key="S5" value="0.0020670657577252405" />
-      <entry key="S10" value="0.04546528837707518" />
-      <entry key="S30" value="0.38775409893111895" />
-      <entry key="S60" value="1.1534218044610771" />
-      <entry key="M2" value="3.3213825588427026" />
-      <entry key="M5" value="12.72528066641922" />
-      <entry key="M10" value="32.33716941383292" />
-      <entry key="M15" value="53.486992052138035" />
-      <entry key="M30" value="115.91337102625565" />
-      <entry key="H1" value="199.83291090678233" />
-      <entry key="H2" value="274.63857217328984" />
-      <entry key="H4" value="326.2549966113551" />
-      <entry key="D1" value="758.470973242239" />
-      <entry key="W1" value="2365.6734157178726" />
+      <entry key="MS100" value="1.0000000000008553" />
+      <entry key="MS500" value="1.0055055266609993" />
+      <entry key="S2" value="1.4654897120126231" />
+      <entry key="S5" value="2.60036384478978" />
+      <entry key="S10" value="4.6093139004678045" />
+      <entry key="S30" value="12.482804490644547" />
+      <entry key="S60" value="22.404220854405313" />
+      <entry key="M2" value="40.84895277433712" />
+      <entry key="M5" value="92.69725397099106" />
+      <entry key="M10" value="161.5442329358719" />
+      <entry key="M15" value="219.89359563255454" />
+      <entry key="M30" value="368.3691689692515" />
+      <entry key="H1" value="580.7983122076996" />
+      <entry key="H2" value="837.2411207312907" />
+      <entry key="H4" value="1099.0499580129642" />
+      <entry key="D1" value="1827.5095189141352" />
+      <entry key="W1" value="3535.290993736597" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0000000000000002" />
-      <entry key="S60" value="1.0000000141067267" />
-      <entry key="M2" value="1.000154803733943" />
-      <entry key="M5" value="1.1390317269970431" />
-      <entry key="M10" value="3.584406778651803" />
-      <entry key="M15" value="9.643301674571427" />
-      <entry key="M30" value="36.93998763058522" />
-      <entry key="H1" value="81.43123051722749" />
-      <entry key="H2" value="124.07427267002372" />
-      <entry key="H4" value="154.44619191351785" />
-      <entry key="D1" value="328.0280412880968" />
-      <entry key="W1" value="694.2077590966745" />
+      <entry key="MS100" value="5.994713818856608E-199" />
+      <entry key="MS500" value="2.267533390843419E-40" />
+      <entry key="S2" value="1.2271243015323588E-10" />
+      <entry key="S5" value="1.0880146742078859E-4" />
+      <entry key="S10" value="0.010946834910738716" />
+      <entry key="S30" value="0.31989516574432586" />
+      <entry key="S60" value="0.8961255932285759" />
+      <entry key="M2" value="1.5972229564949043" />
+      <entry key="M5" value="2.3372249105302556" />
+      <entry key="M10" value="3.125343466584229" />
+      <entry key="M15" value="4.189532394008449" />
+      <entry key="M30" value="7.338614846245407" />
+      <entry key="H1" value="13.109893768205326" />
+      <entry key="H2" value="33.7436856720927" />
+      <entry key="H4" value="77.69626552702208" />
+      <entry key="D1" value="300.26497204661706" />
+      <entry key="W1" value="698.8954567092454" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.001449730049442431" />
-      <entry key="MS500" value="0.2705561611314287" />
-      <entry key="S2" value="0.7212145192337438" />
-      <entry key="S5" value="0.8794300621018847" />
-      <entry key="S10" value="0.9811483740970498" />
-      <entry key="S30" value="1.363446805565332" />
-      <entry key="S60" value="2.140251115158482" />
-      <entry key="M2" value="4.314543458351079" />
-      <entry key="M5" value="13.860552270969237" />
-      <entry key="M10" value="35.91222605472107" />
-      <entry key="M15" value="63.11104125892783" />
-      <entry key="M30" value="152.81257001009521" />
-      <entry key="H1" value="281.21739812125224" />
-      <entry key="H2" value="398.6766405419923" />
-      <entry key="H4" value="480.6784950451308" />
-      <entry key="D1" value="1086.491271564932" />
-      <entry key="W1" value="3059.878674903463" />
+      <entry key="MS100" value="0.8122523963569451" />
+      <entry key="MS500" value="0.9645762661371244" />
+      <entry key="S2" value="1.4506631043019345" />
+      <entry key="S5" value="2.584057343451646" />
+      <entry key="S10" value="4.588000028888633" />
+      <entry key="S30" value="12.718016687696954" />
+      <entry key="S60" value="23.211274867593055" />
+      <entry key="M2" value="42.377537501165165" />
+      <entry key="M5" value="94.99705466138111" />
+      <entry key="M10" value="164.6455493019167" />
+      <entry key="M15" value="224.0626406571299" />
+      <entry key="M30" value="375.6913034214837" />
+      <entry key="H1" value="593.895171875472" />
+      <entry key="H2" value="870.9716177068" />
+      <entry key="H4" value="1176.7329128300466" />
+      <entry key="D1" value="2127.7670247834035" />
+      <entry key="W1" value="4234.183882717869" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -167,7 +227,7 @@
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "experiment",
+    "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/frederik.pietzko/Workspace/javazone-26-kubernetes-operator/k8s",
@@ -182,7 +242,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "rearrange.code.on.save": "true",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "actions.on.save",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
@@ -192,6 +252,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/slides/public/theme" />
       <recent name="$PROJECT_DIR$/k8s/llms" />
       <recent name="$PROJECT_DIR$/operator" />
     </key>

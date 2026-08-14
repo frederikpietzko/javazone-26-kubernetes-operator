@@ -37,12 +37,6 @@ fun desiredState(request: AgentReviewRequestCR = request()): DesiredAgentReviewS
 fun observedWithActiveJob(result: ReviewResultCR? = null): ObservedAgentReviewResources =
     observed(job = JobBuilder().withStatus(JobStatusBuilder().withActive(1).build()).build(), result = result)
 
-fun observedWithCompletedJob(result: ReviewResultCR?): ObservedAgentReviewResources =
-    observed(job = JobBuilder().withStatus(JobStatusBuilder().withSucceeded(1).build()).build(), result = result)
-
-fun observedWithFailedJob(): ObservedAgentReviewResources =
-    observed(job = JobBuilder().withStatus(JobStatusBuilder().withFailed(1).build()).build())
-
 private fun observed(
     job: io.fabric8.kubernetes.api.model.batch.v1.Job,
     result: ReviewResultCR? = null,

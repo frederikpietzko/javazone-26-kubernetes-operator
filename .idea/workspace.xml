@@ -8,8 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="101960eb-25f2-45f5-aaa8-19bd754cfe41" name="Changes" comment="cleanup">
+      <change afterPath="$PROJECT_DIR$/operator/src/com/example/Model.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/operator/src/com/example/Utils.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewClient.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewLifecycle.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewRequestReconciler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewRequestReconciler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceFactory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/AgentReviewResourceMatcher.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/K8sDsl.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/src/com/example/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/src/com/example/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewClientTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewLifecycleTest.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/operator/test/com/example/AgentReviewRequestReconcilerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/operator/test/com/example/AgentReviewRequestReconcilerTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -24,8 +34,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Kotlin File" />
         <option value="Kotlin Annotation" />
+        <option value="Kotlin File" />
       </list>
     </option>
   </component>
@@ -33,6 +43,11 @@
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -60,61 +75,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000000002" />
-      <entry key="MS500" value="1.000793357388952" />
-      <entry key="S2" value="1.1872390456711372" />
-      <entry key="S5" value="1.6963800214449516" />
-      <entry key="S10" value="2.154402515463305" />
-      <entry key="S30" value="2.656733559243394" />
-      <entry key="S60" value="2.8191193109811596" />
-      <entry key="M2" value="2.907108815511286" />
-      <entry key="M5" value="2.9622365188464457" />
-      <entry key="M10" value="2.981015479902621" />
-      <entry key="M15" value="2.987320692382036" />
-      <entry key="M30" value="2.993686458423423" />
-      <entry key="H1" value="3.0891367374040124" />
-      <entry key="H2" value="8.533316387138761" />
-      <entry key="H4" value="54.43692010131017" />
-      <entry key="D1" value="806.1381933702878" />
-      <entry key="W1" value="2201.9012809266965" />
+      <entry key="MS100" value="5.857531509399665E-135" />
+      <entry key="MS500" value="1.4241080018964693E-27" />
+      <entry key="S2" value="1.942610499388902E-7" />
+      <entry key="S5" value="0.0020670657577252405" />
+      <entry key="S10" value="0.04546528837707518" />
+      <entry key="S30" value="0.38775409893111895" />
+      <entry key="S60" value="1.1534218044610771" />
+      <entry key="M2" value="3.3213825588427026" />
+      <entry key="M5" value="12.72528066641922" />
+      <entry key="M10" value="32.33716941383292" />
+      <entry key="M15" value="53.486992052138035" />
+      <entry key="M30" value="115.91337102625565" />
+      <entry key="H1" value="199.83291090678233" />
+      <entry key="H2" value="274.63857217328984" />
+      <entry key="H4" value="326.2549966113551" />
+      <entry key="D1" value="758.470973242239" />
+      <entry key="W1" value="2365.6734157178726" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="1.4241855128025744E-192" />
-      <entry key="M2" value="2.7990964266319187E-96" />
-      <entry key="M5" value="2.962122833306856E-38" />
-      <entry key="M10" value="1.1144644525485089E-18" />
-      <entry key="M15" value="4.709476504751642E-12" />
-      <entry key="M30" value="2.4804774397791367E-5" />
-      <entry key="H1" value="0.0650017322861545" />
-      <entry key="H2" value="3.871347535210812" />
-      <entry key="H4" value="34.763120436019555" />
-      <entry key="D1" value="302.53501142905577" />
-      <entry key="W1" value="560.0830551804339" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0000000000000002" />
+      <entry key="S60" value="1.0000000141067267" />
+      <entry key="M2" value="1.000154803733943" />
+      <entry key="M5" value="1.1390317269970431" />
+      <entry key="M10" value="3.584406778651803" />
+      <entry key="M15" value="9.643301674571427" />
+      <entry key="M30" value="36.93998763058522" />
+      <entry key="H1" value="81.43123051722749" />
+      <entry key="H2" value="124.07427267002372" />
+      <entry key="H4" value="154.44619191351785" />
+      <entry key="D1" value="328.0280412880968" />
+      <entry key="W1" value="694.2077590966745" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9330329915368076" />
-      <entry key="MS500" value="0.9870160874251885" />
-      <entry key="S2" value="1.1711690316134054" />
-      <entry key="S5" value="1.6276852155575268" />
-      <entry key="S10" value="2.0727906106654532" />
-      <entry key="S30" value="2.60796558229409" />
-      <entry key="S60" value="2.7908874996497484" />
-      <entry key="M2" value="2.89191876878562" />
-      <entry key="M5" value="2.955887018777826" />
-      <entry key="M10" value="2.977793782998945" />
-      <entry key="M15" value="2.9851623583895566" />
-      <entry key="M30" value="2.992626778441735" />
-      <entry key="H1" value="3.153564336855075" />
-      <entry key="H2" value="12.403481047889407" />
-      <entry key="H4" value="89.19579152115618" />
-      <entry key="D1" value="1108.666470297641" />
-      <entry key="W1" value="2761.98230278366" />
+      <entry key="MS100" value="0.001449730049442431" />
+      <entry key="MS500" value="0.2705561611314287" />
+      <entry key="S2" value="0.7212145192337438" />
+      <entry key="S5" value="0.8794300621018847" />
+      <entry key="S10" value="0.9811483740970498" />
+      <entry key="S30" value="1.363446805565332" />
+      <entry key="S60" value="2.140251115158482" />
+      <entry key="M2" value="4.314543458351079" />
+      <entry key="M5" value="13.860552270969237" />
+      <entry key="M10" value="35.91222605472107" />
+      <entry key="M15" value="63.11104125892783" />
+      <entry key="M30" value="152.81257001009521" />
+      <entry key="H1" value="281.21739812125224" />
+      <entry key="H2" value="398.6766405419923" />
+      <entry key="H4" value="480.6784950451308" />
+      <entry key="D1" value="1086.491271564932" />
+      <entry key="W1" value="3059.878674903463" />
     </decayedShown>
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -132,6 +147,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Amper [Deprecated].Application.executor": "Run",
+    "Amper [Deprecated].Operator.executor": "Run",
     "Amper [Deprecated].Reviewer Agent.executor": "Run",
     "CidrDebugProfileConversion": "true",
     "KEY_CHAT_IN_TOOLWINDOW": "false",
@@ -151,7 +167,7 @@
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "experiment",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/frederik.pietzko/Workspace/javazone-26-kubernetes-operator/k8s",
@@ -184,7 +200,7 @@
       <recent name="com.example.com.example" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.Reviewer Agent">
+  <component name="RunManager" selected="Spring Boot.Operator">
     <configuration name="Run Module javazone-26-kubernetes-operator" type="Amper.Run" nameIsGenerated="true">
       <option name="command" value="run" />
       <EXTENSION ID="amper.run.common">
@@ -227,7 +243,11 @@
       <method v="2" />
     </configuration>
     <configuration name="Operator" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true">
+      <option name="ACTIVE_PROFILES" value="local" />
       <module name="operator.main" />
+      <selectedOptions>
+        <option name="environmentVariables" />
+      </selectedOptions>
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.Application" />
       <extension name="coverage">
         <pattern>

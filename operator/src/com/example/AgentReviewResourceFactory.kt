@@ -1,19 +1,12 @@
 package com.example
 
-import io.fabric8.kubernetes.api.model.ConfigMap
 import io.fabric8.kubernetes.api.model.Container
-import io.fabric8.kubernetes.api.model.batch.v1.Job
 import org.springframework.stereotype.Component
-
-data class AgentReviewResources(
-    val configMap: ConfigMap,
-    val job: Job,
-)
 
 @Component
 class AgentReviewResourceFactory(private val nameGenerator: ResourceNameGenerator) {
     companion object {
-        private const val REVIEW_CONFIG_KEY = "review.yaml"
+        const val REVIEW_CONFIG_KEY = "review.yaml"
         private const val REVIEW_CONFIG_VOLUME = "review-config"
         private const val REVIEW_CONFIG_MOUNT = "/config/review.yaml"
         private const val SPRING_CONFIG_LOCATION = "classpath:/,file:/config/review.yaml"
@@ -26,7 +19,7 @@ class AgentReviewResourceFactory(private val nameGenerator: ResourceNameGenerato
         openAiBaseUrl: String = "http://127.0.0.1:11434",
     ): AgentReviewResources {
         val baseName = nameGenerator.generateName(desiredState.requestName)
-        val ownerMetadata = objectMeta {
+        val metadata = objectMeta {
             this.name = baseName
             this.namespace = desiredState.namespace
             this.ownerReferences =
@@ -43,13 +36,13 @@ class AgentReviewResourceFactory(private val nameGenerator: ResourceNameGenerato
         }
 
         val configMap = configMap {
-            this.metadata = ownerMetadata
+            this.metadata = metadata
             this.immutable = true
             this.data[REVIEW_CONFIG_KEY] = ReviewYamlFactory.create(desiredState, baseName)
         }
 
         val job = job {
-            this.metadata = ownerMetadata
+            this.metadata = metadata
             spec = jobSpec {
                 backoffLimit = 0
                 template = podTemplate {

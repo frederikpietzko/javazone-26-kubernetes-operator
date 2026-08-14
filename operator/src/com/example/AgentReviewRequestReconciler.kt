@@ -1,10 +1,7 @@
 package com.example
 
-import com.example.AgentReviewRequestStatus.Companion.ERROR_PHASE
-import com.example.AgentReviewRequestStatus.Companion.SUCCESSFUL_PHASE
 import io.fabric8.kubernetes.api.model.ConfigMap
 import io.fabric8.kubernetes.api.model.HasMetadata
-import io.fabric8.kubernetes.api.model.ObjectMeta
 import io.fabric8.kubernetes.api.model.batch.v1.Job
 import io.javaoperatorsdk.operator.api.config.informer.InformerEventSourceConfiguration
 import io.javaoperatorsdk.operator.api.reconciler.*
@@ -25,22 +22,19 @@ internal val AGENT_REVIEW_EVENT_SOURCE_NAMES =
 class AgentReviewRequestReconciler(
     private val agentReviewClient: AgentReviewClient,
     private val properties: AgentReviewProperties,
-    private val nameGenerator: ResourceNameGenerator,
-    private val lifecycle: AgentReviewLifecycle,
     private val agentReviewFactory: AgentReviewResourceFactory,
+    private val nameGenerator: ResourceNameGenerator,
 ) : Reconciler<AgentReviewRequestCR> {
-    fun identifyLifecycleDecision(
-        primary: AgentReviewRequestCR,
-        observed: ObservedAgentReviewResources,
-        desiredState: DesiredAgentReviewState,
-    ): LifecycleDecision =
-        lifecycle.decide(
-            request = primary,
-            observed = observed,
-            desiredState = desiredState,
-        )
 
-    @Suppress("ReturnCount")
+    companion object {
+        const val JOB_CREATION_PENDING_MESSAGE = "review-agent dependencies created; creating Job"
+        const val JOB_IN_PROGRESS_MESSAGE = "review-agent Job is running"
+        const val JOB_FAILED_MESSAGE = "review-agent Job failed"
+        const val JOB_SUCCESSFUL_BUT_RESULT_MISSING =
+            "review-agent Job completed successfully, but no ReviewResult found"
+    }
+
+    @Suppress("ReturnCount", "LongMethod", "CyclomaticComplexMethod")
     override fun reconcile(
         primary: AgentReviewRequestCR,
         context: Context<AgentReviewRequestCR>,
@@ -50,49 +44,88 @@ class AgentReviewRequestReconciler(
                 is PreconditionResult.Invalid -> return result.update
                 is PreconditionResult.Valid -> result.state
             }
-
-        val (metadata, namespace, requestName) = desiredState
-
-        val baseName = nameGenerator.generateName(requestName)
-        val observed = agentReviewClient.observe(namespace, baseName)
-        val desired =
+        val name = nameGenerator.generateName(desiredState.requestName)
+        val (configMap, job, reviewResult) = agentReviewClient.observe(desiredState.namespace, name)
+        val desiredResources =
             agentReviewFactory.create(
                 desiredState = desiredState,
                 image = properties.image,
                 openAiBaseUrl = properties.openAiBaseUrl,
             )
 
-        val conflicts = agentReviewClient.validateDesired(desired, metadata, observed)
-        if (conflicts.isNotEmpty()) {
-            return AgentReviewRequestStatus.stateConflict(
-                    conflicts.joinToString { it.message },
-                    baseName,
+        val phase = primary.status?.phase
+
+        if (configMap == null) {
+            val configMap = context.client.resource(desiredResources.configMap).create()
+            return AgentReviewRequestStatus.inProgress(
+                    message = JOB_CREATION_PENDING_MESSAGE,
+                    configMapName = configMap.metadata.name,
+                    jobName = job?.metadata?.name ?: "unkown",
+                    reviewResultName = reviewResult?.metadata?.name ?: "unknown",
                 )
-                .updateIfChanged(primary)
+                .updateIfChanged(current = primary)
         }
 
-        val decision =
-            identifyLifecycleDecision(
-                primary = primary,
-                observed = observed,
-                desiredState = desiredState,
-            )
+        if (job == null) {
+            val job = context.client.resource(desiredResources.job).create()
+            return AgentReviewRequestStatus.inProgress(
+                    message = JOB_CREATION_PENDING_MESSAGE,
+                    configMapName = configMap.metadata.name,
+                    jobName = job.metadata.name,
+                    reviewResultName = reviewResult?.metadata?.name ?: "unknown",
+                )
+                .updateIfChanged(current = primary)
+        }
+        val status = job.identifyStatus()
 
-        return when (decision) {
-            is LifecycleDecision.EnsureResources -> {
-                val conflict = agentReviewClient.createMissing(desired)
-                if (conflict is ResourceComparisonResult.Conflict) {
-                    return AgentReviewRequestStatus.stateConflict(conflict.message, baseName)
-                        .updateIfChanged(primary)
-                }
-                decision.status.updateIfChanged(primary)
+        if (
+            status == JobStatus.ACTIVE &&
+                phase == AgentReviewRequestStatus.IN_PROGRESS_PHASE &&
+                primary.status.message == JOB_CREATION_PENDING_MESSAGE
+        ) {
+            return AgentReviewRequestStatus.inProgress(
+                    message = JOB_IN_PROGRESS_MESSAGE,
+                    configMapName = configMap.metadata.name,
+                    jobName = job.metadata.name,
+                    reviewResultName = reviewResult?.metadata?.name ?: "unknown",
+                )
+                .updateIfChanged(current = primary)
+        }
+
+        if (status == JobStatus.FAILED && phase == AgentReviewRequestStatus.IN_PROGRESS_PHASE) {
+            return AgentReviewRequestStatus.error(
+                    message = JOB_FAILED_MESSAGE,
+                    configMapName = configMap.metadata.name,
+                    jobName = job.metadata.name,
+                    reviewResultName = reviewResult?.metadata?.name ?: "unknown",
+                )
+                .updateIfChanged(current = primary)
+        }
+        if (reviewResult == null) {
+            if (
+                status == JobStatus.SUCCESSFUL &&
+                    phase == AgentReviewRequestStatus.IN_PROGRESS_PHASE
+            ) {
+                return AgentReviewRequestStatus.error(
+                        message = JOB_SUCCESSFUL_BUT_RESULT_MISSING,
+                        configMapName = configMap.metadata.name,
+                        jobName = job.metadata.name,
+                        reviewResultName = "unknown",
+                    )
+                    .updateIfChanged(current = primary)
             }
-
-            is LifecycleDecision.Wait,
-            is LifecycleDecision.Successful,
-            is LifecycleDecision.Error -> decision.status.updateIfChanged(primary)
-            LifecycleDecision.Noop -> UpdateControl.noUpdate()
+            return UpdateControl.noUpdate()
         }
+
+        if (status == JobStatus.SUCCESSFUL && phase == AgentReviewRequestStatus.IN_PROGRESS_PHASE) {
+            return AgentReviewRequestStatus.success(
+                    configMapName = configMap.metadata.name,
+                    jobName = job.metadata.name,
+                    reviewResultName = reviewResult.metadata.name,
+                )
+                .updateIfChanged(current = primary)
+        }
+        return UpdateControl.noUpdate()
     }
 
     override fun prepareEventSources(
@@ -119,68 +152,4 @@ class AgentReviewRequestReconciler(
                 .build(),
             context,
         )
-}
-
-fun AgentReviewRequestStatus.updateIfChanged(
-    current: AgentReviewRequestCR
-): UpdateControl<AgentReviewRequestCR> =
-    if (this == current.status) {
-        UpdateControl.noUpdate()
-    } else {
-        current.status = this
-        UpdateControl.patchStatus(current)
-    }
-
-data class DesiredAgentReviewState(
-    val metadata: ObjectMeta,
-    val namespace: String,
-    val requestName: String,
-    val uid: String,
-    val repositoryUrl: String,
-    val pr: String,
-)
-
-private sealed interface PreconditionResult {
-    data class Valid(val state: DesiredAgentReviewState) : PreconditionResult
-
-    data class Invalid(val update: UpdateControl<AgentReviewRequestCR>) : PreconditionResult
-}
-
-private fun checkPreconditions(primary: AgentReviewRequestCR): PreconditionResult {
-    val metadata = requireNotNull(primary.metadata) { "request metadata is required" }
-    val namespace = requireNotNull(metadata.namespace) { "request namespace is required" }
-    val requestName = requireNotNull(primary.metadata.name) { "request name is required" }
-    val uid = requireNotNull(metadata.uid) { "request UID is required" }
-    val repositoryUrl = primary.spec.repository?.url
-    val pr = primary.spec.pr
-
-    return when {
-        namespace != "default" -> PreconditionResult.Invalid(UpdateControl.noUpdate())
-
-        primary.status?.phase in [SUCCESSFUL_PHASE, ERROR_PHASE] ->
-            PreconditionResult.Invalid(UpdateControl.noUpdate())
-
-        repositoryUrl == null ->
-            PreconditionResult.Invalid(
-                AgentReviewRequestStatus.error("repository URL is required")
-                    .updateIfChanged(primary)
-            )
-
-        pr == null ->
-            PreconditionResult.Invalid(
-                AgentReviewRequestStatus.error("PR number is required").updateIfChanged(primary)
-            )
-
-        else ->
-            PreconditionResult.Valid(
-                DesiredAgentReviewState(
-                    metadata,
-                    namespace,
-                    requestName,
-                    uid,
-                    repositoryUrl,
-                    pr,
-                )
-            )
-    }
 }

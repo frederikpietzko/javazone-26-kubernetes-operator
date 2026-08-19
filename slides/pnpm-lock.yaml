@@ -21,8 +21,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       slidev-theme-kotlin:
-        specifier: ^0.0.8
-        version: 0.0.8(@modelcontextprotocol/server@2.0.0)(@nuxt/kit@3.21.11)(@vue/compiler-sfc@3.5.41)(cac@7.0.0)(rolldown@1.2.4)(srvx@0.12.5)(typescript@6.0.3)(vite@8.2.1(@types/node@22.20.1)(jiti@2.7.0)(yaml@2.9.0))
+        specifier: ^0.0.9
+        version: 0.0.9(@modelcontextprotocol/server@2.0.0)(@nuxt/kit@3.21.11)(@vue/compiler-sfc@3.5.41)(cac@7.0.0)(rolldown@1.2.4)(srvx@0.12.5)(typescript@6.0.3)(vite@8.2.1(@types/node@22.20.1)(jiti@2.7.0)(yaml@2.9.0))
       vue:
         specifier: ^3.5.33
         version: 3.5.41(typescript@6.0.3)
@@ -2486,8 +2486,8 @@ packages:
   slidev-addon-excalidraw@1.1.1:
     resolution: {integrity: sha512-nrlUtEchQmH2QM4F3p7v6umNWY8hhuR1GOFFlUtiEsbKNl96hKQEisOfQB6uLsMs3b27beN1em6PG0nJhjuYoQ==}
 
-  slidev-theme-kotlin@0.0.8:
-    resolution: {integrity: sha512-+RsW4o6Cic5NJUanlTnmIJUBnPhINf9+q4Yisn/XzYj4SBPGJP9oOpAzLhLdWJlrJ9c17Lwk3tA4r6fW1LxCUA==}
+  slidev-theme-kotlin@0.0.9:
+    resolution: {integrity: sha512-vSY3zMOejEGJ60SS3uPujjREMICTsPP9mOAQx099enxwbmU6HKxeYOMygV/e36M9m796fS5Ean4Q9z1p0kuZTQ==}
     engines: {node: '>=18.0.0'}
 
   source-map-js@1.2.1:
@@ -5920,7 +5920,7 @@ snapshots:
 
   slidev-addon-excalidraw@1.1.1: {}
 
-  slidev-theme-kotlin@0.0.8(@modelcontextprotocol/server@2.0.0)(@nuxt/kit@3.21.11)(@vue/compiler-sfc@3.5.41)(cac@7.0.0)(rolldown@1.2.4)(srvx@0.12.5)(typescript@6.0.3)(vite@8.2.1(@types/node@22.20.1)(jiti@2.7.0)(yaml@2.9.0)):
+  slidev-theme-kotlin@0.0.9(@modelcontextprotocol/server@2.0.0)(@nuxt/kit@3.21.11)(@vue/compiler-sfc@3.5.41)(cac@7.0.0)(rolldown@1.2.4)(srvx@0.12.5)(typescript@6.0.3)(vite@8.2.1(@types/node@22.20.1)(jiti@2.7.0)(yaml@2.9.0)):
     dependencies:
       '@slidev/types': 52.19.0(@modelcontextprotocol/server@2.0.0)(@nuxt/kit@3.21.11)(@vue/compiler-sfc@3.5.41)(cac@7.0.0)(rolldown@1.2.4)(srvx@0.12.5)(typescript@6.0.3)(vite@8.2.1(@types/node@22.20.1)(jiti@2.7.0)(yaml@2.9.0))
     transitivePeerDependencies:

@@ -188,9 +188,9 @@ kodee:
 
 ---
 kodee:
-variant: drinking
-size: small
-position: corner
+  variant: drinking
+  size: small
+  position: corner
 ---
 
 # Reconciliation
@@ -198,7 +198,7 @@ position: corner
 
 <Excalidraw
   drawFilePath="./painting4.excalidraw"
-  class="w-100% mt--10%"
+  class="w-100% mt--30%"
   :darkMode="true"
   :background="false"
 />
@@ -217,9 +217,8 @@ position: corner
 - if it isn't then update them
 
 - if it is correct then do nothing
-
 -->
-  
+
 ---
 kodee:
   variant: drinking
@@ -348,4 +347,3 @@ kodee:
   <img class="rounded" src="/qr.png" />
   <p >Code & Slides</p>
 </div>
-

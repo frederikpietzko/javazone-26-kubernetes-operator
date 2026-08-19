@@ -5,3 +5,6 @@ shamefullyHoist: true
 # build scripts by default (`strictDepBuilds: true`), so allowlist it up-front.
 allowBuilds:
   playwright-chromium: true
+
+minimumReleaseAgeExclude:
+  - slidev-theme-kotlin@0.0.9

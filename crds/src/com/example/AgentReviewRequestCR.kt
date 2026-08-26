@@ -67,9 +67,9 @@ data class AgentReviewRequestStatus(
 
         fun inProgress(
             message: String? = null,
-            jobName: String,
-            configMapName: String,
-            reviewResultName: String,
+            jobName: String? = null,
+            configMapName: String? = null,
+            reviewResultName: String? = null,
         ) =
             AgentReviewRequestStatus(
                 phase = IN_PROGRESS_PHASE,
